@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Web Dynamique côté Serveur</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/zenburn.css" />
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Serveur</div>
+                <div class="subtitle">Jakarta Server Pages</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Application Web avec Jakarta EE</h1>
+                <h2>Application orientée présentation</h2>
+                <ul>
+                    <li><span class="alert">Orientée présentation (site web):</span> Le serveur génère du contenu HTML/CSS/JS pour des clients légers (navigateur)</li>
+                    <li><span class="alert">Orientée services (services web):</span> Le serveur génère des données structurées (JSON, XML) pour des clients lourds (applications, services)</li>
+                    <img src="figures/chap3/jakartaee_archi.svg" class="w-75 m-auto mt-5">
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Application Web avec Jakarta EE</h1>
+                <h2>Application orientée présentation</h2>
+                <ul>
+                    <li>Servlet est suffisant mais peu pratique</li>
+                    <pre><code class="language-java compact" data-trim data-line-numbers>
+import jakarta.servlet.*;
+import java.io.IOException;
+
+public class HelloServlet extends HttpServlet {
+
+    @Override
+    public void doGet(HttpServletRequest req,HttpServletResponse res)
+    throws ServletException, IOException {
+        res.setContentType("text/html");
+        PrintWriter out = res.getWriter();
+        out.print(&quot;&lt;html&gt;\n&quot;);
+        out.print(&quot;\t&lt;head&gt;\n&quot;);
+        out.print(&quot;\t\t&lt;title&gt;Bonjour&lt;/title&gt;\n&quot;);
+        out.print(&quot;\t&lt;/head&gt;\n&quot;);
+        out.print(&quot;\t&lt;body&gt;\n&quot;);
+        out.print(&quot;\t\t&lt;h1&gt;Bonjour&lt;/h1&gt;\n&quot;);
+        out.print(&quot;\t\tNous sommes le &quot;);
+        out.print( new java.util.Date().toString() );
+        out.print(&quot;\t&lt;/body&gt;\n&quot;);
+        out.print(&quot;&lt;/html&gt;&quot;);
+        out.close();
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Application Web avec Jakarta EE</h1>
+                <h2>Application orientée présentation</h2>
+                <ul>
+                    <li>Besoin d'une technologie plus appropriée de type <em>server-side scripting</em></li>
+                    <pre><code class="language-html mb-1" data-trim data-line-numbers>
+&lt;html&gt;
+    &lt;head&gt; &lt;title&gt;Une premiere JSP&lt;/title&gt; &lt;/head&gt;
+    &lt;body&gt;
+        &lt;% //Il est possible d&#39;ecrire du code Java pur
+            Date date = new Date();
+            nombreVisites++;
+        %&gt;
+        &lt;!-- ou d&#39;utiliser des balises JSP speciales --&gt;
+        &lt;h1&gt;Exemple&lt;/h1&gt;
+        &lt;p&gt;nous sommes le &lt;%= date %&gt;.&lt;/p&gt;
+        &lt;p&gt;page affichee &lt;%= nombreVisites %&gt; fois !&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                    </code></pre>
+                    <li>Page <code>.jsp</code> : mélange HTML et balises spéciales permettant l'insertion de code Java</li>
+                    <li>Côté serveur, la page est convertie en servlet automatiquement</li>
+                    <li>Plus facile à écrire mais moins performante et peu adaptée pour des applications complexes</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta Server Pages</h1>
+                <ul>
+                    <li>Technologie de présentation pour les applications web</li>
+                    <li>Basée sur Servlet (mêmes capacités)</li>
+                    <li>Simplifie l'utilisation des servlets, en particulier pour les développeurs <em>front-end</em></li>
+                </ul>
+                <img src="figures/chap3/jsp_cycle.png" class="w-75 m-auto mt-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta Server Pages</h1>
+                <h2>Exemple: la page JSP</h2>
+                <pre><code class="language-html" data-trim>
+&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;title&gt;My first JSP page&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p class=&quot;info&quot;&gt;&lt;%=&quot;Hello World!&quot; %&gt;&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta Server Pages</h1>
+                <h2>Exemple: la servlet correspondante</h2>
+                <pre><code class="language-java compact" data-trim>
+public final class index_jsp 
+    extends org.apache.jasper.runtime.HttpJspBase 
+    implements org.apache.jasper.runtime.JspSourceDependent, org.apache.jasper.runtime.JspSourceImports {			
+	...
+	public void _jspService(final javax.servlet.http.HttpServletRequest request, final javax.servlet.http.HttpServletResponse response)
+	throws java.io.IOException, javax.servlet.ServletException {
+		...
+		response.setContentType("text/html; charset=UTF-8");
+		...
+		out.write("\n");
+		out.write("&lt;!DOCTYPE html&gt;");
+		out.write("&lt;html&gt;\n");
+		...
+		out.write("\t&lt;body&gt;\n");
+		out.write("\t\t&lt;p class=\"info\"&gt;");
+		out.print("Hello World!" );
+		out.write("&lt;/p&gt;\n");
+		...
+	}
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le langage JSP</h1>
+                <h2>5 types de balises de bases</h2>
+                <ul>
+                    <li><code>&lt;%@ ... %&gt;</code> : Directive (configuration de la page)</li>
+                    <li><code>&lt;%-- ... --%&gt;</code> : Commentaire (non affiché dans la page)</li>
+                    <li><code>&lt;%! ... %&gt;</code> : Déclaration (définit des méthodes ou des variables)</li>
+                    <li><code>&lt;%= ... %&gt;</code> : Expression (affiche le résultat d'une expression)</li>
+                    <li><code>&lt;% ... %&gt;</code> : Scriptlet (exécute du code Java)</li>
+                    <li>Chacune permet d'ajouter du contenu à la classe Servlet correspondante</li>
+                    <li>Chacune ajoute ce code à un endroit différent</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le langage JSP</h1>
+                <h2>Les directives</h2>
+                <ul>
+                    <li>Configuration de la page</li>
+                    <li>Permet de spécifier au serveur comment il doit générer la servlet correspondante</li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot; %&gt;
+&lt;%@ include file=&quot;header.jsp&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/fmt&quot; prefix=&quot;fmt&quot; %&gt;
+&lt;%@ page import=&quot;java.util.Date&quot; %&gt;
+                    </code></pre>
+                    <li><code>include</code> : inclure (copier-coller) une autre page JSP ou HTML</li>
+                    <li><code>taglib</code> : bibliothèque de balises JSP (JSTL)</li>
+                    <li><code>import</code> : Importation de classes Java (ajouté dans la servlet)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le langage JSP</h1>
+                <h2>Les déclarations</h2>
+                <ul>
+                    <li>Permet de définir des méthodes ou des variables</li>
+                    <li>Ces déclarations sont ajoutées à la classe Servlet correspondante</li>
+                    <pre><code class="language-html mb-3" data-trim>
+&lt;%!
+    private int count = 5;
+    private String bonjour() {
+        return "Bonjour";
+    }
+%&gt;
+                    </code></pre>
+                    <pre><code class="language-java" data-trim>
+public class MyJSP_jsp implements ... {
+    private int count = 5;
+    private String bonjour(){
+        return "Bonjour";
+    }
+    public void _jspService(...)... {
+        ...
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le langage JSP</h1>
+                <h2>Les scriptlet</h2>
+                <ul>
+                    <li>Permet d'insérer du code Java dans la page</li>
+                    <li>Le code est ajouté à la méthode <code>_jspService()</code></li>
+                    <li>Peu utilisé, car remplacées par des balises JSTL (présentation séparée de la logique)</li>
+                    <pre><code class="language-html" data-trim>
+&lt;%
+    for(int i=0;i&lt;count;i++){
+        out.println(bonjour());
+    }
+    count++;
+%&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le langage JSP</h1>
+                <h2>Les expressions</h2>
+                <ul>
+                    <li>Évaluation d'expressions et renvoie de la valeur sous forme de <code>String</code></li>
+                    <li>Équivalent à <code>&lt;% out.println(...); %&gt;</code></li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;h1&gt;&lt;%= bonjour() %&gt; le monde !&lt;/h1&gt;
+                    </code></pre>
+                    <li>Le code est ajouté à la méthode <code>_jspService()</code> de la servlet générée</li>
+                    <pre><code class="language-java" data-trim>
+public void _jspService(final HttpServletRequest request, final HttpServletResponse response) {
+    ...
+    out.write("\n");
+    out.write("&lt;h1&gt;");
+    out.print(bonjour());
+    out.write(" le monde !&lt;/h1&gt;\n");
+    ...
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les objets implicites</h1>
+                <ul>
+                    <li>Les objets implicites des servlets ont des équivalents en JSP, avec des noms d'instances prédéfinis</li>
+                    <li><code>request</code> : instance de <code>HttpServletRequest</code></li>
+                    <li><code>response</code> : instance de <code>HttpServletResponse</code></li>
+                    <li><code>session</code> : instance de <code>HttpSession</code></li>
+                    <li><code>application</code> : instance de <code>ServletContext</code></li>
+                    <li><code>out</code> : instance de <code>JspWriter</code> (permet d'écrire dans la réponse HTTP)</li>
+                    <li><code>config</code> : instance de <code>ServletConfig</code></li>
+                    <li><code>page</code> : instance de la page JSP elle-même (équivalent à <code>this</code>)</li>
+                    <li><code>pageContext</code> : instance de <code>PageContext</code> (permet d'accéder à l'environnement de la page JSP)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les objets implicites</h1>
+                <ul>
+                    <li>Chaque objet définit une portée (scope), c'est-à-dire un contexte dans lequel elle est disponible</li>
+                    <li>Au-delà de cette portée, l'objet n'est plus accessible (potentiellement détruit)</li>
+                    <li><code>pageContext</code> permet d'accéder à toutes les variables, quelles que soient leur portée</li>
+                </ul>
+                <img src="figures/chap3/jsp_scope.png" class="w-50 m-auto mt-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les objets implicites</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-html" data-trim>
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Formulaire HTML&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form action=&quot;/form.jsp&quot; method=&quot;get&quot; class=&quot;form&quot;&gt;
+            &lt;div class=&#39;form-row&#39;&gt;
+                &lt;label for=&#39;full-name&#39;&gt;Name&lt;/label&gt;
+                &lt;input id=&#39;full-name&#39; name=&#39;full-name&#39; type=&#39;text&#39;/&gt;
+            &lt;/div&gt;
+            &lt;div class=&#39;form-row&#39;&gt;
+                &lt;label for=&#39;email&#39;&gt;Email&lt;/label&gt;
+                &lt;input id=&#39;email&#39; name=&#39;email&#39; type=&#39;email&#39; placeholder=&#39;joe@example.com&#39;/&gt;
+            &lt;/div&gt;
+            &lt;div class=&#39;form-row&#39;&gt;
+                &lt;button&gt;Submit&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les objets implicites</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-html" data-trim>
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Première JSP&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;%  
+            String myname = request.getParameter(&quot;full-name&quot;); 
+            String myemail = request.getParameter(&quot;email&quot;); 
+            session.setAttribute(&quot;name&quot;, myname);
+            session.setAttribute(&quot;email&quot;, myemail);
+            // ou
+            pageContext.setAttribute(&quot;name&quot;, myname, PageContext.SESSION_SCOPE);
+            pageContext.setAttribute(&quot;email&quot;, myemail, PageContext.SESSION_SCOPE);
+        %&gt;
+        &lt;a href=&quot;second.jsp&quot;&gt;second jsp page&lt;/a&gt; 
+    &lt;/body&gt;
+&lt;/html&gt;	
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les objets implicites</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-html" data-trim>
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Seconde JSP&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;%  
+            String myname = (String) session.getAttribute(&quot;name&quot;);
+            String myemail = (String) session.getAttribute(&quot;email&quot;);
+            // ou 
+            String myname = (String) pageContext.getAttribute(&quot;name&quot;, PageContext.SESSION_SCOPE);
+            String myemail = (String) pageContext.getAttribute(&quot;email&quot;, PageContext.SESSION_SCOPE);
+        %&gt;
+        &lt;h1&gt;Bonjour &lt;%= myname %&gt; !&lt;/h1&gt;
+        &lt;p&gt;Votre email est &lt;%= myemail %&gt;.&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;	
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <ul>
+                    <li>Un <em>JavaBean</em> ou <em>bean</em> est une classe Java (Plain Old Java Objet ou POJO) qui :</li>
+                    <ul>
+                        <li>définit un constructeur par défaut (public, sans argument)</li>
+                        <li>possède des attributs privés (propriétés)</li>
+                        <li>fournit des méthodes d'accès (getters et setters) pour ses propriétés</li>
+                        <li>est sérialisable (implémente l'interface <code>Serializable</code>)</li>
+                    </ul>
+                    <li>JSP propose un moyen de manipuler les beans via des balises JSP spéciales:</li>
+                    <ul>
+                        <li><code>&lt;jsp:useBean&gt;</code> : pour créer ou récupérer un bean</li>
+                        <li><code>&lt;jsp:setProperty&gt;</code> : pour définir les propriétés du bean</li>
+                        <li><code>&lt;jsp:getProperty&gt;</code> : pour obtenir les propriétés du bean</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <h2>Exemple: bean <code>Car</code></h2>
+                <pre><code class="language-java compact" data-trim>
+package com.example;
+
+import java.io.Serializable;
+
+public class Car implements Serializable {
+    static final long serialVersionUID = 42L;
+    private String model;
+    private double speed;
+
+    // constructeur par defaut obligatoire (peut être implicite)
+    public Car() {
+        model = "Bugatti Veyron";
+        speed = 407;
+    }
+
+    // getters et setters publics
+    public double getSpeed() {
+        return this.speed;
+    }	
+
+    public void setSpeed(double newSpeed) {
+        if(newSpeed < 0) {
+            sendErrorMessage(...);
+            newSpeed = Math.abs(newSpeed);
+        }
+        this.speed = newSpeed;
+    }
+    ...
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <h2>Dans la page JSP</h2>
+                <ul>
+                    <li>On suppose qu'une instance de <code>Car</code> est disponible dans la session sous l'identifiant <code>myCar</code></li>
+                    <li>Les <em>scope</em> possibles sont <code>page</code>, <code>request</code>, <code>session</code> et <code>application</code></li>
+                    <pre><code class="language-html" data-trim>
+&lt;jsp:useBean id=&quot;myCar&quot; class=&quot;com.example.Car&quot; scope=&quot;session&quot;/&gt;
+&lt;%-- équivalent à:--%&gt;
+&lt;% 
+    com.example.Car myCar = (com.example.Car) request.getAttribute(&quot;myCar&quot;); 
+    if ( myCar == null ) {
+        myCar = new com.example.Car();
+        request.setAttribute(&quot;myCar&quot;,myCar);
+    }
+%&gt;
+&lt;%-- Si le bean n&#39;existe pas, un bean par defaut est créé à la place --%&gt;
+
+&lt;%-- Possible de definir un corps, inclut dans la page si le bean n&#39;existe pas --%&gt;
+&lt;jsp:useBean id=&quot;myCar&quot; class=&quot;com.example.Car&quot; scope=&quot;request&quot; /&gt;
+    &lt;p&gt; Modele par defaut utilisé &lt;/p&gt;
+&lt;/jsp:useBean&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <h2>Dans la page JSP</h2>
+                <ul>
+                    <li>L'intérêt principal est de pouvoir afficher les propriétés du bean dans la page JSP</li>
+                    <li>On suppose que le bean <code>myCar</code> a été déclaré préalablement dans la page</li>
+                    <pre><code class="language-html" data-trim>
+&lt;%-- affiche le contenu de la propriété &#39;speed&#39; du bean &#39;myCar&#39; : --%&gt;
+&lt;jsp:getProperty name=&quot;myCar&quot; property=&quot;speed&quot; /&gt;
+
+&lt;%-- équivalent à : --%&gt;
+&lt;%= myCar.getSpeed() %&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <h2>Dans la page JSP</h2>
+                <ul>
+                    <li>On peut créer et initialiser un bean directement dans la page JSP</li>
+                    <pre><code class="language-html" data-trim>
+&lt;jsp:setProperty name=&quot;myCar&quot; property=&quot;speed&quot; value=&quot;350&quot; /&gt;
+&lt;%-- équivalent à : --%&gt;
+&lt;% myCar.setSpeed(350); %&gt;
+
+&lt;jsp:setProperty name=&quot;myCar&quot; property=&quot;speed&quot; param=&quot;givenSpeed&quot;/&gt;
+&lt;%-- équivalent à : --%&gt;
+&lt;% myCar.setSpeed(request.getParameter(&quot;givenSpeed&quot;)); %&gt;
+
+&lt;jsp:setProperty name=&quot;myCar&quot; property=&quot;speed&quot; /&gt;
+&lt;%-- équivalent à : --%&gt;
+&lt;% myCar.setSpeed(request.getParameter(&quot;speed&quot;)); %&gt;
+
+&lt;jsp:setProperty name=&quot;myCar&quot; property=&quot;*&quot; /&gt;
+&lt;%-- équivalent à : --%&gt;
+&lt;% myCar.setModel(request.getParameter(&quot;model&quot;)); %&gt;
+&lt;% myCar.setSpeed(request.getParameter(&quot;speed&quot;)); %&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <h2>Expression Language</h2>
+                <div class="boxtitle">Jakarta Expression Language</div>
+                <div class="boxcontent mb-4">
+                    <p>Jakarta Expression Language (EL) est un langage utilisé dans les pages JSP pour accéder facilement aux données des beans et des objets dans le contexte de la requête, de la session ou de l'application. Il permet d'écrire des expressions simples pour récupérer des valeurs sans avoir à écrire du code Java complexe.</p>
+                </div>
+                <ul>
+                    <li>Syntaxe: <code>${ expression }</code></li>
+                    <li><code>expression</code> est une opération, un appel à une méthode ou un accès à une variable ou une propriété de bean</li>
+                    <li>Peut être utilisé dans les balises JSP, le corps de la page (hors balises) et les attributs HTML, etc.</li>
+                    <li><span class="alert">Évaluées à l'exécution de la servlet et non à la compilation</span></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <h2>Expression Language</h2>
+                <ul>
+                    <li>Pour manipuler les beans, 2 syntaxes: avec l'opérateur <code>.</code> ou avec des crochets <code>[ ]</code></li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;p&gt;
+    La vitesse maximale d&#39;une ${myCar.model} est de : ${myCar.speed}
+    La vitesse maximale d&#39;une ${myCar[&quot;model&quot;]} est de : ${myCar[&quot;speed&quot;]}
+&lt;/p&gt;
+                    </code></pre>
+                    <li><code>myCar</code> doit exister dans un <em>scope</em> (s'il n'est pas précisé, n'importe lequel)</li>
+                    <li>La classe <code>Car</code> doit avoir des accesseurs (getters) pour ses propriétés (sinon exception)</li>
+                    <li>Contrairement à <code>jsp:useBean</code>, si <code>myCar</code> n'existe pas, il n'est pas créé (exception)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Utilisation des beans</h1>
+                <h2>Expression Language</h2>
+                <ul>
+                    <li>Objets de portée dans les EL: <code>requestScope</code>, <code>sessionScope</code>, <code>applicationScope</code>, <code>pageScope</code> et <code>pageContext</code></li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;p&gt;
+    La vitesse maximale d&#39;une ${sessionScope.myCar.model} est de : ${sessionScope.myCar.speed}
+    &lt;%-- ou si on ne connait pas le scope --%&gt;
+    La vitesse maximale d&#39;une ${pageContext.myCar.model} est de : ${pageContext.myCar.speed}
+&lt;/p&gt;
+                    </code></pre>
+                    Note: <code>pageContext</code> permet d'éviter l'exception si <code>myCar</code> n'existe pas
+                    <li>Accès au paramètres et cookies simplifiés: <code>param</code> et <code>cookie</code></li>
+                    <pre><code class="language-html" data-trim>
+&lt;p&gt;
+    Le paramètre &quot;model&quot; est : ${param.model}
+    Le cookie &quot;user&quot; est : ${cookie.user}
+&lt;/p&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>JSP dans une application MVC</h1>
+                <ul>
+                    <li>Techniquement, JSP peut remplacer entièrement l'utilisation des Servlets</li>
+                    <li>Mais l'intérêt principal est l'utilisation dans une architecture MVC:</li>
+                    <ul>
+                        <li>Servlet pour le contrôleur (reçoit les requêtes)</li>
+                        <li>Beans pour le modèle (encapsulent la logique métier et les données)</li>
+                        <li>JSP pour la vue (génère la présentation en utilisant les données du modèle)</li>
+                    </ul>
+                </ul>
+                <img src="figures/chap3/jsp_mvc.png" class="w-80 m-auto mt-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>JSP dans une application MVC</h1>
+                <h2>Exemple: Servlet contrôleur</h2>
+                <pre><code class="language-java" data-trim>
+import com.example.Car;
+
+@WebServlet("/car")
+public class CarController extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    throws ServletException, IOException {
+        String mo = request.getParameter("model");
+        String sp = request.getParameter("speed");
+
+        if (mo != null && !mo.isEmpty() && sp != null && !sp.isEmpty()) {
+            Car car = new Car();
+            car.setModel(mo);
+            car.setSpeed(Double.parseDouble(sp));
+            request.setAttribute("car",car);
+        }
+
+        RequestDispatcher dis = request.getRequestDispatcher("car.jsp");
+        dis.forward(request,response);
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>JSP dans une application MVC</h1>
+                <h2>Exemple: page JSP</h2>
+                <pre><code class="language-html" data-trim>
+&lt;%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %&gt;
+&lt;%@ page import="com.example.Car" %&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Car Details&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Car Details&lt;/h1&gt;
+        &lt;jsp:useBean id=&quot;car&quot; class=&quot;com.example.Car&quot; scope=&quot;request&quot;&gt;
+            &lt;p&gt; No model specified. Default model used instead &lt;/p&gt;
+        &lt;/jsp:useBean&gt;
+        &lt;table&gt;
+            &lt;tr&gt;&lt;td&gt;Model:&lt;/td&gt;&lt;td&gt;&lt;jsp:getProperty name=&quot;car&quot; property=&quot;model&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;&lt;td&gt;Speed:&lt;/td&gt;&lt;td&gt;&lt;jsp:getProperty name=&quot;car&quot; property=&quot;speed&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;a href=&quot;index.jsp&quot;&gt;Back to Home&lt;/a&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                </code></pre>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>

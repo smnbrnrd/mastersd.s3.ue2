@@ -1,0 +1,16 @@
+:root {
+    /* custom URN color palette */
+    --paletteUrn-color1: #2e4053;
+    --paletteUrn-color2: #3a7ca5;
+    --paletteUrn-color3: #d9dcd6;
+    --paletteUrn-color4: #f0f0f0;
+    --paletteUrn-color5: #f0884e;
+    --paletteUrn-color6: #75afc1;
+
+    --primary-color: var(--paletteUrn-color1);
+    --secondary-color: var(--paletteUrn-color2);
+    --tertiary-color: var(--paletteUrn-color3);
+    --quaternary-color: var(--paletteUrn-color4);
+    --alert-color: var(--paletteUrn-color5);
+    --link-color: var(--paletteUrn-color6);
+}

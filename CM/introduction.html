@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Web Dynamique côté Serveur</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Serveur</div>
+                <div class="subtitle">Introduction</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le Web (rappels)</h1>
+                <h2>Internet et Web</h2>
+                <img src="figures/chap1/web_internet.png" class="w-75 m-auto mt-4 mb-5">
+                <p class="center">Internet est un réseau de réseaux. Le Web est une partie de l’information circulant sur Internet.</p>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le Web (rappels)</h1>
+                <h2>Environnement client-serveur</h2>
+                <ul class="mb-5">
+                    <li><span class="alert">Client</span> : ordinateur/logiciel qui demande une ressource. Le plus souvent, un navigateur web qui demande une ressource web ou qui sollicite un service web.</li>
+                    <li><span class="alert">Serveur</span> : ordinateur/logiciel qui répond à cette demande et qui fournit la ressource ou le service.</li>
+                </ul>
+                <img src="figures/chap1/client_serveur.png" class="w-75 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le Web (rappels)</h1>
+                <h2>Communication avec HTTP et URL</h2>
+                <ul class="mb-5">
+                    <li>Communication client-serveur avec le protocole de communication HTTP</li>
+                    <li>Requête HTTP : méthodes <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>, etc. en fonction de l'action demandée</li>
+                    <li>Réponse HTTP : statut (ex: <code>200 OK</code>, <code>404 Not Found</code>, etc.) + corps (ex: contenu HTML, JSON, etc.)</li>
+                    <li>Serveurs et ressources identifiés par une URL (ex: <code>http://mastersd.univ-rouen.fr/index.html</code>)</li>
+                </ul>
+                <img src="figures/chap1/client_serveur_http.png" class="w-85 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Web dynamique côté serveur</h1>
+                <div class="boxtitle">Page web dynamique</div>
+                <div class="boxcontent mb-4">
+                    <p>Page web générée à la demande, en fonction de la requête ou d'informations contextuelles, contrairement à une page web statique dont le contenu est identique à chaque consultation.</p>
+                </div>
+                <ul class="mb-5">
+                    <li><span class="alert">Côté client</span> : page incluant du code que le client exécute pour générer tout ou partie du contenu (JavaScript)</li>
+                    <li><span class="alert">Côté serveur</span> : page générée par le serveur avant d'être envoyée au client (PHP, Python, Ruby, etc.)</li>
+                </ul>
+                <img src="figures/chap1/client_serveur_wds.png" class="w-85 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Serveur web</h1>
+                <div class="boxtitle">Serveur web (ou serveur HTTP)</div>
+                <div class="boxcontent mb-4">
+                    <p>Logiciel de service de ressources web, qui répond à des requêtes HTTP provenant de réseau public (Internet) ou privé (intranet).</p>
+                </div>
+                <ul class="mb-5">
+                    <li>Capable de recevoir et de prendre en charge des requêtes HTTP</li>
+                    <li>Propose également des fonctionnalités de bases, e.g. gestion des accès, des sessions, des erreurs, etc.</li>
+                </ul>
+                <img src="figures/chap1/serveur_web.png"  class="w-35 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Serveur web</h1>
+                <h2>Exemples de serveurs web</h2>
+                <ul class="mb-5">
+                    <li>Apache HTTP Server (httpd): <a href="https://httpd.apache.org/" target="_blank">https://httpd.apache.org/</a></li>
+                    <li>Nginx: <a href="https://nginx.org/" target="_blank">https://nginx.org/</a></li>
+                    <li>Lighttpd: <a href="https://lighttpd.net/" target="_blank">https://lighttpd.net/</a></li>
+                    <li>OpenLiteSpeed: <a href="https://openlitespeed.org/" target="_blank">https://openlitespeed.org/</a></li>
+                    <li>H2O: <a href="https://h2o.examp1e.net/" target="_blank">https://h2o.examp1e.net/</a></li>
+                    <li>Caddy: <a href="https://caddyserver.com/" target="_blank">https://caddyserver.com/</a></li>
+                    <li>Microsoft Internet Information Services (IIS): <a href="https://www.iis.net/" target="_blank">https://www.iis.net/</a></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Serveur d'application</h1>
+                <ul class="mb-5">
+                    <li>Un serveur HTTP ne peut servir que des ressources statiques (HTML, CSS, JS, images, etc.).</li>
+                    <li>Pour générer dynamiquement des ressources, il faut pouvoir exécuter des programmes dédiés.</li>
+                    <li>Ces programmes sont conçus avec des technologies spécifiques: Jakarta EE, .NET, Ruby on Rails, etc.</li>
+                    <li>Un <span class="alert">serveur d'application</span> est un serveur qui intègre des outils de prise en charge de ces technologies.</li>
+                    <li>Il s'agit le plus souvent de <span class="alert">conteneurs</span> qui fournissent l'environnement d'exécution pour ces technologies.</li>
+                </ul>
+                <img src="figures/chap1/serveur_application.png"  class="w-40 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Serveur d'application</h1>
+                <h2>Exemples de serveurs d'application pour Jakarta EE</h2>
+                <ul class="mb-5">
+                    <li>GlassFish: <a href="https://glassfish.org/" target="_blank">https://glassfish.org/</a></li>
+                    <li>WildFly (anciennement JBoss): <a href="https://www.wildfly.org/" target="_blank">https://www.wildfly.org/</a></li>
+                    <li>Payara Server: <a href="https://www.payara.fish/" target="_blank">https://www.payara.fish/</a></li>
+                    <li>Apache Geronimo: <a href="https://geronimo.apache.org/" target="_blank">https://geronimo.apache.org/</a></li>
+                    <li>Apache TomEE: <a href="https://tomee.apache.org/" target="_blank">https://tomee.apache.org/</a></li>
+                    <li>IBM WebSphere Application Server: <a href="https://www.ibm.com/products/liberty" target="_blank">https://www.ibm.com/products/liberty</a></li>
+                    <li>Oracle WebLogic Application Server: <a href="https://www.oracle.com/fr/java/weblogic/" target="_blank">https://www.oracle.com/fr/java/weblogic/</a></li>
+                    <li class="mt-3">Apache Tomcat: <a href="https://tomcat.apache.org/" target="_blank">https://tomcat.apache.org/</a></li>
+                    <li>Eclipse Jetty: <a href="https://jetty.org/" target="_blank">https://jetty.org/</a></li>
+                </ul>
+                <p class="left">Liste des serveurs qui prennent en charge l'ensemble des API Jakarta EE : <a href="https://jakarta.ee/compatibility/">https://jakarta.ee/compatibility/</a> (note: Tomcat et Jetty ne prennent en charge qu'une partie des spécifications JEE)</p>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Plateforme Java</h2>
+                <div class="row">
+                    <div class="col-10">
+                        <ul>
+                            <li>Comprend des outils de développement et d'exécution des applications Java</li>
+                            <ul>
+                                <li><span class="alert">Environnement d'exécution (JRE)</span>, avec notamment la machine virtuelle Java (JVM)</li>
+                                <li><span class="alert">Environnement de développement (JDK)</span>, avec le JRE et des outils de développement (compilateur, débogueur, etc.)</li>
+                            </ul>
+                            <li>Comprend des bibliothèques et frameworks pour faciliter le développement</li>
+                            <ul>
+                                <li>bibliothèques standards</li>
+                                <li>outils additionnels: gestion de production, IDE, serveurs, etc.</li>
+                            </ul>
+                        </ul>
+                    </div>
+                    <div class="col-2">
+                        <img src="figures/chap1/logo_java.svg" class="w-80 m-auto">
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Éditions de la plateforme Java</h2>
+                <div class="row">
+                    <div class="col-10">
+                        <ul>
+                            <li><span class="alert">Édition standard (Java SE)</span>: applications <em>standalone</em> (pour ordinateur de bureau)</li>
+                            <li><span class="alert">Édition entreprise (Jakarta EE)</span>: applications d'entreprise, avec architectures distribuées et fonctionnalités avancées de sécurité, performances, et évolutivité.</li>
+                            <li>Jakarta EE étend Java SE avec des outils pour:</li>
+                            <ul class="mb-5">
+                                <li>les architectures client-serveur</li>
+                                <li>les architectures distribuées, transactionnelles et portables</li>
+                                <li>les applications "critiques" (haute disponibilité, performance, sécurité)</li>
+                            </ul>
+                        </ul>
+                        <p class="left">Note: il existe 3 autres éditions : <span class="alert">Java ME</span> (Micro Edition), pour les appareils mobiles et embarqués; <span class="alert">Java FX</span>, pour les applications riches en interface utilisateur; et <span class="alert">Java Card</span>, pour les cartes à puce et les dispositifs à ressources limitées.</p>
+                    </div>
+                    <div class="col-2">
+                        <img src="figures/chap1/logo_jee.png" class="w-100 m-auto">
+                    </div>
+                </div>
+            </section> 
+            
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Historique</h2>
+                <img src="figures/chap1/jee_versions.png" class="w-100 m-auto mt-3 mb-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Liste des APIs de Jakarta EE 10</h2>
+                <div class="fig-container" data-file="figures/chap1/jee10_pancake.html" 
+                    data-preload data-style="width:100%; align:center" data-scroll="no" data-overflow-shown=true>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Profils, services et composants</h2>
+                <ul>
+                    <li>Ces API sont des spécifications des <span class="alert">services</span> fournis par Jakarta EE.</li>
+                    <li>Il en existe 3 types, regroupés par <span class="alert">profil</span>:</li>
+                    <ul>
+                        <li><span class="alert">Profil Core</span>: services fondamentaux</li>
+                        <li><span class="alert">Profil Web</span>: Profil Core + services spécifiques au Web</li>
+                        <li><span class="alert">Profil Full</span>: Profil Web + services additionnels (e.g. mails)</li>
+                    </ul>
+                    <li>Les services sont mis en oeuvre par des composants Jakarta EE.</li>
+                    <li>Un <span class="alert">composant Jakarta EE</span> est une unité fonctionnelle autonome, déployé dans un conteneur</li>
+                    <li>2 types de composants :</li>
+                    <ul>
+                        <li><span class="alert">Composants web</span> pour les intéractions web: Servlets, Faces, WebSocket</li>
+                        <li><span class="alert">Composants métier</span> pour la logique métier: EJB, CDI</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Exemples</h2>
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Spécification</th>
+                            <th>Profil</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td>Gestion des requêtes HTTP</td>
+                            <td>Jakarta Servlet</td>
+                            <td>Web</td>
+                        </tr>
+                        <tr>
+                            <td>Interfaces utilisateur</td>
+                            <td>Jakarta Faces</td>
+                            <td>Web</td>
+                        </tr>
+                        <tr>
+                            <td>Injection de dépendance</td>
+                            <td>Jakarta CDI (Lite)</td>
+                            <td>Core</td>
+                        </tr>
+                        <tr>
+                            <td>Services Web REST</td>
+                            <td>Jakarta RESTfull Web Services</td>
+                            <td>Core</td>
+                        </tr>
+                        <tr>
+                            <td>Traitement du format JSON</td>
+                            <td>Jakarta JSON Processing et Jakarta JSON Binding</td>
+                            <td>Core</td>
+                        </tr>
+                        <tr>
+                            <td>Gestion d'email</td>
+                            <td>Jakarta Mail</td>
+                            <td>Full</td>
+                        </tr>
+                    </tbody>
+                    </table>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Structure et packaging d'une application Jakarta EE</h2>
+                <ul>
+                    <li>Une application JEE est composée d'un ou plusieurs modules, chacun regroupant ses propres composants et ressources:</li>
+                    <ul>
+                        <li><span class="alert">Module Web</span>: composants web (Servlets, Faces, etc.) et ressources web (HTML, CSS, images, etc.)</li>
+                        <li><span class="alert">Module de beans entreprises</span>: composants métier de type EJB</li>
+                        <li><span class="alert">Module de ressources</span>: ressources partagées (fichiers de configuration, bibliothèques, etc.)</li>
+                    </ul>
+                    <li>Un module est empaqueté dans un fichier d'archive:</li>
+                    <ul>
+                        <li><span class="alert">WAR</span> (Web Application Archive): pour les modules Web</li>
+                        <li><span class="alert">JAR</span> (Java Archive): pour les modules de beans entreprises et de ressources</li>
+                        <li><span class="alert">EAR</span> (Enterprise Application Archive): pour les applications JEE, qui regroupe plusieurs modules</li>
+                    </ul>
+                    <li>Un fois empaqueté, le module peut être déployé sur un serveur d'applications compatible</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta EE</h1>
+                <h2>Exemple des modules Web</h2>
+                <p>Une archive <code>WAR</code> doit contenir:</p>
+                <ul>
+                    <li>Des ressources web (HTML, CSS, JS, images, etc.) accessibles publiquement</li>
+                    <li>Un dossier <code>WEB-INF</code> contenant les fichiers privés</li>
+                    <li>Un sous-dossier <code>classes</code> avec les classes Java compilées (<code>.class</code>)</li>
+                    <li>Un sous-dossier <code>lib</code> avec les bibliothèques Java nécessaires (<code>.jar</code>)</li>
+                    <li>Un descripteur de déploiement au format <code>XML</code> (<code>web.xml</code> pour les modules Web)</li>
+                </ul>
+                <img src="figures/chap1/web_module.png" class="w-60 m-auto mt-4">
+            </section>
+
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture des applications web</h1>
+                <h2>Architecture 2-tiers (client-serveur)</h2>
+                <ul class="mb-5">
+                    <li>Architecture basique, pour des applications simples</li>
+                    <li><span class="alert">Tier Client</span>: application avec interface utilisateur (HTML, CSS, JS)</li>
+                    <li><span class="alert">Tier Serveur</span>: application avec accès aux données (ressources propres)</li>
+                </ul>
+                <img src="figures/chap1/archi_2tiers.png" class="w-65 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture des applications web</h1>
+                <h2>Architecture 3-tiers</h2>
+                <ul class="mb-5">
+                    <li>Architecture classique pour les applications web</li>
+                    <li><span class="alert">Tier Présentation</span>: interface utilisateur (HTML, CSS, JS)</li>
+                    <li><span class="alert">Tier Application</span>: logique métier (traitement des données, logique métier)</li>
+                    <li><span class="alert">Tier Données</span>: accès aux données (base de données, fichiers, etc.)</li>
+                </ul>
+                <img src="figures/chap1/archi_3tiers.png" class="w-80 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture des applications Web</h1>
+                <h2>Architecture N-tiers</h2>
+                <ul class="mb-5">
+                    <li>Architecture plus complexe, avec plusieurs couches supplémentaires de traitement</li>
+                    <li>Les couches peuvent être réparties sur plusieurs serveurs distincts</li>
+                    <li>Permet de répartir la charge, d'améliorer la performance et la scalabilité</li>
+                    <li>Exemple:</li>
+                </ul>
+                <img src="figures/chap1/archi_Ntiers.png" class="w-85 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture des applications web</h1>
+                <h2>Modèle-Vue-Contrôleur pour le Web</h2>
+                <ul class="mb-5">
+                    <li>Architecture basée sur le patron de conception MVC</li>
+                    <li><span class="alert">Modèle</span>: gestion des données et de la logique métier</li>
+                    <li><span class="alert">Vue</span>: présentation des données (interface utilisateur)</li>
+                    <li><span class="alert">Contrôleur</span>: gestion des interactions utilisateur et coordination entre le modèle et la vue</li>
+                </ul>
+                <img src="figures/chap1/patron_mvc.png" class="w-60 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture des applications web</h1>
+                <h2>Modèle-Vue-Contrôleur pour le Web</h2>
+                <ul class="mb-4">
+                    <li>Le modèle est souvent mis en œuvre par des composants métier (EJB, CDI)</li>
+                    <li>La vue et le contrôleur sont souvent mis en œuvre par des composants web (Servlets, Faces)</li>
+                    <li>Exemple:</li>
+                </ul>
+                <img src="figures/chap1/archi_mvc.png" class="w-85 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture des applications web</h1>
+                <h2>Architecture Orientée Service (SOA)</h2>
+                <ul class="mb-5">
+                    <li>Architecture basée sur des services indépendants</li>
+                    <li>Chaque service est autonome et expose une interface pour interagir avec d'autres services</li>
+                    <li>Permet de créer des applications modulaires, évolutives et maintenables</li>
+                </ul>
+                <img src="figures/chap1/archi_soa.png" class="w-55 m-auto">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture des applications web</h1>
+                <h2>Architecture microservices</h2>
+                <ul class="mb-3">
+                    <li>Similaire à SOA mais avec des services plus petits et plus légers</li>
+                    <li>Chaque microservice prend en charge <u>une</u> fonctionnalité spécifique</li>
+                    <li>Communication entre microservices via des API légères et uniformes (REST)</li>
+                </ul>
+                <img src="figures/chap1/archi_microservices.webp" class="w-80 m-auto">
+            </section>
+
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>

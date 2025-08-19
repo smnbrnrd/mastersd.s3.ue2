@@ -1,0 +1,24 @@
+\documentclass[tikz]{standalone}
+\usepackage[sfdefault,light]{roboto}
+\usetikzlibrary{shapes, arrows, positioning, backgrounds}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
+\begin{document}
+    \begin{tikzpicture} [
+			every node/.style={align=center, draw=none, fill=none, minimum width=2cm},
+			legend/.style={font=\small},
+		]
+			\node (client) {Client};
+			\node (serveur) [right=5cm of client] {Serveur};
+			\node (ordiClient) [above=0.2cm of client] {\includegraphics[width=17mm]{./images/pc.png}};
+			\node (logo) [above=0.12cm of client] {\includegraphics[width=8mm]{./images/logo_firefox.png}}; 
+			\node (ordiServeur) [above=0.2cm of serveur]  {\includegraphics[width=15mm]{./images/server.png}};
+			\node [legend, right=0.5cm of ordiServeur] {	\texttt{2. programme} \\ \texttt{serveur} };
+			\path[-latex,thick] (ordiClient.20) edge node [legend,above] {
+				\texttt{1. GET /index.html HTTP/1.1}
+			} (ordiServeur.west|-ordiClient.20);
+			\path[latex-,thick] (ordiClient.-20) edge node [legend,below] {
+				\texttt{3. HTTP/1.1 200 OK}
+			} (ordiServeur.west|-ordiClient.-20);
+			\path[-latex,thick] (ordiServeur) edge [looseness=2, out=340, in=30] (ordiServeur);
+		\end{tikzpicture}
+\end{document}

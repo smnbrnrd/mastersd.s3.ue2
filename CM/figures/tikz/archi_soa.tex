@@ -1,0 +1,23 @@
+\documentclass[tikz, margin=5mm]{standalone}
+\usepackage[sfdefault,light]{roboto}
+\usetikzlibrary{shapes, arrows, positioning, backgrounds}
+\definecolor{MyGreen}{HTML}{41B3A3}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
+\begin{document}
+    \begin{tikzpicture} [
+		every node/.style={align=center,rectangle,rounded corners},
+		composant/.style={draw,fill=MyGreen!30,text width=2.5cm,minimum height=1.5cm},
+		bdd/.style={draw,cylinder,shape border rotate=90,aspect=0.7,minimum width=10mm,minimum height=13mm, cylinder uses custom fill,cylinder body fill=MyGreen!30,cylinder end fill=MyGreen!20}
+		]
+		\node (conso) [composant] {Consommateur \\ du service};
+		\node (pc) [draw=none,below=-0.2cm of conso] {\includegraphics[width=20mm]{./images/pc.png}};
+		\node (registre) [composant,above right=0.8cm and 0.6cm of conso] {Registre \\ de services};
+		\node (produc) [composant, right=4cm of conso] {Producteur \\ du service};
+		\node (pc) [draw=none,below=-0.2cm of produc] {\includegraphics[width=12mm]{./images/server.png}};
+		\path[<->,draw,ultra thick] (conso) |- coordinate[midway] (cr) (registre);
+		\path[<->,draw,ultra thick] (registre) -| coordinate[midway] (rp) (produc);
+		\path[<->,draw,ultra thick] (conso) edge node [below] {3 - Invoque \\ (requête/réponse)} (produc);
+		\node [above] at (cr) {2 - Recherche};
+		\node [above] at (rp) {1 - Publication};
+		\end{tikzpicture}
+\end{document}

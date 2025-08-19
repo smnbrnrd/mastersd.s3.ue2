@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Web Dynamique côté Serveur</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/zenburn.css" />
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Serveur</div>
+                <div class="subtitle">Jakarta Servlet</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Classe Servlet</h2>
+                <div class="boxtitle">Servlet</div>
+                <div class="boxcontent mb-4">
+                    <p>Une servlet est un objet Java capable de recevoir des requêtes et de générer des réponses à ces requêtes. Il s'agit le plus souvent de requêtes et réponses HTTP, mais il est techniquement possible de prendre en charge d'autres protocoles.</p>
+                </div>
+                <ul>
+                    <li><span class="alert">Composants web de base, pour convertir les requêtes HTTP en objets Java</span></li>
+                    <li>Définir une classe Java qui implémente (directement ou indirectement) l'interface <code>Servlet</code></li>
+                    <li>Pour HTTP, on peut utiliser la classe abstraite <code>HttpServlet</code> qui implémente déjà cette interface</li>
+                    <li>Redéfinir au moins une méthode de traitement des requêtes HTTP (<code>doGet()</code>, <code>doPost()</code>, etc.)</li>
+                    <li>À la reception d'une requête, le conteneur web instancie cette classe et appelle l'une de ces méthodes</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-java" data-trim data-line-numbers>
+import jakarta.servlet.*;
+import java.io.IOException;
+
+public class HelloServlet extends HttpServlet {
+
+    @Override
+    public void doGet(HttpServletRequest req,HttpServletResponse res)
+    throws ServletException, IOException {
+        res.setContentType("text/html");
+        PrintWriter out = res.getWriter();
+        out.println(&quot;&lt;html&gt;&quot;);
+        out.println(&quot;&lt;head&gt;&lt;title&gt; Titre &lt;/title&gt;&lt;/head&gt;&quot;);
+        out.println(&quot;&lt;body&gt;&quot;);
+        out.println(&quot;Hello World&quot;);
+        out.println(&quot;&lt;/body&gt;&quot;);
+        out.println(&quot;&lt;/html&gt;&quot;);
+        out.close();
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Exemple</h2>
+                <p class="mb-3">La page HTML générée par la servlet est la suivante :</p>
+                <pre><code class="language-html" data-trim data-line-numbers>
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt; Titre &lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+Hello World
+&lt;/body&gt;
+&lt;/html&gt;
+                </code></pre>
+                <p class="mt-3 mb-3">Le navigateur affiche :</p>
+                <img src="figures/chap2/helloservlet_html.png" class="framed w-55 m-auto mt-4 mb-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Déploiement</h2>
+                <ul>
+                    <li>Après déploiement de l'application, chaque classe Servlet est instanciée une fois</li>
+                    <li>L'instance est chargée dans le conteneur de servlet et prête à recevoir des requêtes</li>
+                    <li>Toutes les requêtes destinées à une même servlet sont traitées par la même instance</li>
+                </ul>
+                <img src="figures/chap2/servlet_instances.png" class="w-75 m-auto mt-4 mb-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Cycle de vie</h2>
+                <ul>
+                    <li>Le conteneur de servlets est responsable de la gestion du cycle de vie des servlets</li>
+                    <li>Lorsqu'une servlet est demandée pour la première fois, le conteneur crée l'instance et appelle <code>init()</code></li>
+                    <li>La méthode <code>service()</code> est invoquée pour chaque requête reçue par la servlet</li>
+                </ul>
+                <img src="figures/chap2/servlet_cycle.png" class="w-65 m-auto mt-4 mb-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Configuration et initialisation</h2>
+                <ul>
+                    <li>Une classe Servlet doit être annotée avec <code>@WebServlet</code></li>
+                    <li>Cela permet de configurer la servlet et de la déclarer auprès du conteneur</li>
+                    <pre><code class="language-java" data-trim>
+@WebServlet(
+    name = "HelloServlet",
+    description = "This is a simple web application",
+    urlPatterns = {"/hello", "/hello*"},
+    initParams = {
+        @WebInitParam(name = "defaultLastname", value = "Doe"),
+        @WebInitParam(name = "defaultFirstname", value = "John")
+    }
+)
+public class HelloServlet extends HttpServlet {
+    ...
+}
+                    </code></pre>
+                    ou 
+                    <pre><code class="language-java" data-trim>
+@WebServlet("/hello")
+public class HelloServlet extends HttpServlet {
+    ...
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Configuration et initialisation</h2>
+                <ul>
+                    <li>Alternative: déclaration dans <code>web.xml</code> :</li>
+                    <pre><code class="language-xml compact" data-trim>
+&lt;web-app xmlns=&quot;https://jakarta.ee/xml/ns/jakartaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd&quot; 
+         version=&quot;6.0&quot;&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;HelloServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.example.HelloServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;defaultLastname&lt;/param-name&gt;
+            &lt;param-value&gt;Doe&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;defaultFirstname&lt;/param-name&gt;
+            &lt;param-value&gt;John&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;HelloServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+                    </code></pre>
+                    <li>Remplace l'annotation <code>@WebServlet</code> (il ne faut pas utiliser les deux)</li>
+                    <li>Si vous définissez vous-même la servlet, privilégiez l'annotation</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Le composant servlet</h1>
+                <h2>Configuration et initialisation</h2>
+                <ul>
+                    <li><code>init()</code> est appelée par le conteneur lors de l'initialisation de la servlet. Elle peut être redéfinie <u>si nécessaire</u></li>
+                    <li>Elle permet de configurer la servlet avant que celle-ci ne traite des requêtes</li>
+                    <li>Exemple: récupération des paramètres d'initialisation</li>
+                    <pre><code class="language-java" data-trim>
+public class HelloServlet extends HttpServlet {
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config); // <-- obligatoire
+        String defaultLastname = config.getInitParameter("defaultLastname");
+        String defaultFirstname = config.getInitParameter("defaultFirstname");
+        ... // autres initialisations, e.g. connexion BDD, initialisation de ressources, etc.
+    }
+}
+                    </code></pre>
+                    <li><code>config</code> est un objet créé par le conteneur pour transmettre les informations de configuration à la servlet</li>
+                    <li>De la même manière, la méthode <code>destroy()</code> est appelée par le conteneur lors de la destruction de la servlet</li>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Traitement des requêtes</h1>
+                <h2>Méthode <code>doXXX()</code></h2>
+                <ul>
+                    <li>Une méthode pour chaque type de requête HTTP :</li>
+                    <pre><code class="language-java" data-trim>
+protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
+protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
+protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
+protected void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
+protected void doHead(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
+protected void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
+protected void doTrace(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
+                    </code></pre>
+                    <li>2 paramètres de type <code>HttpServletRequest</code> et <code>HttpServletResponse</code></li>
+                    <li>Ces objets sont créés par le conteneur et encapsulent les informations de la requête et de la réponse</li>
+                    <li><code>HttpServletRequest</code> donne accès aux informations sur le client et l'environnement serveur</li>
+                    <li><code>HttpServletResponse</code> permet de construire la réponse à envoyer au client</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Traitement des requêtes</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-java" data-trim data-line-numbers>
+protected void doGet(HttpServletRequest req, HttpServletResponse res)
+throws ServletException, IOException {
+    res.setContentType("text/plain");
+    PrintWriter out= res.getWriter();
+    out.println("Protocol: " + req.getProtocol());
+    out.println("Scheme: " + req.getScheme());
+    out.println("ServerName: " + req.getServerName());
+    out.println("ServerPort: " + req.getServerPort());
+    out.println("RemoteAddr: " + req.getRemoteAddr());
+    out.println("RemoteHost: " + req.getRemoteHost());
+    out.println("Method: " + req.getMethod());
+    out.close();
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Traitement des requêtes</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-java" data-trim data-line-numbers>
+protected void doGet(HttpServletRequest req, HttpServletResponse res)
+throws ServletException, IOException {
+    try {
+        InputStream is = new FileInputStream("/home/serveur/sample.txt");
+        OutputStream os = res.getOutputStream(); // flux de sortie
+        res.setContentType("text/plain");
+        res.setHeader("Content-Disposition","attachment;filename=tmp.txt");
+        int count;
+        byte buf[] = new byte[4096];
+        while ((count = is.read(buf)) > -1) {
+            os.write(buf, 0, count);
+        }
+        is.close();
+        os.close();
+    } catch (Exception e) { 
+        e.printStackTrace();
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Traitement des requêtes</h1>
+                <h2>Paramètres de requête</h2>
+                <ul>
+                    <li>Une requête HTTP peut inclure des paramètres</li>
+                    <li>Par exemple, via un formulaire :</li>
+                    <div class="row">
+                        <div class="col-8">
+                            <pre><code class="language-html" data-trim>
+&lt;form action=&quot;/Demo/FormServlet&quot; method=&quot;get&quot;&gt;
+    &lt;label&gt;Nom : &lt;/label&gt;
+    &lt;input name=&quot;name&quot; type=&quot;text&quot;&gt;
+    ...
+    &lt;input type=&quot;submit&quot; value=&quot;Envoyer&quot;&gt;
+&lt;/form&gt;
+                            </code></pre>
+                        </div>
+                        <div class="col-4">
+                            <img src="figures/chap2/html_form.png" class="w-90 m-auto">
+                        </div>
+                    </div>
+                    <li><code>action</code>: URL de la servlet qui traitera la requête</li>
+                    <li><code>method</code>: méthode HTTP utilisée pour envoyer les données (<code>GET</code> ou <code>POST</code>)</li>
+                    <li>Bouton "Envoyer": les données saisies sont encapsulées dans la requête et envoyées à l'URL spécifiée</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Traitement des requêtes</h1>
+                <h2>Paramètres de requête</h2>
+                <ul>
+                    <li>Chaque information saisie est un paramètre de la forme <code>clé=valeur</code>, où la clé est le <code>name</code> de <code>input</code></li>
+                    <li>Si méthode <code>GET</code>, les paramètres sont transmis dans l'URL :</li>
+                    <pre><code class="language-text" data-trim>
+http://localhost:8080/Demo/FormServlet?name=Doe&firstname=John&age=30
+                    </code></pre>
+                    <li>Si méthode <code>POST</code>, les paramètres sont transmis dans le corps de la requête</li>
+                    <li>Dans les deux cas, la servlet peut récupérer les paramètres via l'objet <code>HttpServletRequest</code> :</li>
+                    <pre><code class="language-java" data-trim>
+String name = req.getParameter("name");
+String firstname = req.getParameter("firstname");
+String age = req.getParameter("age");
+                    </code></pre>
+                    ou
+                    <pre><code class="language-java" data-trim>
+Enumeration&lt;String&gt; names = req.getParameterNames();
+while (names.hasMoreElements()) {
+    String paramName = names.nextElement();
+    String paramValue = req.getParameter(paramName);
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Communication entre servlets</h1>
+                <h2>Partage d'informations</h2>
+                <ul>
+                    <li>Au sein d'une même application, plusieurs servlets peuvent partager des informations</li>
+                    <li>Instance de type <code>ServletContext</code>, créée par le conteneur au démarrage de l'application</li>
+                    <li>Chaque servlet peut accéder à cet objet via la méthode <code>getServletContext()</code></li>
+                    <li>On peut y stocker des attributs partagés entre les servlets :</li>
+                    <pre><code class="language-java" data-trim>
+getServletContext().setAttribute("sharedString", "Hello World");
+String sharedString = (String) getServletContext().getAttribute("sharedString");
+
+MyData data = new MyData();
+getServletContext().setAttribute("sharedData", data);
+MyData sharedData = (MyData) getServletContext().getAttribute("sharedData");
+                    </code></pre>
+                    <li>Ces attributs sont accessibles par toutes les servlets de l'application</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Communication entre servlets</h1>
+                <h2>Partage d'informations</h2>
+                <ul>
+                    <li>Possibilité aussi de définir des paramètres de contexte via <code>ServletContext</code></li>
+                    <li>Dans <code>web.xml</code> :</li>
+                    <pre><code class="language-xml" data-trim>
+&lt;context-param&gt;
+    &lt;param-name&gt;emailAdmin&lt;/param-name&gt;
+    &lt;param-value&gt;admin@domain.com&lt;/param-value&gt;
+&lt;/context-param&gt;
+                    </code></pre>
+                    <li>Accès dans une servlet:</li>
+                    <pre><code class="language-java" data-trim>
+String emailAdmin = getServletContext().getInitParameter("emailAdmin");
+                    </code></pre>
+                    <li>Ces paramètres sont globaux pour l'application et accessibles par toutes les servlets</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Communication entre servlets</h1>
+                <h2>Partage de contrôle</h2>
+                <ul>
+                    <li>Une servlet peut appeler une autre servlet pour lui déléguer tout ou partie du traitement d'une requête</li>
+                    <li>Utilisation de la méthode <code>forward</code> de <code>RequestDispatcher</code> :</li>
+                    <pre><code class="language-java" data-trim>
+RequestDispatcher dispatcher = request.getRequestDispatcher("/otherservlet");
+dispatcher.forward(request, response);
+                    </code></pre>
+                    <li>Le paramètre de <code>getRequestDispatcher()</code> est l'URL de la servlet cible (cf. annotation <code>@WebServlet</code>)</li>
+                    <li>Permet de structurer l'application en plusieurs servlets pour des tâches spécifiques</li>
+                    <li class="mt-3">Différent d'une redirection :</li>
+                    <pre><code class="language-java" data-trim>
+response.sendRedirect("http://www.example.com");
+response.sendRedirect("/otherservlet");
+                    </code></pre>
+                    <li>Redirige le client vers une nouvelle URL, <u>changeant l'URL dans le navigateur</u></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Communication entre servlets</h1>
+                <h2>Partage de contrôle</h2>
+                <ul>
+                    <li>Possibilité de transmettre des informations au moment du transfert :</li>
+                    <pre><code class="language-java" data-trim>
+RequestDispatcher dispatcher = request.getRequestDispatcher("/otherservlet?key=value");
+                    </code></pre>
+                    ou
+                    <pre><code class="language-java" data-trim>
+request.setAttribute("key", "value");
+RequestDispatcher dispatcher = request.getRequestDispatcher("/otherservlet");
+dispatcher.forward(request, response);
+                    </code></pre>
+                    <li>Puis dans la servlet cible :</li>
+                    <pre><code class="language-java" data-trim>
+String value = (String) request.getAttribute("key");
+                    </code></pre>
+                    <li>Ces informations sont valables uniquement pour la requête en cours</li>
+                    <li>Quand la réponse est envoyée, les objets <code>request</code> et <code>response</code> sont détruits</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Communication entre servlets</h1>
+                <h2>Partage de contrôle</h2>
+                <ul>
+                    <li><code>RequestDispatcher</code> permet également d'inclure le contenu d'une servlet dans une autre servlet :</li>
+                    <pre><code class="language-java" data-trim>
+RequestDispatcher dispatcher = request.getRequestDispatcher("/otherservlet");
+dispatcher.include(request, response);
+                    </code></pre>
+                    <li>Dans ce cas, la réponse de la servlet incluse est intégrée dans la réponse de la servlet appelante</li>
+                    <li><code>include()</code> permet de conserver le contrôle dans la servlet appelante</li>
+                    <li>Différent de <code>forward()</code> avec lequel la servlet appelante donne le contrôle, et ne le reprend pas</li>
+                    <li>Cette méthode est surtout utile pour inclure des contenus statiques :</li>
+                    <pre><code class="language-java" data-trim>
+RequestDispatcher dispatcher = request.getRequestDispatcher("/header.html");
+dispatcher.include(request, response);
+// Traitement de la servlet principale
+dispatcher = request.getRequestDispatcher("/footer.html");
+dispatcher.include(request, response);
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cookies et sessions</h1>
+                <h2>Les cookies</h2>
+                <div class="boxtitle">Cookie</div>
+                <div class="boxcontent mb-4">
+                    <p>Un cookie est un information se présentant sous la forme d'une paire clé/valeur (et optionnellement d'attributs de la même forme), envoyée par le serveur au client et stockée par le navigateur. Il est utilisé pour conserver des informations entre les requêtes HTTP d'un même client.</p>
+                </div>
+                <ul>
+                    <li>Exemples d'utilisation :</li>
+                        <ul>
+                            <li>Authentification persistante</li>
+                            <li>Préférences utilisateur</li>
+                            <li>Suivi de session</li>
+                        </ul>
+                    <li>Mis à jour par le serveur via les réponses HTTP</li>
+                    <li>Envoyé par le client dans chaque requête HTTP</li>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cookies et sessions</h1>
+                <h2>Les cookies</h2>
+                <ul>
+                    <li>L'API Servlet fournit une classe <code>Cookie</code> pour gérer les cookies</li>
+                    <li>Création d'un cookie :</li>
+                    <pre><code class="language-java" data-trim>
+Cookie cookie = new Cookie("username", "JohnDoe");
+cookie.setMaxAge(60*60*24); // Durée de vie du cookie (1 jour)
+response.addCookie(cookie);
+                    </code></pre>
+                    <li>Récupération des cookies :</li>
+                    <pre><code class="language-java" data-trim>
+Cookie[] cookies = request.getCookies();
+if (cookies != null) {
+    for (Cookie c : cookies) {
+        if (c.getName().equals("username")) {
+            String username = c.getValue();
+            // Utiliser le nom d'utilisateur
+        }
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cookies et sessions</h1>
+                <h2>Les sessions</h2>
+                <div class="boxtitle">Session</div>
+                <div class="boxcontent mb-4">
+                    <p>Une session est un ensemble d'interactions entre un client et un serveur, donnant lieu à plusieurs requêtes consécutives. Elle permet de conserver des informations sur l'utilisateur pendant toute la durée de l'échange.</p>
+                </div>
+                <ul>
+                    <li>Exemple : panier d'achats dans un site e-commerce</li>
+                    <li>HTTP ne prend pas en charge les sessions (protocole sans état)</li>
+                    <li>Il faut un mécanisme de suivi de session côté serveur (<em>session tracking</em>)</li>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cookies et sessions</h1>
+                <h2>Les sessions</h2>
+                <ul>
+                    <li>Chaque session est identifiée par un identifiant unique (<em>session ID</em>)</li>
+                    <li>Cet identifiant est créé à la réception de la première requête d'un client</li>
+                    <li>Il est ensuite transmis dans chacune des requêtes suivantes provenant du même client :</li>
+                    <ul>
+                        <li>via l'URL:</li>
+                        <pre><code class="language-text" data-trim>
+http://localhost:8080/Demo/HelloServlet;jsessionid=0A8EA5D9E8665C8AC80F141C3818F6BA
+                        </code></pre>
+                        <li>ou via un cookie (défaut):</li>
+                        <pre><code class="language-text" data-trim>
+Set-Cookie: JSESSIONID=0A8EA5D9E8665C8AC80F141C3818F6BA; Path=/Demo; HttpOnly
+                        </code></pre>
+                    </ul>
+                    <li>Si cookies désactivés, la servlet doit utiliser l'URL rewriting pour transmettre l'ID :</li>
+                    <pre><code class="language-java" data-trim>
+String url = response.encodeURL("/hello"); // ajoute le session ID si nécessaire
+response.sendRedirect(url);
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cookies et sessions</h1>
+                <h2>Les sessions</h2>
+                <ul>
+                    <li>Si elles sont activées, le conteneur de servlets gère les sessions automatiquement</li>
+                    <li>Récupération ou création d'une session :</li>
+                    <pre><code class="language-java" data-trim>
+HttpSession session = request.getSession(); // récupére la session existante ou en crée une nouvelle
+session.setMaxInactiveInterval(60*30); // Durée de vie de la session (30 minutes)
+                    </code></pre>
+                    <li>La session doit être récupérée avant d'écrire dans la réponse</li>
+                    <li>Partage d'informations via la session :</li>
+                    <pre><code class="language-java" data-trim>
+session.setAttribute("username", "JohnDoe");
+String username = (String) session.getAttribute("username");
+session.removeAttribute("username"); // Supprimer un attribut de session
+session.invalidate(); // Détruire la session
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>En résumé...</h1>
+                <ul>
+                    <li>Une servlet est un composant Java qui traite les requêtes HTTP et génère des réponses</li>
+                    <li>Le cycle de vie d'une servlet est géré par le conteneur de servlets</li>
+                    <li>Plusieurs servlets peuvent coopérer au traitement d'une même requête (<code>RequestDispatcher</code>)</li>
+                    <li>Plusieurs objets implicites disponibles, avec des portées différentes :</li>
+                    <ul>
+                        <li><code>ServletContext</code> : portée application (toutes les servlets)</li>
+                        <li><code>HttpServletRequest</code> : portée requête (toutes les servlets qui traitent une même requête)</li>
+                        <li><code>HttpSession</code> : portée session (toutes les servlets qui traitent les requêtes d'une même session)</li>
+                        <li><code>ServletConfig</code> : portée servlet (une seule servlet)</li>
+                    </ul>
+                    <li>Ces objets permettent le partage d'information et la communication avec le conteneur :</li>
+                    <ul>
+                        <li><code>setAttribute/getAttribute</code> : stocker et récupérer des informations</li>
+                        <li><code>getInitParameter</code> : récupérer les paramètres de configuration (<code>ServletConfig</code>)</li>
+                        <li><code>getParameter</code> : récupérer les paramètres de la requête (<code>HttpServletRequest</code>)</li>
+                    </ul>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>

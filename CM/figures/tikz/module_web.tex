@@ -1,0 +1,39 @@
+\documentclass[tikz, margin=5mm]{standalone}
+\usepackage[sfdefault,light]{roboto}
+\usetikzlibrary{
+	arrows,
+	arrows.meta,
+	chains,
+	positioning,
+	shapes,
+	shapes.multipart,
+	mindmap,
+	fit,
+	calc,
+	intersections,
+	backgrounds,
+	scopes,
+	matrix,
+	shadows,
+}
+\definecolor{MyGreen}{HTML}{41B3A3}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
+
+\begin{document}
+\tikzstyle{every node}=[draw=black,thick,anchor=west]
+\tikzstyle{folder}=[draw=MyGreen,fill=MyGreen!30, minimum height=6mm, minimum width=15mm, rounded corners]
+\tikzstyle{files}=[draw=none,]
+\begin{tikzpicture} [%
+    grow via three points={one child at (0.5,-0.7) and two children at (0.5,-0.7) and (0.5,-1.4)},
+    edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}
+]
+    \node[folder] {Racine}
+        child { node[files] {dossiers et fichiers publiques (images, \texttt{.html}, \texttt{.css}, etc.)}}		
+        child { node[folder] {\texttt{WEB-INF}}
+            child { node[folder] {\texttt{classes}} }
+            child { node[folder] {\texttt{lib}} }
+            child { node[files] {dossiers et fichiers privés (\texttt{.jsp}, \texttt{.xhtml}, etc.)}}	
+            child { node[files] {descripteur de déploiement \texttt{web.xml}} }
+        };
+\end{tikzpicture}
+\end{document}

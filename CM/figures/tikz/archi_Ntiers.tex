@@ -1,0 +1,33 @@
+\documentclass[tikz, margin=5mm]{standalone}
+\usepackage[sfdefault,light]{roboto}
+\usetikzlibrary{shapes, arrows, positioning, backgrounds}
+\definecolor{MyGreen}{HTML}{41B3A3}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
+\begin{document}
+    \begin{tikzpicture} [
+			every node/.style={draw,font=\small,align=center},
+			tier/.style={draw,rectangle,text width=60, minimum width=60, minimum height=80,fill=MyGreen!60,rounded corners},
+			bdd/.style={draw,cylinder,shape border rotate=90,aspect=0.7,minimum width=15mm,minimum height=15mm, cylinder uses custom fill,cylinder body fill=MyGreen!60,cylinder end fill=MyGreen!60},
+			legend/.style={draw=none,fill=none,align=center},
+			dots/.style={draw=gray!0,fill=blue!0,thick,font=\normalsize}
+		]
+			\node at (0,0) [tier] (nodeClient) {Présentation};
+			\node at (0,-2) [legend] (legClient) {Client};
+			\node at (6,0) [tier] (nodeServeur) {Composants Web};
+			\node at (6,-2) [legend] (legServeur) {Conteneur Web};
+			\node at (9,0) [tier] (nodeBusiness) {Composants métier};
+			\node at (9,-2) [legend] (legBusiness) {Conteneur métier};
+			\node at (12,0) [tier] (nodeBDD) {Accès aux données};
+			\node at (12,-2) [legend] (legBDD) {Base de données};
+			\node at (15,0) [bdd] (nodeResources) {};
+			\node at (15,-2) [legend] (legResources) {Données};
+			\path[->, thick] (nodeClient.25) edge node [legend,above] {requête} (nodeServeur.west|-nodeClient.25);
+			\path[<-, thick] (nodeClient.-25) edge node [legend,below] {réponse} (nodeServeur.west|-nodeClient.-25);
+			\path[->, thick] (nodeServeur.25) edge (nodeBusiness.west|-nodeServeur.25);
+			\path[<-, thick] (nodeServeur.-25) edge (nodeBusiness.west|-nodeServeur.-25);
+			\path[->, thick] (nodeBusiness.25) edge (nodeBDD.west|-nodeBusiness.25);
+			\path[<-, thick] (nodeBusiness.-25) edge (nodeBDD.west|-nodeBusiness.-25);
+			\path[->, thick] (nodeBDD.25) edge (nodeResources);
+			\path[<-, thick] (nodeBDD.-25) edge (nodeResources);
+		\end{tikzpicture}
+\end{document}

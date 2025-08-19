@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master SD - Web Dynamique côté Serveur - Travaux Pratiques</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css">
+    <link rel="stylesheet" href="../css/urn.css">
+  
+</head>
+<body>
+
+<div class="container-lg">
+
+    <aside class="sidebar">
+        <nav class="flex-shrink-0 container-fluid navbar-expand-lg">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <h2 class ="link-dark text-decoration-none border-bottom p-2 mb-3">Table des matières</h2>
+            <ul class="list-unstyled" id="navbarTogglerDemo03">
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#env-collapse" aria-expanded="true">
+                        Environnement de développement
+                    </button>
+                    <div class="collapse show" id="env-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#java" class="d-inline-flex align-items-center rounded">Java</a></li>
+                            <li><a href="#vscode" class="d-inline-flex align-items-center rounded">Visual Studio Code</a></li>
+                            <li><a href="#maven" class="d-inline-flex align-items-center rounded">Maven</a></li>
+                            <li><a href="#glassfish" class="d-inline-flex align-items-center rounded">GlassFish</a></li>
+                            <li><a href="#premier-projet" class="d-inline-flex align-items-center rounded">Premiet projet</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#premier-collapse" aria-expanded="true">
+                        Jakarta Servlet
+                    </button>
+                    <div class="collapse show" id="premier-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#hello-servlet" class="d-inline-flex align-items-center rounded">Hello Servlet</a></li>
+                            <li><a href="#param-requete" class="d-inline-flex align-items-center rounded">Paramètres de requêtes</a></li>
+                            <li><a href="#partage-controle" class="d-inline-flex align-items-center rounded">Partage de contrôle</a></li>
+                            <li><a href="#user-manager" class="d-inline-flex align-items-center rounded">Projet UserManager</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="numbered-title order-1">
+
+        <h1>Web Dynamique côté Serveur</h1>
+        <h2>Travaux Pratiques</h2>
+
+        <!--=======================================================-->
+        <h3 id="environnement">Environnement de développement</h3>
+
+        <p>Pour ces travaux pratiques, vous allez utiliser les quatres outils suivant:</p>
+        <ul>
+            <li><strong>Java</strong></li>
+            <li><strong>Visual Studio Code</strong></li>
+            <li><strong>Maven</strong></li>
+            <li><strong>GlassFish</strong></li>
+        </ul>
+
+        <!----------------------------------------->
+        <h4 id="java">Java</h4>
+
+        <p>Pour le développement Java, nous allons utiliser la version <strong>17</strong> du JDK. Si vous utilisez un ordinateur d'une salle de TP, Java est déjà correctement installé. Si vous utilisez votre propre ordinateur, assurez-vous que vous disposez bien de cette version avec la commande:</p>
+        <pre><code>java -version</code></pre>
+
+        <p>Si vous n'avez pas Java 17, vous pouvez le télécharger depuis le site officiel d'<a href="https://www.oracle.com/java/technologies/javase-jdk17-downloads.html" target="_blank">Oracle</a>. Ce site comprend également des instructions pour l'installation.</p>
+
+        <!----------------------------------------->
+        <h4 id="vscode">Visual Studio Code</h4>
+
+        <p>Il existe plusieurs IDE spécifiques au développement d'application Jakarta EE (IntelliJ IDEA, Eclipse, NetBeans, etc.) mais pour ces travaux pratiques, vous allez utiliser <strong>Visual Studio Code</strong> (VSCode) car il propose des extensions pour la prise en charge des trois autres outils. Si vous n'avez pas encore installé VSCode, vous pouvez le faire à partir du site officiel de <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>.</p>
+
+        <p>Une fois VSCode installé et ouvert:</p>
+        <ul>
+            <li>Dans la vue <code>Extensions</code>, recherchez et installez les extensions suivantes:</li>
+            <ul>
+                <li><strong>Java Extension Pack</strong> - un ensemble d'extensions pour le développement Java, incluant l'extension <strong>Maven for Java</strong>.</li>
+                <li><strong>Community Server Connectors</strong> - pour la gestion des serveurs de déploiement.</li>
+            </ul>
+            <li>Créez un dossier dédié aux projets Jakarta EE dans votre dossier personnel, par exemple <code>~/vscode-workspace/jee/</code>.</li>
+            <li>Ouvrez ce dossier dans VSCode: <code>Fichier > Ouvrir Dossier...</code>.</li>
+        </ul>
+
+        <!------------------------------------------->
+        <h4 id="maven">Maven</h4>
+
+        <p>Maven est un outil de gestion et d'automatisation de production, qui permet de gérer les dépendances d'un projet, de compiler, de tester et de déployer une application. Pour vérifier si Maven est installé sur votre ordinateur, vous pouvez exécuter la commande suivante dans le terminal:</p>
+        <pre><code>mvn -version</code></pre>
+
+        <p>Si Maven n'est pas installé, vous pouvez le télécharger depuis le site officiel d'<a href="https://maven.apache.org/download.cgi" target="_blank">Apache Maven</a>. Téléchargez l'archive contenant les binaires et décompressez-la dans un répertoire de votre dossier personnel. Définissez ensuite les variables d'environnement qui permettront d'utiliser l'outil:</p>
+        <ul>
+            <li>Ajoutez le chemin vers le dossier <code>bin</code> de Maven à la variable d'environnement <code>PATH</code>.</li>
+            <pre><code>export PATH=$PATH:/chemin/vers/maven/bin</code></pre>
+            <li>Créez une variable d'environnement <code>M2_HOME</code> pointant vers le dossier où Maven a été décompressé.</li>
+            <pre><code>export M2_HOME=/chemin/vers/maven</code></pre>
+            <li>Ajoutez la variable <code>M2_HOME/bin</code> à la variable d'environnement <code>PATH</code>.</li>
+            <pre><code>export PATH=$PATH:$M2_HOME/bin</code></pre>
+        </ul>
+
+        <p>Pour Linux, ces commandes peuvent être ajoutées au fichier <code>.bashrc</code> ou <code>.bash_profile</code> de votre dossier personnel pour qu'elles soient exécutées à chaque ouverture de terminal. Pour macOS, à partir de la version Catalina (10.15), ces commandes sont à ajouter au fichier <code>.zshenv</code>. Pour Windows, il faut utiliser l'interface graphique pour définir ces variables d'environnement.</p>
+
+        <!------------------------------------------->
+        <h4 id="glassfish">GlassFish</h4>
+
+        <p>Pour mettre en oeuvre la plateforme Jakarta EE, il faut un serveur qui intègre les spécifications de cette plateforme. Il existe de nombreux serveurs compatibles avec Jakarta EE (cf. <a href="https://jakarta.ee/compatibility/certification/10/" target="_blank">https://jakarta.ee/compatibility/certification/10/</a>), parmi lesquelles GlassFish qui est le serveur de référence. </p>
+
+        <p>Pour installer GlassFish, vous pouvez télécharger la dernière version depuis le site officiel de <a href="https://projects.eclipse.org/projects/ee4j.glassfish" target="_blank">Eclipse GlassFish</a>. Téléchargez l'archive contenant la dernière version <em>Full Profile</em> et décompressez-la dans un répertoire de votre dossier personnel.</p>
+
+        <p>Pour intégrer GlassFish à VSCode, il faut utiliser l'extension <strong>Community Server Connectors</strong>:</p>
+        <ul>
+            <li>Dans la partie <code>SERVERS</code> du volet <code>EXPLORATEUR</code> de VSCode, cliquez sur l'icône <code>+</code> pour ajouter un nouveau serveur.</li>
+            <li>À la question "<code>Download server?</code>", répondez l'option "<code>No, use server on disk</code>".</li>
+            <li>Sélectionnez le dossier où vous avez décompressé GlassFish.</li>
+            <li>Cliquez sur "<code>Finish</code>".</li>
+        </ul>
+        <p>Vous devriez maintenant voir apparaître le serveur GlassFish dans la partie <code>SERVERS</code> du volet <code>EXPLORATEUR</code> de VSCode. Vous pouvez démarrer le serveur avec un clic-droit sur le nom du serveur et en sélectionnant l'option "<code>Start server</code>". Vous pouvez également arrêter le serveur de la même manière. Pour vérifier que le serveur fonctionne correctement, ouvrez un navigateur web et accédez à l'URL <code>http://localhost:8080</code>. Vous devriez voir la page d'accueil de GlassFish.</p>
+
+        <!------------------------------------------->
+        <h4 id="premier-projet">Premier projet Jakarta EE</h4>
+
+        <h5 id="creation-projet">Création du projet</h5>
+
+        <p>Pour créer un projet Jakarta EE, le plus simple est d'utiliser Maven: Ouvrez la palette de commandes de VSCode avec l'une des trois méthodes suivantes:</p>
+        <ul>
+            <li>le raccourci clavier <code>Ctrl+Maj+P</code> (Windows/Linux) ou <code>Cmd+Maj+P</code> (Mac).</li>
+            <li>le menu <code>Affichage</code> > <code>Pallette de commandes</code>.</li>
+            <li>le touche <code>F1</code></li>
+        </ul>
+        <p>Dans la palette de commandes: saisissez la commande "<code>Maven: New Project...</code>. L'assistant de création vous propose de sélectionner un <em>archetype</em>. Un <em>archetype</em> est un modèle de projet qui définit la structure de base d'un projet Maven. Recherchez et sélectionner l'archetype <code>jakartaee10-minimal</code>.</p>
+        
+        <p>Vous devez maintenant saisir:</p>
+        <ul>
+            <li>le <strong>Group ID</strong> du projet, qui est généralement le nom de votre organisation, par exemple <code>fr.urn.mastersime</code>.</li>
+            <li>l'<strong>Artifact ID</strong>, qui est le nom du projet, par exemple <code>first-jee-app</code>.</li>
+        </ul>
+
+        <p>Le projet créé contient les dossiers et fichiers suivants:</p>
+        <table class="table table-bordered table-striped">
+            <tr class="a">
+                <td style="text-align: left;"><code>src/main/java</code></td>
+                <td style="text-align: left;">Dossier contenant les fichiers sources java de l'application</td>
+            </tr>
+            <tr class="b">
+                <td style="text-align: left;"><code>src/main/resources</code></td>
+                <td style="text-align: left;">Dossier contenant les ressources de l'application</td>
+            </tr>
+            <tr class="a">
+                <td style="text-align: left;"><code>src/main/webapp</code></td>
+                <td style="text-align: left;">Dossier contenant les fichiers web de l'application</td>
+            </tr>
+            <tr class="b">
+                <td style="text-align: left;"><code>target</code></td>
+                <td style="text-align: left;">Dossier contenant les résultats de la production</td>
+            </tr>
+            <tr class="b">
+                <td style="text-align: left;"><code>pom.xml</code></td>
+                <td style="text-align: left;">Fichier de configuration de Maven pour le projet</td>
+            </tr>
+        </table>
+        <p>Un projet Maven peut contenir d'autres dossiers et fichiers, le plus souvent correspondant à la structure décrite <a href="https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html" target="_blank">ici</a>.</p>
+
+        <h5 id="config-maven">Configuration de Maven</h5>
+
+        <p>Le fichier <code>pom.xml</code> est le fichier de configuration de Maven, qui contient toutes les informations pour la construction, la gestion des dépendances, la création de la documentation, les ajouts de fonctionnalité, etc. L'archetype <code>jakartaee10-minimal</code> a créé un fichier <code>pom.xml</code> de sorte qu'il soit prêt à l'emploi pour un projet Jakarta EE. Il comprend 4 parties:</p>
+        <ol>
+            <li>Les informations de base du projet: <code>groupId</code>, <code>artifactId</code>, <code>version</code>, etc.</li>
+            <li>Les propriétés du projet, notamment la version de la JDK utilisée.</li>
+            <li>Les dépendances du projet, ici l'API Jakarta EE. L'option <code>provided</code> permet de spécifier que l'API est fournie par le serveur.</li>
+            <li>La configuration de la production du fichier WAR, avec le nom du fichier produit et les plugins utilisés pour cela.</li>
+        </ol>
+        <p>Il s'agit d'une configuration minimale pour compiler le projet et produire le WAR qui sera ensuite déployer sur le serveur. Il sera souvent nécessaire de compléter ce fichier pour des projets plus complexes. Nous vous invitons à consulter la <a href="https://maven.apache.org/index.html">documentation</a> à chaque fois que cela est nécessaire.</p>
+
+        <h5 id="test-application">Test de l'application</h5>
+
+        <p>À la création, une application créée avec l'archétype <code>jakartaee10-minimal</code> est fonctionnelle et prête à être testée. Cependant, il s'agit d'une application orientée service (REST), que nous aborderons plus tard dans ces TP:
+        <ul>
+            <li>Supprimez tous les fichiers <code>.java</code> ainsi que les dossiers <code>resources</code></li>
+            <li>Dans la partie <code>MAVEN</code> de l'<code>EXPLORATEUR</code>, via un clic-droit sur le nom de votre projet, sélectionnez <code>Run Maven Commands...</code> > <code>clean</code>.</li>
+            <li>Créez un fichier <code>index.html</code> dans le dossier <code>src/main/webapp</code>.</li>
+            <li>Éditez ce fichier pour qu'il affiche le message "Bienvenue dans mon application Jakarta EE !".</li>
+        </ul>
+
+        <p>L'application peut maintenant être construite et déployée sur le serveur:</p>
+        <ul>
+            <li>Exécutez <code>Run Maven Commands...</code> > <code>package</code>. Cette commande va compiler le projet et produire un fichier WAR dans le dossier <code>target</code>.</li>
+            <li>Déployez le fichier WAR sur le serveur GlassFish: clic-droit sur le fichier WAR produit, puis <code>Run on Server</code>.</li>
+            <li>Ouvrez un navigateur web et accédez à l'URL <code>http://localhost:8080/first-jee-app/</code>. Vous devriez voir le message "Bienvenue dans mon application Jakarta EE !".</li>
+        </ul>
+
+        <p>Note: les commandes Maven peuvent également être exécutées en ligne de commande. Par exemple, il est possible de nettoyer, compiler et produire un fichier WAR en se plaçant dans le dossier du projet via le terminal et en saisissant la commande suivante:</p>
+        <pre><code>mvn clean package</code></pre>
+
+        <h5 id="creation-servlet">Création d'une servlet</h5>
+
+        <p>Pour créer une servlet, vous devez créer une classe Java qui étend la classe <code>HttpServlet</code> et qui implémente la méthode <code>doGet()</code> ou <code>doPost()</code>. Par exemple, créez un fichier <code>HelloServlet.java</code> dans le dossier <code>src/main/java/fr/urn/mastersime</code> avec le contenu suivant:</p>
+        <pre><code class="language-java">
+package fr.urn.mastersime;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/hello")
+public class HelloServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        response.getWriter().println("Bienvenue dans mon application Jakarta EE avec Servlet !");
+    }
+}
+        </code></pre>
+
+        <p>Testez cette servlet en relançant la commande <code>package</code> de Maven, puis en accédant via votre navigateur à l'URL <code>http://localhost:8080/first-jee-app/hello</code>. Vous devriez voir le message "Bienvenue dans mon application Jakarta EE avec Servlet !".</p>
+
+        <h5 id="serveur-embarqué">Utilisation d'un serveur embarqué</h5>
+
+        <p>Le serveur GlassFish est également disponible en version embarquée. Cela signifie que vous pouvez exécuter votre application Jakarta EE sans avoir besoin d'installer un serveur externe. Cette approche simplifie le développement et les tests, car tout le nécessaire est inclus dans votre projet.</p>
+
+        <p>Maven propose un plugin pour utiliser la version embarquée de GlassFish. Ce plugin permet de démarrer et d'arrêter le serveur à partir de la ligne de commande, ainsi que de déployer votre application automatiquement:</p>
+        <ul>
+            <li>Créez un nouveau projet Maven <code>second-jee-app</code> en suivant la même méthode que précédemment.</li>
+            <li>Ajoutez le plugin <code>embedded-glassfish-maven-plugin</code> à votre fichier <code>pom.xml</code> dans la section <code>&lt;build&gt;</code>:</li>
+            <pre><code class="language-xml">
+&lt;plugin&gt;
+    &lt;groupId&gt;org.glassfish.embedded&lt;&#x2F;groupId&gt;
+    &lt;artifactId&gt;embedded-glassfish-maven-plugin&lt;&#x2F;artifactId&gt;
+    &lt;version&gt;7.0&lt;&#x2F;version&gt;
+    &lt;configuration&gt;
+        &lt;app&gt;target&#x2F;second-jee-app.war&lt;&#x2F;app&gt;
+        &lt;port&gt;8080&lt;&#x2F;port&gt;
+        &lt;contextRoot&gt;second-jee-app&lt;&#x2F;contextRoot&gt;
+        &lt;autoDelete&gt;true&lt;&#x2F;autoDelete&gt;
+    &lt;&#x2F;configuration&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;phase&gt;install&lt;&#x2F;phase&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;run&lt;&#x2F;goal&gt;
+            &lt;&#x2F;goals&gt;
+        &lt;&#x2F;execution&gt;
+    &lt;&#x2F;executions&gt;
+&lt;&#x2F;plugin&gt;
+            </code></pre>
+            <li>Pour démarrer le serveur et déployer l'application, utilisez la commande suivante dans le terminal:</li>
+            <pre><code>mvn install</code></pre>
+            <li>Accédez à l'application via l'URL <code>http://localhost:8080/second-jee-app/</code>.</li>
+        </ul>
+
+        <p>Cette méthode permet de simplifier le processus de développement en évitant la configuration manuelle du serveur. Cependant, elle peut ne pas convenir à tous les scénarios, en particulier pour les applications plus complexes qui nécessitent une configuration spécifique du serveur. Pour ces TP, les deux approches se valent.</p>
+
+        <p>Pour aller plus loin, vous pouvez consulter la <a href="https://glassfish.org/docs/SNAPSHOT/embedded-server-guide.html">documentation</a>.</p>
+
+
+        
+        <!--=======================================================-->
+        <h3 id="servlet">Jakarta Servlet</h3>
+
+        <!------------------------------------------->
+        <h4 id="hello-servlet">Hello Servlet</h4>
+
+        <ul>
+            <li>Dans un nouveau projet, créez et testez la servlet <code>HelloServlet</code> qui vous a été présentée au début du chapitre 2 du cours.</li>
+            <li>Modifiez cette servlet pour qu'elle affiche la date courante (cf. <code>java.util.Date</code>) dans la réponse au client, en plus du message "Hello World". Testez le résultats "en raffraichissant" la page plusieurs fois. Vous devez constater que l'heure change à chaque nouvel affichage.</li>
+            <li>Modifiez cette servlet pour insérer dans la page renvoyée au client, l'image <code>logo-urn.png</code> fournie sur UniversiTICE. L'image sera stockée sur le serveur, charge à vous de la placer au bon endroit.</li>
+        </ul>
+
+        <!------------------------------------------->
+        <h4 id="param-requete">Paramètres de requêtes</h4>
+
+        <p>Le but de ce deuxième exercice est de personnaliser la réponse envoyée au client par la servlet, en fonction de données transmises par l'utilisateur à l'aide d'un formulaire HTML.</p>
+        <ul>
+            <li>Dans un nouveau projet, créez une page <code>index.html</code> contenant un formulaire HTML avec deux champs de texte pour permettre à l'utilisateur de saisir son nom et son prénom, et deux boutons radio pour sélectionner le texte "monsieur" ou "madame".</li>
+            <li>Créez une servlet chargée de réceptionner ces informations et de générer une page HTML affichant le message :</li>
+            <pre><code>Bonjour &lt;monsieur/madame&gt; &lt;prénom&gt; &lt;nom&gt;</code></pre>
+            où <code>&lt;monsieur/madame&gt;</code> est à remplacer par monsieur OU madame en fonction de l'option qui a été cochée dans le formulaire, et <code>&lt;prénom&gt;</code> et <code>&lt;nom&gt;</code> sont à remplacer par les textes saisis.
+            <li>Modifiez le formulaire pour ajouter un champ qui permet la saisie d'un nombre compris entre 2 et 50</li>
+            <li>Modifiez la servlet pour que le message précédent soit répété <em>n</em> fois, <em>n</em> étant la valeur saisie dans ce nouveau champ</li>
+        </ul>
+
+        <!------------------------------------------->
+        <h4 id="partage-controle">Partage de contrôle</h4>
+
+        <p>Dans ce nouvel exercice, vous allez créer plusieurs servlets qui participeront à produire la même réponse à une requête. Le principe à implémenter est le suivant:</p>
+        <ul>
+            <li>La page d'accueil <code>index.html</code> contient deux boutons avec les intitulés "Texte" et "Image"</li>
+            <li>Ces deux boutons déclenchent l'envoie d'une requête <code>GET</code> vers une servlet <code>ControllerServlet</code> avec un paramètre d'URL <code>button=&lt;value&gt;</code>, où <code>&lt;value&gt;</code> est à remplacer par l'intitulé du bouton actionné.</li>
+            <li><code>ControllerServlet</code> réceptionne la requête et répond à trois situations:</li>
+            <ul>
+                <li>Si le paramètre <code>button</code> a pour valeur <code>Texte</code>, elle délègue la requête à une servlet qui <code>TextServlet</code>.</li>
+                <li>Si le paramètre <code>button</code> a pour valeur <code>Image</code>, elle délègue la requête à une servlet qui <code>ImageServlet</code>.</li>
+                <li>Si le paramètre <code>button</code> n'est pas reconnu, la servlet renvoie un message d'erreur.</li>
+            </ul>
+            <li><code>TextServlet</code> renvoie le contenu HTML de la page <code>kitchen_sink.html</code> disponible sur UniversiTICE. Il ne doit pas s'agir d'une redirection ici mais bien d'une inclusion du contenu.</li>
+            <li><code>ImageServlet</code> renvoie un contenu HTML pour inclure l’image <code>logo-urn.png</code>.</li>
+        </ul>
+
+        <!------------------------------------------->
+        <h4 id="partage-controle">Partage de contrôle</h4>
+
+        <!------------------------------------------->
+        <h4 id="user-manager">Projet <em>UserManager</em></h4>
+
+
+
+        <!--=======================================================-->
+        <h3 id="faces">Jakarta Faces</h3>
+
+        <!--=======================================================-->
+        <h3 id="cdi">CDI Managed Bean</h3>
+
+        <!--=======================================================-->
+        <h3 id="rest">Services Web REST</h3>
+
+        <!--=======================================================-->
+        <h3 id="spring">Spring</h3>
+    </main>
+
+    <footer>
+        <p>© 2025 <a href="https://mastersd.univ-rouen.fr">Master Science des Données</a> - Université de Rouen Normandie</p>
+    </footer>
+</div>
+    
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/normalize-whitespace/prism-normalize-whitespace.js" ></script>
+</body>
+</html>

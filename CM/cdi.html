@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Web Dynamique côté Serveur</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/zenburn.css" />
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Serveur</div>
+                <div class="subtitle">Jakarta Contexts and Dependency Injection (CDI)</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Injection de dépendances</h1>
+                <ul>
+                    <li>Dans une application, les composants dépendent souvent les uns des autres</li>
+                    <li>Considérons la classe <code>CoffeeService</code> qui contrôle une machine à café</li>
+                    <pre><code class="language-java mb-1" data-trim>
+public class CoffeeService {
+    private FilterCoffeeMachine coffeeMachine;
+
+    public CoffeeService() {
+        this.coffeeMachine = new FilterCoffeeMachine();
+    }
+
+    public Coffee makeCoffee(int strength, int sugar) {
+        Coffee coffee = coffeeMachine.brewCoffee(strength);
+        coffee.setSugar(sugar);
+        return coffee;
+    }
+}
+                    </code></pre>
+                    <li><code>CoffeeService</code> dépend de <code>FilterCoffeeMachine</code> : il doit en connaître les constructeurs et les méthodes</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Injection de dépendances</h1>
+                <ul>
+                    <li><span class="alert">En POO, les dépendances de ce type induisent un couplage fort entre les composants</span></li>
+                    <li>Si on veut changer la machine à café (e.g. <code>EspressoCoffeeMachine</code>), on doit modifier <code>CoffeeService</code></li>
+                    <li>Si plein de composants dépendants, modifications en cascade</li>
+                    <li>Problèmes d'évolutivité et de testabilité</li>
+                    <li><span class="alert">Il faut découpler au maximum les composants (classes) pour améliorer la flexibilité et la testabilité</span></li>
+                    <li>Une première solution consiste à utiliser des interfaces et des classes abstraites...</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Injection de dépendances</h1>
+                <ul>
+                    <li>Pour contrôler plusieurs types de machines, on définit une interface <code>CoffeeMachine</code></li>
+                    <pre><code class="language-java mb-1" data-trim>
+public interface CoffeeMachine {
+    public Coffee brewCoffee(int strength);
+}
+                    </code></pre>
+                    <li>On crée une classe <code>FilterCoffeeMachine</code> qui implémente cette interface</li>
+                    <pre><code class="language-java mb-1" data-trim>
+public class FilterCoffeeMachine implements CoffeeMachine {
+    @Override
+    public Coffee brewCoffee(int strength) {
+        System.out.println("Coffee brewed");
+        return new Coffee("Filter Coffee", strength);
+    }
+    public void addWater() {
+        System.out.println("Water added");
+    }
+    public void addCoffee() {
+        System.out.println("Coffee added");
+    }
+}
+                    </code></pre>
+                    <li>On peut imaginer d'autres classes qui implémentent <code>CoffeeMachine</code> (e.g. <code>EspressoCoffeeMachine</code>)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Injection de dépendances</h1>
+                <ul>
+                    <li>On modifie <code>CoffeeService</code> pour qu'il utilise l'interface <code>CoffeeMachine</code></li>
+                    <pre><code class="language-java mb-1" data-trim>
+public class CoffeeService {
+    private CoffeeMachine coffeeMachine;
+
+    public CoffeeService() {
+        this.coffeeMachine = new FilterCoffeeMachine();
+    }
+
+    public Coffee makeCoffee(int strength, int sugar) {
+        Coffee coffee = coffeeMachine.brewCoffee(strength);
+        coffee.setSugar(sugar);
+        return coffee;
+    }
+}
+                    </code></pre>
+                    <li>Changer l'implémentation est plus simple : plus besoin de connaître les méthodes de <code>FilterCoffeeMachine</code></li>
+                    <li>Mais la dépendance est toujours présente : il faut instancier <code>FilterCoffeeMachine</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Injection de dépendances</h1>
+                <ul>
+                    <li>Solution : injection de dépendances</li>
+                    <li>Pour disposer d'une instance de classe qui implémente <code>CoffeeMachine</code>, on doit <u>injecter</u> cette dépendance via le constructeur de <code>CoffeeService</code> (on peut aussi le faire via un setter).</li>
+                    <pre><code class="language-java mb-1" data-trim>
+public class CoffeeService {
+    private CoffeeMachine coffeeMachine;
+
+    public CoffeeService(CoffeeMachine coffeeMachine) {
+        this.coffeeMachine = coffeeMachine;
+    }
+
+    public Coffee makeCoffee(int strength, int sugar) {
+        Coffee coffee = coffeeMachine.brewCoffee(strength);
+        coffee.setSugar(sugar);
+        return coffee;
+    }
+}
+                    </code></pre>
+                    <li>Responsabilité de la création de l'instance déléguée à l'extérieur de <code>CoffeeService</code></li>
+                    <li>On peut changer l'implémentation sans impacter <code>CoffeeService</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Injection de dépendances</h1>
+                <ul>
+                    <li><span class="alert">Ce principe d'injection de dépendances rend le code plus flexible et testable</span></li>
+                    <li>Nécessite de fournir les dépendances requises à la création de <code>CoffeeService</code></li>
+                    <li>La multiplication des composants rend la gestion des dépendances complexe</li>
+                    <pre><code class="language-java mb-2" data-trim>
+CoffeeType type = new CoffeeType("Medium Fine", 0.5);
+CoffeeConfiguration config = new CoffeeConfiguration(type, 0.7, 550);
+FilterCoffeeMachine coffeeMachine = new FilterCoffeeMachine(config);
+CoffeeService coffeeService = new CoffeeService(coffeeMachine);
+Coffee coffee = coffeeService.makeCoffee(2, 1);
+                    </code></pre>
+                    <li>Solution : utiliser un framework d'injection de dépendances, e.g. Jakarta CDI</li>
+                    <li>C'est le conteneur CDI qui crée et gère les instances des classes</li>
+                    <li>Le développeur se contente de déclarer les dépendances requises</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta Contexts and Dependency Injection (CDI)</h1>
+                <ul>
+                    <li>Annotation <code>@Inject</code> pour déclarer les dépendances</li>
+                    <pre><code class="language-java mb-1" data-trim>
+public class CoffeeService {
+    private CoffeeMachine coffeeMachine;
+
+    @Inject
+    public CoffeeService(CoffeeMachine coffeeMachine) {
+        this.coffeeMachine = coffeeMachine;
+    }
+    ...
+}
+                    </code></pre>
+                    ou injection par champs:
+                    <pre><code class="language-java mb-1" data-trim>
+public class CoffeeService {
+    @Inject
+    private CoffeeMachine coffeeMachine;
+    ...
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta Contexts and Dependency Injection (CDI)</h1>
+                <ul>
+                    <li>Le conteneur CDI recherche les classes qui correspondent aux dépendances déclarées</li>
+                    <li>Il crée des instances de ces classes et les injecte dans les composants qui en ont besoin</li>
+                    <li>Pour gérer le cycle de vie des instances, le conteneur doit connaître la portée de l'instance</li>
+                    <li>Si plusieurs classes candidates, le conteneur doit pouvoir choisir celle qui correspond au contexte d'injection</li>
+                    <li class="mb-5"><span class="alert">Il faut configurer les classes injectables : les CDI managed beans</span></li>
+                    <li>Note: CDI permet aussi d'injecter des ressources (e.g. des connexions à une base de données)</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@Resource(name = "jdbc/myDataSource")
+private DataSource dataSource;
+
+public Connection getConnection() throws SQLException {
+    return dataSource.getConnection();
+}
+                    </code></pre>
+                    Nous ne couvrirons pas ce cas d'usage dans ce cours.
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <ul>
+                    <li>Un <em>managed bean</em> est une classe Java qui peut être gérée par le conteneur CDI</li>
+                    <li>Elle doit :</li>
+                    <ul>
+                        <li>Être publique et instantiable (non abstraite)</li>
+                        <li>Avoir un constructeur public sans argument ou avec des paramètres annotés avec <code>@Inject</code></li>
+                        <li>Être dans un package scanné par le conteneur CDI</li>
+                    </ul>
+                    <li>Elle est souvent annotée pour configurer son comportement (mais pas obligatoire)</li>
+                    <li class="mb-3">Toutes les classes qui respectent ces contraintes sont des <em>managed bean</em> potentiels, c'est-à-dire qu'elles peuvent être découvertes et gérées automatiquement par le conteneur CDI</li>
+                    <li>Note: englobe les JavaBeans (entre autres)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <ul>
+                    <li>Le conteneur CDI associe à chaque <em>managed bean</em> plusieurs attributs:</li>
+                    <ul>
+                        <li>un ensemble de types de bean</li>
+                        <li>un ensemble de <em>qualifiers</em></li>
+                        <li>une portée</li>
+                        <li>optionnellement, un nom de bean</li>
+                        <li>un ensemble d'intercepteurs</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <h2>Types de beans</h2>
+                <ul>
+                    <li>Un bean a un ou plusieurs types à l'injection desquels il est candidat</li>
+                    <li>Exemple : <code>FilterCoffeeMachine</code> a les types <code>CoffeeMachine</code>, <code>FilterCoffeeMachine</code> et <code>java.lang.Object</code></li>
+                    <li>Ces types peuvent être explicitement restreint</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@Typed(CoffeeMachine.class)
+public class FilterCoffeeMachine implements CoffeeMachine {
+    ...
+}
+                    </code></pre>
+                    <li>Ici, les types de bean sont <code>CoffeeMachine</code> et <code>Object</code></li>
+                    <li>Signifie que <code>FilterCoffeeMachine</code> est injectable en tant que <code>CoffeeMachine</code> (ou <code>Object</code>) uniquement</li>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <h2>Qualifiers</h2>
+                <ul>
+                    <li>Si plusieurs types de bean correspondent à une dépendance : Exception au déploiement</li>
+                    <pre><code class="language-java mb-1" data-trim>
+public class FilterCoffeeMachine implements CoffeeMachine { ... }
+public class EspressoCoffeeMachine implements CoffeeMachine { ... }
+                    </code></pre>
+                    <pre><code class="language-java" data-trim>
+public class CoffeeService {
+    private CoffeeMachine coffeeMachine; 
+    
+    @Inject
+    public CoffeeService(CoffeeMachine coffeeMachine) { // Erreur: plusieurs beans correspondants
+        this.coffeeMachine = coffeeMachine; 
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <h2>Qualifiers</h2>
+                <ul>
+                    <li>Pour désambiguiser, on utilise des <em>qualifiers</em></li>
+                    <pre><code class="language-java mb-1" data-trim>
+@Filter
+public class FilterCoffeeMachine implements CoffeeMachine { ... }
+
+@Espresso
+public class EspressoCoffeeMachine implements CoffeeMachine { ... }
+                    </code></pre>
+                    <li>Permet de préciser le type de machine à café souhaité lors de l'injection</li>
+                    <pre><code class="language-java" data-trim>
+public class CoffeeService {
+    private CoffeeMachine coffeeMachine;
+    @Inject
+    public CoffeeService(@Filter CoffeeMachine coffeeMachine) { // OK: un seul bean correspondant
+        this.coffeeMachine = coffeeMachine;
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <h2>Qualifiers</h2>
+                <ul>
+                    <li>Les <em>qualifiers</em> de l'exemple précédent sont à définir</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@Qualifier
+@Retention(RUNTIME)
+@Target({TYPE, METHOD, FIELD, PARAMETER})
+public @interface Filter { }
+                    </code></pre>
+                    <pre><code class="language-java" data-trim>
+@Qualifier
+@Retention(RUNTIME)
+@Target({TYPE, METHOD, FIELD, PARAMETER})
+public @interface Espresso { }
+                    </code></pre>
+                    <li><code>@Qualifier</code>, <code>@Retention</code> et <code>@Target</code> sont des meta-annotations, c'est-à-dire des annotations d'annotations</li>
+                    <li><code>@Retention(RUNTIME)</code> indique que le <em>qualifier</em> est disponible à l'exécution (pas le cas par défaut)</li>
+                    <li><code>@Target({TYPE, METHOD, FIELD, PARAMETER})</code> précise où le <em>qualifier</em> peut être utilisé</li>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <h2>Portée des beans</h2>
+                <ul>
+                    <li>La portée détermine la durée de vie et la visibilité des beans</li>
+                    <li>Annotation de classe : <code>@ApplicationScoped</code>, <code>@SessionScoped</code>, <code>@RequestScoped</code></li>
+                    <li>Par défaut, la portée est <code>@Dependent</code> = une instance par injection</li>
+                    <li>Exemple : servlet qui utilise <code>CoffeeService</code></li>
+                    <pre><code class="language-java mb-1" data-trim>
+@WebServlet("/coffee")
+public class CoffeeServlet extends HttpServlet {
+    @Inject
+    private CoffeeService coffeeService;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    throws ServletException, IOException {
+        Coffee coffee = coffeeService.makeCoffee(3, 2);
+        request.setAttribute("coffee", coffee);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/coffee.jsp");
+        dispatcher.forward(request, response);
+    }
+}
+                    </code></pre>
+                    <li>Question : une nouvelle instance de <code>CoffeeService</code> à chaque requête? pour chaque client? au déploiement?</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <h2>Portée des beans</h2>
+                <ul>
+                    <li><code>CoffeeService</code> doit spécifier sa portée (requête, session ou application)</li>
+                    <li>Le conteneur cherche une instance dans cette portée</li>
+                    <li>Si elle existe, elle est réutilisée. Si elle n'existe pas, une nouvelle instance est créée</li>
+                    <li>Exemple :</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@SessionScoped
+public class CoffeeService implements Serializable{
+    ...
+}
+                    </code></pre>
+                    Une instance de <code>CoffeeService</code> est créée à la réception par <code>CoffeeServlet</code> de la première requête dans une session utilisateur, puis réutilisée pour toutes les requêtes suivantes dans la même session
+                    <li>Les instances sont détruites quand la portée prend fin (e.g. quand la session expire)</li>
+                    <li>Note: <code>CoffeeService</code> doit implémenter <code>Serializable</code> pour être stocké dans la session</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>CDI managed beans</h1>
+                <h2>Nom de bean</h2>
+                <ul>
+                    <li>Un bean peut avoir un nom, le rendant accessible dans un environnement non typé (e.g. EL)</li>
+                    <li>Annotation du bean avec <code>@Named</code></li>
+                    <li>Le nom par défaut est le nom de la classe avec une minuscule</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@Named  // Nom par défaut: "coffeeService"
+@RequestScoped
+public class CoffeeService {
+    @Inject
+    private CoffeeMachine coffeeMachine;
+    public String getName() {
+        return "The M2 SIME coffee shop";
+    }
+    ...
+}
+                    </code></pre>
+                    <li>On peut spécifier un nom différent avec l'annotation <code>@Named("myCoffeeShop")</code></li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;h1&gt;Welcome to ${ myCoffeeShop.name }&lt;/h1&gt;
+                    </code></pre>
+                    <li>Pas d'intérêt quand on utilise des servlets (e.g. architecture MVC du chapitre précédent)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Intercepteurs</h1>
+                <ul>
+                    <li>Les intercepteurs permettent de déclencher des actions avant ou après l'instanciation d'un bean ou l'exécution d'une de ses méthodes</li>
+                    <li>Exemple : utilisation de <code>CoffeeService</code> requiert une authentification, c'est-à-dire qu'à chaque appel de la méthode <code>makeCoffee</code>, on veut vérifier que l'utilisateur est authentifié et/ou lui proposer de s'authentifier avant</li>
+                    <li>Pour ça, on crée un intercepteur</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@Interceptor
+public class AuthentificationInterceptor {
+    @AroundInvoke
+    public Object checkAuthentication(InvocationContext context) throws Exception {
+        if (!isUserAuthenticated()) {
+            // Rediriger vers la page de connexion
+        }
+        return context.proceed();
+    }
+}
+                    </code></pre>
+                    <li>La méthode devra être exécutée automatiquement avant l'exécution de la méthode interceptée</li>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Intercepteurs</h1>
+                <ul>
+                    <li>Pour utiliser l'intercepteur: annotation <code>@Interceptors(AuthentificationInterceptor.class)</code> sur la méthode ciblée</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@RequestScoped
+public class CoffeeService {
+    ...
+    @Interceptors(AuthentificationInterceptor.class)
+    public Coffee makeCoffee(int strength, int sugar) {
+        ...
+    }
+}
+                    </code></pre>
+                    <li>Autre annotation possible: <code>AroundConstruct</code></li>
+                    <li>Dans ce cas, on annote la classe cible et l'intercepteur est déclenché à l'instanciation</li>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Intercepteurs</h1>
+                <h2>Annotations <code>@PostConstruct</code> et <code>@PreDestroy</code></h2>
+                <ul>
+                    <li>Si un bean est injecté ET contient des injections par champs:</li>
+                    <ol>
+                        <li>le conteneur crée l'instance avec le constructeur par défaut</li>
+                        <li>le conteneur injecte ses dépendances</li>
+                    </ol>
+                    <li>Les injections par champs ne sont pas effectuées quand le constructeur est exécuté</li>
+                    <li><code>@PostConstruct</code> et <code>@PreDestroy</code> pour exécuter du code après l'injection et avant la destruction de l'instance:</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@RequestScoped
+public class CoffeeService {
+    @Inject
+    private CoffeeMachine coffeeMachine;
+    @PostConstruct
+    public void init() {
+        this.coffeeMachine.preheating();
+    }
+}
+                    </code></pre>
+                    <li>L'injection par constructeur évite ce problème</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Méthodes <em>Producer</em></h1>
+                <ul>
+                    <li>Les méthodes <em>producer</em> permettent de créer des instances de beans de manière programmatique</li>
+                    <li>Annotation <code>@Produces</code> pour une méthode qui crée un bean</li>
+                    <pre><code class="language-java mb-1" data-trim>
+@ApplicationScoped
+public class CoffeeSelector {
+
+    private final static int FILTER = 1;
+    private final static int EXPRESSO = 2;
+    private int coffeeMachineType = FILTER; // default value
+    
+    @Produces @Selected
+    public CoffeeMachine getCoffeeMachine() {
+        if (this.coffeeMachineType == EXPRESSO) {
+            return new ExpressCoffeeMachine();
+        }
+        return new FilterCoffeeMachine();
+    }
+}
+                    </code></pre>
+                    <li><code>@Selected</code> est un <em>qualifier</em></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Méthodes <em>Producer</em></h1>
+                <ul>
+                    <li>Injection de <code>@Selected CoffeeMachine</code></li>
+                    <pre><code class="language-java mb-1" data-trim>
+@RequestScoped
+public class CoffeeService {
+
+    @Inject @Selected
+    private CoffeeMachine coffeeMachine;
+
+    public void makeCoffee() {
+        this.coffeeMachine.brewCoffee();
+    }
+}
+                    </code></pre>
+                    <li>Le conteneur appelle <code>getCoffeeMachine()</code> pour obtenir une instance de <code>CoffeeMachine</code></li>
+                    <li>Pas de conflit avec <code>FilterCoffeeMachine</code> grâce à <code>@Selected</code></li>
+                    <li>Le type du bean injecté est déterminé à l'exécution (et peut changer)</li>
+                    <li>Note: possible ici de définir la méthode <em>producer</em> dans <code>CoffeeService</code> directement</li>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Packaging</h1>
+                <ul>
+                    <li>Les beans peuvent être empaquetés dans des archives <code>JAR</code> ou <code>WAR</code></li>
+                    <li>Une archive est considérée comme un module CDI si elle contient un fichier <code>beans.xml</code></li>
+                    <pre><code class="language-xml mb-1" data-trim>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans  xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                            https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd"
+        version="3.0" bean-discovery-mode="all"&gt;
+    ...
+&lt;/beans&gt;
+                    </code></pre>
+                    <li><code>beans.xml</code> doit être placé dans <code>WEB-INF</code> si <code>WAR</code>, <code>META-INF</code> si <code>JAR</code></li>
+                    <li><code>beans.xml</code> est optionnel si tous les beans sont annotés avec un scope ou <code>@Dependent</code></li>
+                    <li>Il peut être entièrement vide si <code>bean-discovery-mode</code> est <code>annotated</code> (défaut)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Packaging</h1>
+                <ul>
+                    <li>Le conteneur CDI scanne les classes dans ces archives pour détecter les beans</li>
+                    <li>Deux cas de figures :</li>
+                    <ul>
+                        <li><code>beans.xml</code> est présent et non vide: toutes les classes de l'archive sont des <code>beans</code> potentiels</li>
+                        <li><code>beans.xml</code> est absent ou vide: seuls les classes annotées sont des <code>beans</code> potentiels</li>
+                    </ul>
+                    <li><code>beans.xml</code> peut spécifier des exclusions de classes ou de packages:</li>
+                    <pre><code class="language-xml mb-1" data-trim>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans  xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                            https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd"
+        version="3.0" bean-discovery-mode="all"&gt;
+    &lt;exclude name="com.example.rest.*" />
+    &lt;exclude name="com.example.faces.**"&gt;
+        &lt;if-class-not-available name="jakarta.faces.context.FacesContext"/&gt;
+    &lt;/exclude&gt;
+    &lt;trim /&gt;
+&lt;/beans&gt;
+                    </code></pre>
+                    <li><code>trim</code> exclut toutes les classes qui n'ont pas d'annotation de bean</li>
+                </ul>
+            </section>
+
+
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>

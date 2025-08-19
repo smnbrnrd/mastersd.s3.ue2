@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>API de Jakarta EE 10</title>
+    <link rel="stylesheet" href="../css/cm.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: "Roboto", sans-serif; font-weight: 300;}
+        .slice text { font-size: 14px; fill: #fff; text-anchor: middle; }
+        .legend { font-size: 13px; }
+        .legend rect { stroke-width: 1; stroke: #ccc; }
+    </style>
+</head>
+<body>
+
+    <script>
+        jee10_apis = [
+            { name: "Dependency Injection", version: "2.0", status: "not updated", covered: false},
+            { name: "JSON Processing", version: "2.1", status: "updated", covered: false},
+            { name: "RESTful Web Services", version: "3.1", status: "updated", covered: true},
+            { name: "Interceptors", version: "2.1", status: "updated", covered: false},
+            { name: "Annotations", version: "2.1", status: "updated", covered: true},
+            { name: "JSON Binding", version: "3.0", status: "updated", covered: true},
+            { name: "CDI Lite", version: "4.0", status: "new", covered: true},
+            { name: "Transactions", version: "2.0", status: "not updated", covered: false},
+            { name: "Managed Beans", version: "2.0", status: "not updated", covered: false},
+            { name: "Enterprise Beans Lite", version: "4.0", status: "not updated", covered: false},
+            { name: "Debugging Support", version: "2.0", status: "not updated", covered: false},
+            { name: "Bean Validation", version: "2.0", status: "not updated", covered: true},
+            { name: "WebSocket", version: "2.1", status: "updated", covered: false},
+            { name: "CDI", version: "4.0", status: "updated", covered: true},
+            { name: "Server Pages", version: "3.1", status: "updated", covered: true},
+            { name: "Standard Tag Libraries", version: "3.0", status: "updated", covered: true},
+            { name: "Servlet", version: "6.0", status: "updated", covered: true},
+            { name: "Security", version: "3.0", status: "updated", covered: false},
+            { name: "Faces", version: "4.0", status: "updated", covered: true},
+            { name: "Persistence", version: "3.1", status: "updated", covered: false},
+            { name: "Concurrency", version: "3.0", status: "updated", covered: false},
+            { name: "Authentification", version: "3.0", status: "updated", covered: false},
+            { name: "Expression Language", version: "5.0", status: "updated", covered: true},
+            { name: "Enterprise Beans", version: "4.0", status: "not updated", covered: false},
+            { name: "Messaging", version: "3.1", status: "updated", covered: false},
+            { name: "Mail", version: "2.1", status: "updated", covered: false},
+            { name: "Connectors", version: "2.1", status: "updated", covered: false},
+            { name: "Batch", version: "2.1", status: "updated", covered: false},
+            { name: "Activation", version: "2.1", status: "updated", covered: false},
+            { name: "Authorization", version: "2.1", status: "updated", covered: false},
+        ]
+        const apiColumn = [
+            { name: "core", apis: jee10_apis.slice(0, 7) },
+            { name: "web1", apis: jee10_apis.slice(7, 15) },
+            { name: "web2", apis: jee10_apis.slice(15, 23) },
+            { name: "entreprise", apis: jee10_apis.slice(23, 30) }
+        ];
+        const legendData = [
+            { color: "#75afc1", label: "Mis à jour" },
+            { color: "#e0d43d", label: "Nouveau" },
+            { color: "#d9dcd6", label: "Non mis à jour" }
+        ];
+        const width = 1050;
+        const height = 600;
+        const columnWidth = 220;
+        const rowHeight = 50;
+        const boxWidth = 200;
+        const boxHeight = 40;
+
+        function drawAPIBox(g, api, x, y) {
+            const borderWidth = api.covered ? 3 : 1; // Épaisseur de bordure différente selon le statut
+            const borderColor = api.covered ? "#f0884e" : "#2e4053"; // Couleur de bordure différente selon le statut
+            const fillColor = api.status === "updated" ? "#75afc1" : api.status === "new" ? "#e0d43d" : "#d9dcd6"; // Bleu pour mis à jour, orange pour nouveau, gris pour non mis à jour
+
+            g.append("rect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", boxWidth)
+                .attr("height", boxHeight)
+                .attr("fill", fillColor)
+                .attr("fill-opacity", 0.4 )
+                .attr("stroke", borderColor)
+                .attr("stroke-width", borderWidth)
+                .attr("rx", 7);
+
+            g.append("text")
+                .attr("x", x + 7)
+                .attr("y", y + boxHeight / 2 + 5)
+                .text(api.name + " " + api.version);
+        }
+
+        function drawColumn(g, column, colIndex) {
+            const x = colIndex * columnWidth;
+            column.apis.forEach((api, rowIndex) => {
+                const y = 10 + rowIndex * rowHeight;
+                drawAPIBox(g, api, x, y);
+            });
+        }
+
+        function drawLegend(g, x, y, color, label) {
+            g.append("rect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", 15)
+                .attr("height", 15)
+                .attr("fill", color);
+
+            g.append("text")
+                .attr("x", x + 20)
+                .attr("y", y + 12)
+                .text(label);
+        }
+
+        function drawCoreProfileBoundingBox(g, color, label) {
+            g.append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", boxWidth+20)
+                .attr("height", 120+(boxHeight+10)*7)
+                .attr("fill-opacity", 0 )
+                .attr("stroke", "#2e4053")
+                .attr("stroke-width", 2)
+                .attr("rx", 7);
+
+            g.append("text")
+                .attr("x", boxWidth+20-100)
+                .attr("y", 450)
+                .text(label);
+        }
+
+        function drawWebProfileBoundingBox(g, color, label) {
+            g.append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", (boxWidth+20)*3)
+                .attr("height", 95+(boxHeight+10)*8)
+                .attr("fill-opacity", 0 )
+                .attr("stroke", "#2e4053")
+                .attr("stroke-width", 2)
+                .attr("rx", 7);
+
+            g.append("text")
+                .attr("x", (boxWidth+20)*3-100)
+                .attr("y", 475)
+                .text(label);
+        }
+
+        function drawFullProfileBoundingBox(g, color, label) {
+            g.append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", (boxWidth+20)*4)
+                .attr("height", 120+(boxHeight+10)*8)
+                .attr("fill-opacity", 0 )
+                .attr("stroke", "#2e4053")
+                .attr("stroke-width", 2)
+                .attr("rx", 7);
+
+            g.append("text")
+                .attr("x", (boxWidth+20)*4-100)
+                .attr("y", 500)
+                .text(label)
+        }
+
+        const svg = d3.select("body").append("svg")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", [0, 0, width, height])
+            .style("display", "block")
+            .style("margin", "auto");
+
+        // Ajouter le cadre du profil Full
+        const fullProfileGroup = d3.select("svg").append("g").attr("transform", "translate(5, 10)");
+        drawFullProfileBoundingBox(fullProfileGroup, "#f6b93b", "Full Profile");
+
+        // Ajouter le cadre du profil Web
+        const webProfileGroup = d3.select("svg").append("g").attr("transform", "translate(5, 10)");
+        drawWebProfileBoundingBox(webProfileGroup, "#f0884e", "Web Profile");
+
+        // Ajouter le cadre du profil Core
+        const coreProfileGroup = d3.select("svg").append("g").attr("transform", "translate(5, 10)");
+        drawCoreProfileBoundingBox(coreProfileGroup, "#75afc1", "Core Profile");
+
+        // Ajouter les colonnes
+        const colGroup = d3.select("svg").append("g").attr("transform", "translate(15, 10)");
+        apiColumn.forEach((column, colIndex) => {
+            drawColumn(colGroup, column, colIndex);
+        });
+
+        // Ajouter des légendes
+        const legend = colGroup.append("g")
+            .attr("transform", "translate(900, 10)");
+        legendData.forEach((item, index) => {
+            drawLegend(legend, 0, index * 25, item.color, item.label);
+        });
+        
+
+    </script>
+</body>
+</html>
