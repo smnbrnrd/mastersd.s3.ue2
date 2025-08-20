@@ -183,7 +183,7 @@
 
         <h5 id="test-application">Test de l'application</h5>
 
-        <p>À la création, une application créée avec l'archétype <code>jakartaee10-minimal</code> est fonctionnelle et prête à être testée. Cependant, il s'agit d'une application orientée service (REST), que nous aborderons plus tard dans ces TP:
+        <>À la création, une application créée avec l'archétype <code>jakartaee10-minimal</code> est fonctionnelle et prête à être testée. Cependant, il s'agit d'une application orientée service (REST), que nous aborderons plus tard dans ces TP:
         <ul>
             <li>Supprimez tous les fichiers <code>.java</code> ainsi que les dossiers <code>resources</code></li>
             <li>Dans la partie <code>MAVEN</code> de l'<code>EXPLORATEUR</code>, via un clic-droit sur le nom de votre projet, sélectionnez <code>Run Maven Commands...</code> > <code>clean</code>.</li>
@@ -309,24 +309,71 @@ public class HelloServlet extends HttpServlet {
         </ul>
 
         <!------------------------------------------->
-        <h4 id="partage-controle">Partage de contrôle</h4>
-
-        <!------------------------------------------->
         <h4 id="user-manager">Projet <em>UserManager</em></h4>
 
+        <p>Ce mini-projet vise à concevoir une interface très simple de gestion d’utilisateurs. Nous n’utiliserons pas de base de données pour ce projet, les utilisateurs seront sauvegardés dans un simple fichier texte sur le serveur.</p>
 
+        <h5>Créer un nouvel utilisateur</h5>
+        <ul>
+            <li>Créer une classe Java <code>User</code> qui représente un ”utilisateur” de l’application. Cette classe permettra de renseigner :</li>
+            <ol>
+                <li>un prénom</li>
+                <li>un nom</li>
+                <li>une adresse mail</li>
+                <li>un numéro et un nom de rue</li>
+                <li>un code postal et la ville associée</li>
+            </ol>
+            <li>Créer un fichier HTML avec un formulaire permettant la saisie de toutes ces informations.</li>
+            <li>Créer une servlet <code>NewUserServlet</code> qui réceptionne les informations saisies dans ce formulaire, puis qui crée une instance de la classe <code>User</code> à partir de toutes les informations saisies.</li>
+            <li>Ajouter à la servlet des traitements de contrôle des informations saisies pour vérifier :
+                <ul>
+                    <li>que la chaîne de caractères saisie dans le champ "adresse mail" est au bon format, i.e. avec un <code>@</code>, un suffixe valide, etc.</li>
+                    <li>que le code postal est bien une suite de 5 chiffres</li>
+                    <li>que l’adresse postal débutent bien par un numéro de rue</li>
+                </ul>
+                Si ces informations saisies ne sont pas conformes, l’objet <code>User</code> n’est pas créé.
+            </li>
+            <li>Créer une page d’erreur HTML vers laquelle sera redirigé l’utilisateur s’il ne saisit pas correctement les informations demandées. Cette page doit permettre à l’utilisateur de retourner en suite vers la page de saisie des informations.</li>
+            <li>Pour tester cette servlet, faites en sorte qu’elle retourne au client une page HTML qui récapitule les informations de l’utilisateur quand celui-ci a bien été créé.</li>
+        </ul>
 
-        <!--=======================================================-->
-        <h3 id="faces">Jakarta Faces</h3>
+        <h5>Charger des utilisateurs existants</h5>
+        <ul>
+            <li>Créez une classe <code>Users</code> contenant une collection d’instances de la classe <code>User</code>. Ces instances correspondent à tous les utilisateurs déjà créés dans l’application : à chaque fois qu’un nouvel utilisateur est créé via le formulaire HTML, il est inséré dans la collection.</li>
+            <li>Créez un fichier texte <code>users.txt</code> dans un dossier <code>/WEB-INF/users/</code>. Saisissez dans ce fichier les informations de 5 utilisateurs fictifs, selon le format suivant :</li>
+            <pre><code>Jean,MICHEL,jean.michel@univ-rouen.fr,42 rue du sens de la vie,76000,Rouen</code></pre>
+            et à raison d’un utilisateur par ligne.
+            <li>Créez une nouvelle servlet <code>UsersServlet</code> et munissez là d’un paramètre d’initialisation dont la valeur correspond au chemin de ce fichier. Ce chemin est relatif à la racine du projet.</li>
+            <li>Redéfinissez la méthode <code>init</code> de cette servlet de sorte qu’elle:</li>
+            <ol>
+                <li>récupère la valeur du paramètre d’initialisation</li>
+                <li>ouvre le fichier texte en tant que flux à l’aide de la méthode <code>getResourceAsStream</code></li>
+                <li>crée un objet <code>Users</code> et y charge tous les utilisateurs listés dans le fichier texte. Pour cela, définissez un constructeur qui lit le flux, qui crée autant d’objets <code>User</code> qu’il y a de lignes dans le fichier et qui les ajoute à sa collection.</li>
+            </ol>
+            <li>Redéfinissez la méthode <code>doGet</code> pour renvoyer au client une page HTML affichant l’ensemble des utilisateurs qu’il contient. Cette page HTML présentera également un lien ou bouton vers le formulaire d’ajout d’utilisateur.</li>
+            <li>Enfin, modifiez la servlet <code>NewUserServlet</code> pour qu’après avoir créé un nouvel utilisateur, elle transfère la requête à <code>UsersServlet</code> au lieu d’afficher un récapitulatif du nouvel utilisateur</li>
+        </ul>
 
-        <!--=======================================================-->
-        <h3 id="cdi">CDI Managed Bean</h3>
+        <h5>Ajoutez une photo de profil</h5>
+        <ul>
+            <li>Ajoutez au formulaire de saisie de l’exercice précédent un champs permettant à l’utilisateur de désigner un fichier image de son disque dur. Ce fichier sera téléversé (uploadé) sur le serveur et servira de photo de profil à l’utilisateur.</li>
+            <li>Modifiez la servlet <code>NewUserServlet</code> pour qu’elle réceptionne l’image téléversée et qu’elle l’enregistre sur le serveur. Pour cela:</li>
+            <ol>
+                <li>ajoutez à la servlet l’annotation <code>@MultipartConfig</code> qui permet de gérer l’encodage HTTP <code>multipart/form-data</code>, nécessaire à la transmission des fichiers</li>
+                <li>ajoutez un paramètre d’initialisation de servlet avec le chemin du dossier dans lequel les images seront stockées sur le serveur. Ce chemin est un chemin absolu du système du serveur (e.g. <code>/home/login/workspace/UserMngr/src/main/webapp/images/</code>)</li>
+                <li>modifiez la servlet pour qu’elle récupère l’image et l’enregistre sur le serveur, avec les instructions suivantes:</li>
+                <pre><code class="language-java">
+// pour récupérer le fichier téléversé :
+Part filePart = request.getPart(&lt;name&gt;);
 
-        <!--=======================================================-->
-        <h3 id="rest">Services Web REST</h3>
+// pour l'enregistré sur le serveur:
+filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
+                </code></pre>
+                où <code>&lt;name&gt;</code> est le nom du champ dans le formulaire HTML qui a permis de sélectionner l’image, <code>&lt;chemin&gt;</code> est le chemin absolu du dossier destinataire sur le serveur, et <code>&lt;filename&gt;</code> est le nom du fichier enregistré sur le serveur.
+            </ol>
+            <li>Modifiez la servlet <code>UsersServlet</code> pour ajouter les photos de profil dans la liste des utilisateurs retournée au client.</li>
+        </ul>
 
-        <!--=======================================================-->
-        <h3 id="spring">Spring</h3>
     </main>
 
     <footer>
