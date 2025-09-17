@@ -71,7 +71,7 @@ main.numbered-title h5::before {
     margin-right: 0.5rem;
 }
 footer {
-    margin-top: 5rem;
+    margin-top: 10rem;
     font-size: 0.9em;
     color: var(--primary-color);
     text-align: center;

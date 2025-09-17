@@ -11,9 +11,8 @@ import jakarta.inject.Named;
 public class UserNumberBean implements Serializable {
 
     private static final long serialVersionUID = 5443351151396868724L;
-    Integer randomInt = null;
+    private Integer randomInt = null;
     private Integer userNumber = null;
-    String response = null;
     private int maximum = 10;
     private int minimum = 0;
 

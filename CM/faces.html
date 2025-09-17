@@ -29,16 +29,18 @@
             <section>
                 <h1>Jakarta Faces</h1>
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-6">
                         <ul>
                             <li>Framework MVC pour la création d'UI web</li>
-                            <li>Contrôleur: fournit sa propre servlet (<code>FacesServlet</code>)</li>
-                            <li>Modèle: CDI managed beans</li>
+                            <li>Modèle: CDI beans and co</li>
                             <li>Vues: pages <code>XHTML</code>, appelées <code>Facelets</code></li>
-                            <li>Note: remplace définitivement <code>JSP</code> depuis JEE 9</li>
+                            <li class="mb-4">Contrôleur: servlet <code>FacesServlet</code></li>
+                            <li>La servlet est fournie par le framework</li>
+                            <li>Facelets remplace <code>JSP</code> depuis la version 9</li>
+
                         </ul>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <img src="figures/chap5/jakartafaces.png" class="w-90 m-auto">
                     </div>
                 </div>
@@ -49,15 +51,15 @@
                 <h1>Jakarta Faces</h1>
                 <h2>Exemple: guessnumber-faces</h2>
                 <ul>
-                    <li>Modèle: bean <code>UserNumberBean</code></li>
+                    <li>Backing Bean <code>UserNumberBean</code></li>
                     <pre><code class="language-java compact" data-trim data-line-numbers>
 @Named
 @SessionScoped
 public class UserNumberBean implements Serializable {
     private static final long serialVersionUID = 5443351151396868724L;
-    Integer randomInt = null;           // the random number to guess
-    private Integer userNumber = null;  // the number proposed by the user
-    String response = null;             // the response to display
+
+    private Integer randomInt = null;       // the random number to guess
+    private Integer userNumber = null;      // the number proposed by the user
     private int maximum = 10;           
     private int minimum = 0;            
 
@@ -83,9 +85,9 @@ public class UserNumberBean implements Serializable {
             <!--------------------------------------------->
             <section>
                 <h1>Jakarta Faces</h1>
-                <h2>Exemple: hello-faces</h2>
+                <h2>Exemple: guessnumber-faces</h2>
                 <ul>
-                    <li>Vue: facelet <code>greeting.xhtml</code></li>
+                    <li>Facelet <code>greeting.xhtml</code></li>
                     <pre><code class="language-html compact" data-trim data-line-numbers>
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot; xmlns:f=&quot;jakarta.faces.core&quot;&gt;
@@ -119,9 +121,9 @@ public class UserNumberBean implements Serializable {
             <!--------------------------------------------->
             <section>
                 <h1>Jakarta Faces</h1>
-                <h2>Exemple: hello-faces</h2>
+                <h2>Exemple: guessnumber-faces</h2>
                 <ul>
-                    <li>Vue: facelet <code>response.xhtml</code></li>
+                    <li>Facelet <code>response.xhtml</code></li>
                     <pre><code class="language-html compact" data-trim data-line-numbers>
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot;&gt;
@@ -148,9 +150,9 @@ public class UserNumberBean implements Serializable {
             <!--------------------------------------------->
             <section>
                 <h1>Jakarta Faces</h1>
-                <h2>Exemple: hello-faces</h2>
+                <h2>Exemple: guessnumber-faces</h2>
                 <ul>
-                    <li>Contrôleur: Déclarer la servlet via le descripteur de déploiement (<code>WEB-INF/web.xml</code>)</li>
+                    <li>Déclarer la servlet <code>FacesServlet</code> dans le descripteur de déploiement (<code>WEB-INF/web.xml</code>)</li>
                     <pre><code class="language-xml compact" data-trim data-line-numbers>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
@@ -180,16 +182,80 @@ public class UserNumberBean implements Serializable {
 
             <!--------------------------------------------->
             <section>
+                <h1>Cycle de vie</h1>
+                <h2>Différences avec JSP</h2>
+                <ul>
+                    <li>Une page JSP est traduite en une unique servlet, qui génère toute la page HTML renvoyée au client</li>
+                    <li class="mb-4">La vue est entièrement reconstruite par la servlet à chaque requête</li>
+                    <li>Une page Facelet est constitué de plusieurs composants UI, organisés en arbre</li>
+                    <li>Chaque composant est un objet Java autonome, responsable de son rendu et de son état</li>
+                    <li>Ses états sont sauvegardés entre les requêtes, via les objets Java</li>
+                    <li>La construction de l'arbre et son rendu sont gérés par le moteur de rendu de Jakarta Faces</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cycle de vie</h1>
+                <div class="row">
+                    <div class="col-5">
+                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
+                    </div>
+                    <div class="col-7">
+                        <ol>
+                            <li class="mb-3">Première requête vers une page facelets</li>
+                            <ul class="small mb-5">
+                                <li>Création d'un arbre de composants vide (en Java)</li>
+                                <li>Arbre peuplé avec les composants de la vue facelets</li>
+                                <li>Rendu de la vue facelets pour création de la page HTML résultante</li>
+                                <li>Envoi de la page HTML au navigateur</li>
+                                <li>Sauvegarde de l'état de la vue pour requêtes suivantes</li>
+                            </ul>
+                            Note: Dans ce cas, on n'exécute que la première (<em>restore view</em>) et la dernière étape (<em>render response</em>) du cycle de vie
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cycle de vie</h1>
+                <div class="row">
+                    <div class="col-5">
+                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
+                    </div>
+                    <div class="col-7">
+                        <ol start="2">
+                            <li class="mb-3">Requêtes suivantes</li>
+                            <ul class="small mb-5">
+                                <li>La vue est restaurée</li>
+                                <li>Paramètres de requête ajoutés dans l'arbre de composants</li>
+                                <li>Validation et conversion des données saisies</li>
+                                <li>Si erreurs: étape de rendu de la vue</li>
+                                <li>Si ok, données mises à jour dans le modèle</li>
+                                <li>Exécution de l'action associée à la commande utilisateur</li>
+                                <li>En fonction du retour de l'action, on détermine la vue à rendre</li>
+                            </ul>
+                            Note: chaque étape <em>Process events</em> est susceptible de rediriger vers une autre vue (<em>response complete</em>)
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
                 <h1>Facelets</h1>
                 <div class="boxtitle">Facelets</div>
                 <div class="boxcontent mb-4">
-                    <p>Moteur de template web, permettant de construire des interfaces utilisateur à l'aide de composants réutilisables. Il s'appuit sur des descriptions XML des interfaces, comprenant des balises HTML et des balises spécifiques, pour définir la structure arborescente des composants et leur comportement.</p>
+                    <p>Langage de déclaration utilisé pour construire des vues Jakarta Faces (interfaces utilisateurs) sous la forme d'une structure arborescente de composants Java. Ces composants sont des composants Java, manipulés dans une page Facelets avec des balises spécifiques.</p>
                 </div>
                 <ul>
                     <li>Une vue facelets est un fichier <code>.xhtml</code></li>
                     <li>Mélange de balises HTML et de balises spécifiques à Facelets</li>
                     <li>Les balises facelets pour ajouter des composants, définis en Java dans le framework</li>
                     <li>Support des expressions EL (Expression Language) pour accéder aux données du modèle</li>
+                    <li>Ce fichier N'EST PAS le fichier retourné au client</li>
+                    <li>Il est traité par le moteur de rendu pour générer le contenu HTML final</li>
                 </ul>
             </section>
 
@@ -373,8 +439,63 @@ public class UserNumberBean implements Serializable {
 
             <!--------------------------------------------->
             <section>
-                <h1>Facelets</h1>
-                <h2>Ressources externes</h2>
+                <h1>Librairies de balises</h1>
+                <table class="table mt-4 small">
+                    <thead>
+                        <tr>
+                            <th>URI</th>
+                            <th>Préfixe</th>
+                            <th>Description</th>
+                            <th>Exemple</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr>
+                            <td><code>jakarta.faces.html</code></td>
+                            <td><code>h:</code></td>
+                            <td>Composants d'interfaces utilisateur</td>
+                            <td><code>&lt;h:body&gt;</code>, <code>&lt;h:form&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>jakarta.faces.core</code></td>
+                            <td><code>f:</code></td>
+                            <td>Fonctionnalités spécifiques à Jakarta Faces</td>
+                            <td><code>&lt;f:validateLongRange&gt;</code>, <code>&lt;f:ajax&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>jakarta.faces.facelets</code></td>
+                            <td><code>ui:</code></td>
+                            <td>Fonctionnalités de <em>templating</em></td>
+                            <td><code>ui:component</code>, <code>ui:composition</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>jakarta.tags.core</code></td>
+                            <td><code>c:</code></td>
+                            <td>Balises pour les itérations, tests, etc.</td>
+                            <td><code>&lt;c:forEach&gt;</code>, <code>&lt;c:if&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>jakarta.tags.functions</code></td>
+                            <td><code>fn:</code></td>
+                            <td>Fonctions utiles (math, chaînes, etc.)</td>
+                            <td><code>fn:substring</code>, <code>fn:toUpperCase</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>jakarta.faces.composite</code></td>
+                            <td><code>cc:</code></td>
+                            <td>Pour définir de nouveaux composants</td>
+                            <td><code>&lt;cc:interface&gt;</code>, <code>&lt;cc:implementation&gt;</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Ressources externes</h1>
                 <ul>
                     <li>Les ressources externes (CSS, images, scripts) sont gérées par le framework</li>
                     <li>Balises dédiées (e.g. <code>&lt;h:outputStylesheet&gt;</code> pour les CSS, <code>&lt;h:graphicImage&gt;</code> pour les images)</li>
@@ -397,69 +518,66 @@ public class UserNumberBean implements Serializable {
                 </ul>
             </section>
 
+            <!--------------------------------------------->
+            <section>
+                <h1>Baking beans</h1>
+                <ul>
+                    <li>Bean CDI utilisé dans une page Facelets : doit être annoté avec <code>@Named</code></li>
+                    <pre><code class="language-java" data-trim data-line-numbers>
+@Named("userNumber")
+public class UserNumberBean { ... }
+                    </code></pre>
+                    <li>Utilisation dans la facelet:</li>
+                    <pre><code class="language-html" data-trim data-line-numbers="3,6,7">
+&lt;h:form&gt;
+    &lt;h2&gt;
+        Hi, my name is Sime. I am thinking of a number from #{userNumber.minimum} to #{userNumber.maximum}. Can you guess it?
+    &lt;/h2&gt;
+    &lt;p&gt;
+        &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumber.userNumber}&quot;&gt;
+            &lt;f:validateLongRange minimum=&quot;#{userNumber.minimum}&quot; maximum=&quot;#{userNumber.maximum}&quot;/&gt;
+        &lt;/h:inputText&gt;
+                    </code></pre>
+                    <li>Il s'agit d'une injection: le conteneur recherche une instance, et la crée si elle n'existe pas</li>
+                </ul>
+            </section>
+            <!--------------------------------------------->
+            <section>
+                <h1>Baking beans</h1>
+                <ul>
+                    <li>Dans une application type, on a généralement un baking bean par facelet</li>
+                    <li>Les scopes CDI : <code>@RequestScoped</code>, <code>@SessionScoped</code>, <code>@ApplicationScoped</code></li>
+                    <li>+ nouveau scope : <code>@ViewScoped</code></li>
+                    <pre><code class="language-java" data-trim data-line-numbers>
+@Named("userNumber")
+@ViewScoped
+public class UserNumberBean { ... }
+                    </code></pre>
+                    <li>Permet de réutiliser la même instance tant que l'utilisateur interagit avec la même page</li>
+                </ul>
+                <img src="figures/chap5/jsf-mvc.png" class="w-30 m-auto mt-4">
+            </section>
+
 
             <!--------------------------------------------->
             <section>
-                <h1>Cycle de vie d'une application Jakarta Faces</h1>
-                <p>Une application Jakarta Faces est composée de plusieurs éléments clés:</p>
+                <h1>Validation et conversion</h1>
                 <ul>
-                    <li>Des vues facelets, constitués de plusieurs <span class="alert">composants d'interface utilisateur</span></li>
-                    <li>Ces composants sont <span class="alert">associés à un <em>renderer</em></span> qui en définit le rendu visuel</li>
-                    <li>Ils peuvent être <span class="alert">liés à des données du modèle</span> (e.g. propriétés de bean)</li>
-                    <li>Ils peuvent être <span class="alert">associés à des <em>listeners</em></span> pour gérer les événements (clic, saisie, etc.)</li>
-                    <li>Ils peuvent être <span class="alert">associés à des <em>validators</em></span> pour vérifier les données saisies par l'utilisateur</li>
-                    <li>Des <span class="alert">règles de navigation</span> (implicites ou explicites) pour définir le flux de l'application</li>
+                    <li>Les données saisies dans un formulaires sont des chaînes de caractères</li>
+                    <li>Il faut les convertir en Java, dans le bon type</li>
+                    <li>Exemple: conversion en entier pour affecter à <code>userNumber</code></li>
+                    <pre><code class="language-html compact" data-trim>
+&lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
+                    </code></pre>
+                    <li>Ici la conversion est implicite mais le developpeur peut définir une conversion explicite</li>
+                    <pre><code class="language-html compact" data-trim>
+&lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
+    &lt;f:convertNumber integerOnly=&quot;true&quot; /&gt;
+&lt;/h:inputText&gt;
+                    </code></pre>
                 </ul>
             </section>
 
-            <!--------------------------------------------->
-            <section>
-                <h1>Cycle de vie d'une application Jakarta Faces</h1>
-                <div class="row">
-                    <div class="col-5">
-                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
-                    </div>
-                    <div class="col-7">
-                        <ol>
-                            <li class="mb-3">Première requête vers une page facelets</li>
-                            <ul class="small mb-5">
-                                <li>Création d'un arbre de composants vide (en Java)</li>
-                                <li>Arbre peuplé avec les composants de la vue facelets</li>
-                                <li>Rendu de la vue facelets pour création de la page HTML résultante</li>
-                                <li>Envoi de la page HTML au navigateur</li>
-                                <li>Sauvegarde de l'état de la vue pour requête suivante</li>
-                            </ul>
-                            Note: Dans ce cas, on n'exécute que la première (<em>restore view</em>) et la dernière étape (<em>render response</em>) du cycle de vie
-                        </ol>
-                    </div>
-                </div>
-            </section>
-
-            <!--------------------------------------------->
-            <section>
-                <h1>Cycle de vie d'une application Jakarta Faces</h1>
-                <div class="row">
-                    <div class="col-5">
-                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
-                    </div>
-                    <div class="col-7">
-                        <ol start="2">
-                            <li class="mb-3">Requêtes suivantes (e.g. soumission d'un formulaire)</li>
-                            <ul class="small mb-5">
-                                <li>La vue est restaurée (i.e. celle du formulaire)</li>
-                                <li>Paramètres de requête ajoutés dans l'arbre de composants</li>
-                                <li>Validation des données saisies</li>
-                                <li>Si erreurs de validation: étape de rendu de la vue</li>
-                                <li>Si validées, données mises à jour dans le modèle</li>
-                                <li>Si erreur de conversion: étape de rendu de la vue</li>
-                                <li>Exécution de l'action associée à la commande utilisateur</li>
-                                <li>En fonction du retour de l'action, on détermine la vue à rendre</li>
-                            </ul>
-                            Note: chaque étape <em>Process events</em> est susceptible de rediriger vers une autre vue (<em>response complete</em>)
-                        </ol>
-                    </div>
-                </div>
-            </section>
         </div>
     </div>
 

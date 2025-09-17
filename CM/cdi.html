@@ -550,8 +550,7 @@ public class CoffeeService {
 &lt;/beans&gt;
                     </code></pre>
                     <li><code>beans.xml</code> doit être placé dans <code>WEB-INF</code> si <code>WAR</code>, <code>META-INF</code> si <code>JAR</code></li>
-                    <li><code>beans.xml</code> est optionnel si tous les beans sont annotés avec un scope ou <code>@Dependent</code></li>
-                    <li>Il peut être entièrement vide si <code>bean-discovery-mode</code> est <code>annotated</code> (défaut)</li>
+                    <li><code>bean-discovery-mode</code> spécifie le mode de découverte des beans: toutes les classes (<code>all</code>), seulement les classes annotées (<code>annotated</code>) ou aucune classe (<code>none</code>)</li>
                 </ul>
             </section>
 
@@ -559,10 +558,10 @@ public class CoffeeService {
             <section>
                 <h1>Packaging</h1>
                 <ul>
-                    <li>Le conteneur CDI scanne les classes dans ces archives pour détecter les beans</li>
-                    <li>Deux cas de figures :</li>
+                    <li>Le conteneur CDI scanne automatiquement les classes de toutes les archives (<code>WAR</code> ou <code>JAR</code>) d'un projet</li>
+                    <li>Deux cas de figures:</li>
                     <ul>
-                        <li><code>beans.xml</code> est présent et non vide: toutes les classes de l'archive sont des <code>beans</code> potentiels</li>
+                        <li><code>beans.xml</code> est présent dans l'archive et non vide: applique le <code>bean-discovery-mode</code> spécifié</li>
                         <li><code>beans.xml</code> est absent ou vide: seuls les classes annotées sont des <code>beans</code> potentiels</li>
                     </ul>
                     <li><code>beans.xml</code> peut spécifier des exclusions de classes ou de packages:</li>
@@ -577,10 +576,8 @@ public class CoffeeService {
     &lt;exclude name="com.example.faces.**"&gt;
         &lt;if-class-not-available name="jakarta.faces.context.FacesContext"/&gt;
     &lt;/exclude&gt;
-    &lt;trim /&gt;
 &lt;/beans&gt;
                     </code></pre>
-                    <li><code>trim</code> exclut toutes les classes qui n'ont pas d'annotation de bean</li>
                 </ul>
             </section>
 
