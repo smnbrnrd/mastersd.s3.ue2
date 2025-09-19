@@ -1,0 +1,7 @@
+houcine,hadir,123456,14.05
+laurent,lestac,234567,11.58
+mistuko,minamoto,345678,10.99
+sanjay,singh,456789,08.96
+graziella,gonzalez,567891,09.45
+turner,tough,678912,12.17
+natacha,navlova,789123,16.34
