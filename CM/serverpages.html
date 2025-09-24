@@ -135,22 +135,22 @@ public class HelloServlet extends HttpServlet {
 public final class index_jsp 
     extends org.apache.jasper.runtime.HttpJspBase 
     implements org.apache.jasper.runtime.JspSourceDependent, org.apache.jasper.runtime.JspSourceImports {			
-	...
-	public void _jspService(final javax.servlet.http.HttpServletRequest request, final javax.servlet.http.HttpServletResponse response)
-	throws java.io.IOException, javax.servlet.ServletException {
-		...
-		response.setContentType("text/html; charset=UTF-8");
-		...
-		out.write("\n");
-		out.write("&lt;!DOCTYPE html&gt;");
-		out.write("&lt;html&gt;\n");
-		...
-		out.write("\t&lt;body&gt;\n");
-		out.write("\t\t&lt;p class=\"info\"&gt;");
-		out.print("Hello World!" );
-		out.write("&lt;/p&gt;\n");
-		...
-	}
+    ...
+    public void _jspService(final javax.servlet.http.HttpServletRequest request, final javax.servlet.http.HttpServletResponse response)
+    throws java.io.IOException, javax.servlet.ServletException {
+        ...
+        response.setContentType("text/html; charset=UTF-8");
+        ...
+        out.write("\n");
+        out.write("&lt;!DOCTYPE html&gt;");
+        out.write("&lt;html&gt;\n");
+        ...
+        out.write("\t&lt;body&gt;\n");
+        out.write("\t\t&lt;p class=\"info\"&gt;");
+        out.print("Hello World!" );
+        out.write("&lt;/p&gt;\n");
+        ...
+    }
 }
                 </code></pre>
             </section>
@@ -566,6 +566,26 @@ public class Car implements Serializable {
                     </ul>
                 </ul>
                 <img src="figures/chap3/jsp_mvc.png" class="w-80 m-auto mt-5">
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>JSP dans une application MVC</h1>
+                <ul>
+                    <li><strong>Contrôleur</strong></li>
+                    <ul>
+                        <li>Gère les paramètres des requêtes</li>
+                        <li>Lie modèle et vue</li>
+                        <li>Si application complexe, un contrôleur est lié à une action spécifique</li>
+                        <li>Souvent, pattern <em>Front Controller</em>, et des sous-contrôleurs pour les actions spécifiques (pattern command)</li>
+                    </ul>
+                    <li class="mt-4"><strong>Vue</strong></li>
+                    <ul>
+                        <li>Encapsulent la création des pages Web (réponses)</li>
+                        <li>MVC "push-based": c'est le contrôleur qui fournit les données à la vue (attributs de la requête)</li>
+                        <li>MVC "pull-based": la vue demande les données au modèle (beans)</li>
+                    </ul>
+                </ul>
             </section>
 
             <!--------------------------------------------->

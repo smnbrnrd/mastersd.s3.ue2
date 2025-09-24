@@ -61,6 +61,21 @@
                         </ul>
                     </div>
                 </li>
+
+
+
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#jsp-collapse" aria-expanded="true">
+                        MVC avec Servlet/JSP
+                    </button>
+                    <div class="collapse show" id="jsp-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#banque-images" class="d-inline-flex align-items-center rounded">Projet "Banque d'images"</a></li>
+                            <li><a href="#images-aleatoires" class="d-inline-flex align-items-center rounded">Premier cas d'usage</a></li>
+                            <li><a href="#images-authentifie" class="d-inline-flex align-items-center rounded">Deuxième cas d'usage</a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </nav>
     </aside>
@@ -397,7 +412,7 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
             </section>
         </section>
 
-        
+
         <!--=======================================================-->
         <section>
             <h3 id="jsp">Jakarta Server Pages</h3>
@@ -455,6 +470,63 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
             </section>
 
         </section>
+
+
+        <!--=======================================================-->
+        <section>
+            <h3 id="mvc">MVC avec Servlet/JSP</h3>
+
+            <!------------------------------------------->
+            <section>
+                <h4 id="banque-images">Le projet "Banque d'images"</h4>
+
+                <p>On propose de réaliser une application qui permet à un utilisateur de visionner des images d'une banque d'images. Cette banque d'images est disponible sur UniversiTICE sous la forme d'un <code>zip</code> contenant plusieurs dossiers, chacun d'eux contenant des images d'une même catégorie. Le nom du dossier est le nom de la catégorie des images qu'il contient.</p>
+                <p>Cette application doit fonctionner selon deux modes de fonctionnement:</p>
+                <ul>
+                    <li>mode "anonyme"</li>
+                    <li>mode "authentifié"</li>
+                </ul>
+                <p>Dans le mode "anonyme", l'utilisateur peut visualiser un sous-ensemble d'images sélectionnées aléatoirement dans la banque d'images, toutes catégories confondues. Le mode "authentifié", accessible après que l'utilisateur ait rempli un formulaire d'authentification, permet d'accéder à un sous-ensemble d'images correspondant à une catégorie que celui-ci a sélectionné via ce formulaire.</p>
+
+                <p>On fournit ci-dessous un schéma simplifié de l'architecture de l'application. Les trois grands blocs représentent les trois composants MVC: Modèle, Vue et Contrôleur. Le modèle et le contrôleur sont implémentés par des <em>packages</em> Java et les blocs qu'ils contiennent sont des classes. La vue représente le dossier <code>webapp</code> et les blocs qu'elle contient sont des fichiers <code>.jsp</code>. L'application doit au moins respecter cette architecture, que vous êtes libre ensuite de compléter comme vous le souhaitez.</p>
+                <img src="../img/imagebank_diagram.png" class="mt-2 mb-3" alt="Diagramme de l'architecture de l'application ImageBank">
+                <p>L'architecture de l'application est basé sur le patron <em>Front controller</em>. Ce patron préconise d’utiliser une unique servlet chargée de recevoir l’ensemble des requêtes de l’application, et de déléguer ensuite le traitement au composant adéquat. Une application complexe disposerait typiquement d'un composant de traitement par fonctionnalité/action. Pour mettre en oeuvre cela, on s'appuit généralement sur le patron <em>command</em> qui préconise de créer une classe pour chaque "commande" reçu par le contrôleur:</p>
+                <figure>
+                    <img src="../img/frontcontroller_command.svg" class="w-50 m-auto mt-2 mb-3 framed" alt="Diagramme du patron Front Controller">
+                    <figcaption>Source: <a href="https://en.wikipedia.org/wiki/Front_controller">Wikipedia</a></figcaption>
+                </figure>
+                <p>Dans le cadre de ce projet, on pourra se contenter d'une seule classe (<code>RequestProcessor</code>) pour gérer les deux cas d'usages, "anonyme" et "authentifié".</p>
+
+                <p>Les images sont à placer dans le dossier <code>webapp/images</code>, chacune dans un sous-dossier correspondant à sa catégorie, comme dans l'archive.</p>
+                <p>Au chargement de l'application, les images contenues dans ce dossier sont parcourues et chargées en mémoire à l'aide des classes du modèle. L'objet correspondant est "sauvegardé", pour le rendre accéssible ensuite à n'importe quel composant de l'application. Ce chargement est à effectuer à l'initialisation de la servlet <code>FrontController</code>.</p>
+            </section>
+
+
+            <!------------------------------------------->
+            <section>
+                <h4 id="images-aléatoires">Premier cas d'usage: gallerie de 50 images aléatoires</h4>
+                <p>Le premier cas d'usage que vous devez implémenter correspond au scénario suivant:</p>
+                <ol>
+                    <li>L'utilisateur saisi l'URL de base, sans paramètre</li>
+                    <li>La servlet <code>FrontController</code> reçoit la requête et la transmet au <code>RequestProcessor</code></li>
+                    <li>Celui-ci sollicite le modèle pour récupérer 50 images aléatoires et les transmet en retour à la servlet</li>
+                    <li>La servlet sélectionne la vue appropriée pour afficher les images et transfert le contrôle à cette vue</li>
+                    <li>La vue est ensuite responsable de la présentation des images à l'utilisateur</li>
+                </ol>
+                <p>Le résultat attendu est montré dans la capture d'écran ci-dessous:</p>
+                <img src="../img/imagebank-screen1.png" class="w-100 m-auto mt-2 mb-3" alt="Capture d'écran de l'application ImageBank en mode anonyme">
+            </section>
+
+
+
+            <!------------------------------------------->
+            <section>
+                <h4 id="images-authentifie">Deuxième cas d'usage: souscription et gallerie personnalisée</h4>
+                <p>L'énnoncé de ce TP sera complété très prochainement...</p>
+            </section> 
+
+        </section>
+
     </main>
 
     <footer>
