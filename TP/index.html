@@ -73,6 +73,7 @@
                             <li><a href="#banque-images" class="d-inline-flex align-items-center rounded">Projet "Banque d'images"</a></li>
                             <li><a href="#images-aleatoires" class="d-inline-flex align-items-center rounded">Premier cas d'usage</a></li>
                             <li><a href="#images-authentifie" class="d-inline-flex align-items-center rounded">Deuxième cas d'usage</a></li>
+                            <li><a href="#indications" class="d-inline-flex align-items-center rounded">Indications</a></li>
                         </ul>
                     </div>
                 </li>
@@ -486,7 +487,7 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                     <li>mode "anonyme"</li>
                     <li>mode "authentifié"</li>
                 </ul>
-                <p>Dans le mode "anonyme", l'utilisateur peut visualiser un sous-ensemble d'images sélectionnées aléatoirement dans la banque d'images, toutes catégories confondues. Le mode "authentifié", accessible après que l'utilisateur ait rempli un formulaire d'authentification, permet d'accéder à un sous-ensemble d'images correspondant à une catégorie que celui-ci a sélectionné via ce formulaire.</p>
+                <p>Dans le mode "anonyme", l'utilisateur peut visualiser un sous-ensemble d'images sélectionnées aléatoirement dans la banque d'images, toutes catégories confondues. Le mode "authentifié", accessible après que l'utilisateur ait rempli un formulaire d'inscription, permet d'accéder à un sous-ensemble d'images correspondant à une catégorie que celui-ci a sélectionné via ce formulaire.</p>
 
                 <p>On fournit ci-dessous un schéma simplifié de l'architecture de l'application. Les trois grands blocs représentent les trois composants MVC: Modèle, Vue et Contrôleur. Le modèle et le contrôleur sont implémentés par des <em>packages</em> Java et les blocs qu'ils contiennent sont des classes. La vue représente le dossier <code>webapp</code> et les blocs qu'elle contient sont des fichiers <code>.jsp</code>. L'application doit au moins respecter cette architecture, que vous êtes libre ensuite de compléter comme vous le souhaitez.</p>
                 <img src="../img/imagebank_diagram.png" class="mt-2 mb-3" alt="Diagramme de l'architecture de l'application ImageBank">
@@ -495,7 +496,7 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                     <img src="../img/frontcontroller_command.svg" class="w-50 m-auto mt-2 mb-3 framed" alt="Diagramme du patron Front Controller">
                     <figcaption>Source: <a href="https://en.wikipedia.org/wiki/Front_controller">Wikipedia</a></figcaption>
                 </figure>
-                <p>Dans le cadre de ce projet, on pourra se contenter d'une seule classe (<code>RequestProcessor</code>) pour gérer les deux cas d'usages, "anonyme" et "authentifié".</p>
+                <p>Dans le cadre de ce projet, on pourra se contenter d'une seule classe (<code>RequestProcessor</code>) pour gérer tous les cas d'usages.</p>
 
                 <p>Les images sont à placer dans le dossier <code>webapp/images</code>, chacune dans un sous-dossier correspondant à sa catégorie, comme dans l'archive.</p>
                 <p>Au chargement de l'application, les images contenues dans ce dossier sont parcourues et chargées en mémoire à l'aide des classes du modèle. L'objet correspondant est "sauvegardé", pour le rendre accéssible ensuite à n'importe quel composant de l'application. Ce chargement est à effectuer à l'initialisation de la servlet <code>FrontController</code>.</p>
@@ -514,17 +515,47 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                     <li>La vue est ensuite responsable de la présentation des images à l'utilisateur</li>
                 </ol>
                 <p>Le résultat attendu est montré dans la capture d'écran ci-dessous:</p>
-                <img src="../img/imagebank-screen1.png" class="w-100 m-auto mt-2 mb-3" alt="Capture d'écran de l'application ImageBank en mode anonyme">
+                <img src="../img/imagebank-screen1.png" class="w-100 m-auto mt-2 mb-3">
             </section>
-
 
 
             <!------------------------------------------->
             <section>
                 <h4 id="images-authentifie">Deuxième cas d'usage: souscription et gallerie personnalisée</h4>
-                <p>L'énnoncé de ce TP sera complété très prochainement...</p>
+                <p>Le deuxième cas d’usage à implémenter fait suite au premier cas d’usage:</p>
+                <ul>
+                    <li>À partir de l'interface montrée ci-dessus, l'utilisateur doit pouvoir s'inscrire en cliquant sur le bouton "Sign up". Cela déclenche l'envoie d'une requête vers l'URL de base avec un paramètre d'URL permettant d'identifier l'objet de la requête (cf. figure ci-dessous)</li>
+                </ul>
+                <img src="../img/imagebank-screen2.png" class="w-100 m-auto mt-2 mb-3 framed">
+                <ul>
+                    <li>Le <code>FrontController</code> reçoit la requête et la transmet au <code>RequestProcessor</code>. Celui-ci indique en retour au <code>FrontController</code> la vue qu'il doit solliciter</li>
+                    <li>Le <code>FrontController</code> transfert le contrôle à cette vue qui retourne au client un formulaire HTML à remplir par l'utilisateur (cf. image ci-dessus)</li>
+                    <li>Lorsque l'utilisateur rempli et soumet le formulaire, une nouvelle requête est envoyée avec les données saisies à destination de la même URL</li>
+                    <li>À nouveau, le <code>FrontController</code> reçoit et transmet la requête au <code>RequestProcessor</code>, qui cette fois-ci sollicite le modèle pour:</li>
+                    <ol>
+                        <li>contrôler la validité des informations saisies</li>
+                        <li>créer un nouvel utilisateur si tout est valide ou renvoyer un message d'erreur dans le cas contraire</li>
+                    </ol>
+                    <li>En cas d'échec, la vue à solliciter est celle du formulaire d'inscription, qui affiche en plus le message d'erreur (cf. image ci-dessous)</li>
+                </ul>
+                <img src="../img/imagebank-screen3.png" class="w-100 m-auto mt-2 mb-3">
+                <ul>
+                    <li>En cas de succès, le <code>FrontController</code> doit envoyer au client une redirection vers la gallerie d'images. Cette redirection va renvoyer une requête vers l'URL de base</li>
+                    <li>Le <code>FrontController</code> reçoit cette requête, la transmet au <code>RequestProcessor</code> qui sollicite le modèle pour récupérer 50 images aléatoires dans la catégorie que l'utilisateur a sélectionnée pendant son inscription (cf. image ci-dessous).</li>
+                </ul>
+                <img src="../img/imagebank-screen5.png" class="w-100 m-auto mt-2 mb-3">
             </section> 
 
+            <!------------------------------------------->
+            <section>
+                <h4 id="indications">Indications</h4>
+                <ul>
+                    <li>Dans une page JSP, tous les chemins relatifs et les hyperliens vers une URL relative au projet doivent être préfixés par <code>${pageContext.request.contextPath}</code>. Par exemple:</li>
+                    <pre><code class="language-html">&lt;link rel="stylesheet" href="${pageContext.request.contextPath}/style.css"&gt;</code></pre>
+                    <li>Pour pouvoir charger les images dans le modèle, vous devez lui transmettre le chemin du dossier <code>images</code>, après le déploiement sur le serveur. En pratique, vous ne connaissez pas ce chemin car vous ne savez pas comment l'application sera déployée sur le serveur. La solution est de définir ce chemin relativement au dossier <code>webapp</code> et d'utiliser une méthode dédiée pour déduire le chemin sur le serveur. Cette méthode est accessible via le <code>ServletContext</code>.</li>
+                </ul>
+            </section>
+            
         </section>
 
     </main>
