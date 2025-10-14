@@ -25,140 +25,37 @@
                 <div class="logo"><img src="../img/logo_urn_color.png"></div>
             </section>
 
-            <!--------------------------------------------->
-            <section>
-                <h1>Jakarta Faces</h1>
-                <div class="row">
-                    <div class="col-6">
-                        <ul>
-                            <li>Framework MVC pour la création d'UI web</li>
-                            <li>Modèle: CDI beans and co</li>
-                            <li>Vues: pages <code>XHTML</code>, appelées <code>Facelets</code></li>
-                            <li class="mb-4">Contrôleur: servlet <code>FacesServlet</code></li>
-                            <li>La servlet est fournie par le framework</li>
-                            <li>Facelets remplace <code>JSP</code> depuis la version 9</li>
-
-                        </ul>
-                    </div>
-                    <div class="col-6">
-                        <img src="figures/chap5/jakartafaces.png" class="w-90 m-auto">
-                    </div>
-                </div>
-            </section>
 
             <!--------------------------------------------->
             <section>
                 <h1>Jakarta Faces</h1>
-                <h2>Exemple: guessnumber-faces</h2>
                 <ul>
-                    <li>Backing Bean <code>UserNumberBean</code></li>
-                    <pre><code class="language-java compact" data-trim data-line-numbers>
-@Named
-@SessionScoped
-public class UserNumberBean implements Serializable {
-    private static final long serialVersionUID = 5443351151396868724L;
-
-    private Integer randomInt = null;       // the random number to guess
-    private Integer userNumber = null;      // the number proposed by the user
-    private int maximum = 10;           
-    private int minimum = 0;            
-
-    public UserNumberBean() {
-        Random randomGR = new Random();
-        randomInt = Integer.valueOf(randomGR.nextInt(maximum + 1));
-        System.out.println("Sime's number: " + randomInt);
-    }
-    public String getResponse() {
-        if ((userNumber == null) || (userNumber.compareTo(randomInt) != 0)) {
-            return "Sorry, " + userNumber + " is incorrect.";
-        } else {
-            return "Yay! You got it!";
-        }
-    }
-    // getters and setters required for reading/writing access in the view
-    ...
-}
-                    </code></pre>
+                    <li>Framework pour applications orientées présentation</li>
+                    <li>Pour la création d'UI web: interfaces basées sur des formulaires HTML</li>
+                    <li>MVC:</li> 
+                    <ul>
+                        <li>CDI beans pour le modèle</li>
+                        <li>Pages <code>.xhtml</code> (<code>Facelets</code>) pour la vue</li>
+                        <li>Servlet <code>FacesServlet</code> pour le contrôleur</li>
+                    </ul>
                 </ul>
+                <img src="figures/chap3/jakartaee_archi.svg" class="w-75 m-auto mt-5">
             </section>
 
             <!--------------------------------------------->
             <section>
                 <h1>Jakarta Faces</h1>
-                <h2>Exemple: guessnumber-faces</h2>
+                <h2>Activation du framework</h2>
                 <ul>
-                    <li>Facelet <code>greeting.xhtml</code></li>
-                    <pre><code class="language-html compact" data-trim data-line-numbers>
-&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot; xmlns:f=&quot;jakarta.faces.core&quot;&gt;
-    &lt;h:head&gt;
-        &lt;h:outputStylesheet library=&quot;css&quot; name=&quot;default.css&quot;/&gt;
-        &lt;title&gt;Guess Number Facelets Application&lt;/title&gt;
-    &lt;/h:head&gt;
-    &lt;h:body&gt;
-        &lt;main class=&quot;container&quot;&gt;
-            &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
-            &lt;h:form&gt;
-                &lt;h2&gt;
-                    Hi, my name is Sime. I am thinking of a number from #{userNumberBean.minimum} to #{userNumberBean.maximum}. 
-                    Can you guess it?
-                &lt;/h2&gt;
-                &lt;p&gt;
-                    &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
-                        &lt;f:validateLongRange minimum=&quot;#{userNumberBean.minimum}&quot; maximum=&quot;#{userNumberBean.maximum}&quot;/&gt;
-                    &lt;/h:inputText&gt;
-                    &lt;h:commandButton id=&quot;submit&quot; value=&quot;Submit&quot; action=&quot;response&quot;/&gt;
-                &lt;/p&gt;
-                &lt;h:message showSummary=&quot;true&quot; showDetail=&quot;false&quot; style=&quot;color: #d20005&quot; id=&quot;errors1&quot; for=&quot;userNo&quot;/&gt;
-            &lt;/h:form&gt;
-        &lt;/main&gt;
-    &lt;/h:body&gt;
-&lt;/html&gt;
-                    </code></pre>
-                </ul>
-            </section>
-
-            <!--------------------------------------------->
-            <section>
-                <h1>Jakarta Faces</h1>
-                <h2>Exemple: guessnumber-faces</h2>
-                <ul>
-                    <li>Facelet <code>response.xhtml</code></li>
-                    <pre><code class="language-html compact" data-trim data-line-numbers>
-&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot;&gt;
-    &lt;h:head&gt;
-        &lt;h:outputStylesheet library=&quot;css&quot; name=&quot;default.css&quot;/&gt;
-        &lt;title&gt;Guess Number Facelets Application&lt;/title&gt;
-    &lt;/h:head&gt;
-    &lt;h:body&gt;
-        &lt;main class=&quot;container&quot;&gt;
-            &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
-            &lt;h:form&gt;
-                &lt;h2&gt;
-                    &lt;h:outputText id=&quot;result&quot; value=&quot;#{userNumberBean.response}&quot;/&gt;
-                &lt;/h2&gt;
-                &lt;h:commandButton id=&quot;back&quot; value=&quot;Back&quot; action=&quot;greeting&quot;/&gt;
-            &lt;/h:form&gt;
-        &lt;/main&gt;
-    &lt;/h:body&gt;
-&lt;/html&gt;
-                    </code></pre>
-                </ul>
-            </section>
-
-            <!--------------------------------------------->
-            <section>
-                <h1>Jakarta Faces</h1>
-                <h2>Exemple: guessnumber-faces</h2>
-                <ul>
-                    <li>Déclarer la servlet <code>FacesServlet</code> dans le descripteur de déploiement (<code>WEB-INF/web.xml</code>)</li>
-                    <pre><code class="language-xml compact" data-trim data-line-numbers>
+                    <li><code>FacesServlet</code> est le point d'entrée des requêtes <em>Faces</em></li>
+                    <li>Servlet fournie par le framework</li>
+                    <li>Pour "activer" le framework, il faut la déclarer dans <code>web.xml</code></li>
+                    <pre><code class="language-xml compact" data-trim data-line-numbers="6-18">
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;
           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
           xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot; 
-          version=&quot;3.1&quot;&gt;
+          version=&quot;3.1&quot;&gt;                        
     &lt;servlet&gt;
         &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
         &lt;servlet-class&gt;jakarta.faces.webapp.FacesServlet&lt;/servlet-class&gt;
@@ -168,81 +65,75 @@ public class UserNumberBean implements Serializable {
         &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
         &lt;url-pattern&gt;*.xhtml&lt;/url-pattern&gt;
     &lt;/servlet-mapping&gt;
-    &lt;session-config&gt;
-        &lt;session-timeout&gt;
-            30
-        &lt;/session-timeout&gt;
-    &lt;/session-config&gt;
-    &lt;welcome-file-list&gt;
-        &lt;welcome-file&gt;greeting.xhtml&lt;/welcome-file&gt;
-    &lt;/welcome-file-list&gt;
+    &lt;context-param&gt;
+        &lt;param-name&gt;jakarta.faces.AUTOMATIC_EXTENSIONLESS_MAPPING&lt;/param-name&gt;
+        &lt;param-value&gt;true&lt;/param-value&gt;
+    &lt;/context-param&gt;
+    ...
 &lt;/web-app&gt;
                     </code></pre>
-            </section>
-
-            <!--------------------------------------------->
-            <section>
-                <h1>Cycle de vie</h1>
-                <h2>Différences avec JSP</h2>
-                <ul>
-                    <li>Une page JSP est traduite en une unique servlet, qui génère toute la page HTML renvoyée au client</li>
-                    <li class="mb-4">La vue est entièrement reconstruite par la servlet à chaque requête</li>
-                    <li>Une page Facelet est constitué de plusieurs composants UI, organisés en arbre</li>
-                    <li>Chaque composant est un objet Java autonome, responsable de son rendu et de son état</li>
-                    <li>Ses états sont sauvegardés entre les requêtes, via les objets Java</li>
-                    <li>La construction de l'arbre et son rendu sont gérés par le moteur de rendu de Jakarta Faces</li>
+                    <li><code>AUTOMATIC_EXTENSIONLESS_MAPPING</code> autorise les accès aux vues sans l'extension <code>.xhtml</code></li>
                 </ul>
             </section>
 
             <!--------------------------------------------->
             <section>
-                <h1>Cycle de vie</h1>
+                <h1>Jakarta Faces</h1>
+                <h2>Activation du framework</h2>
+                <ul>
+                    <li><code>FacesServlet</code> est le point d'entrée des requêtes <em>Faces</em></li>
+                    <li>Servlet fournie par le framework</li>
+                    <li>Alternative: créer une classe annotée avec <code>@FacesConfig</code></li>
+                    <pre><code class="language-java" data-trim data-line-numbers>
+@FacesConfig()
+@ApplicationScoped
+public class FacesActivator { }
+                    </code></pre>
+                    <li>Le conteneur détecte cette annotation et active le framework</li>
+                    <li>Plus besoin de déclarer la servlet dans <code>web.xml</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Facelets</h1>
                 <div class="row">
-                    <div class="col-5">
-                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
-                    </div>
                     <div class="col-7">
-                        <ol>
-                            <li class="mb-3">Première requête vers une page facelets</li>
-                            <ul class="small mb-5">
-                                <li>Création d'un arbre de composants vide (en Java)</li>
-                                <li>Arbre peuplé avec les composants de la vue facelets</li>
-                                <li>Rendu de la vue facelets pour création de la page HTML résultante</li>
-                                <li>Envoi de la page HTML au navigateur</li>
-                                <li>Sauvegarde de l'état de la vue pour requêtes suivantes</li>
-                            </ul>
-                            Note: Dans ce cas, on n'exécute que la première (<em>restore view</em>) et la dernière étape (<em>render response</em>) du cycle de vie
-                        </ol>
+                        <ul>
+                            <li>Langage déclaratif pour la création des vues</li>
+                            <li>Facelets remplace <code>JSP</code> depuis la version 9</li>
+                            <li>Basé sur la construction d'un arbre de composants</li>
+                            <li>Page <code>.xhtml</code> qui décrit l'arbre (balises HTML et Facelets)</li>
+                        </ul>
+                    </div>
+                    <div class="col-5">
+                        <img src="figures/chap5/jakartafaces.png" class="w-90 m-auto">
                     </div>
                 </div>
             </section>
 
             <!--------------------------------------------->
             <section>
-                <h1>Cycle de vie</h1>
+                <h1>Facelets</h1>
                 <div class="row">
-                    <div class="col-5">
-                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
-                    </div>
                     <div class="col-7">
-                        <ol start="2">
-                            <li class="mb-3">Requêtes suivantes</li>
-                            <ul class="small mb-5">
-                                <li>La vue est restaurée</li>
-                                <li>Paramètres de requête ajoutés dans l'arbre de composants</li>
-                                <li>Validation et conversion des données saisies</li>
-                                <li>Si erreurs: étape de rendu de la vue</li>
-                                <li>Si ok, données mises à jour dans le modèle</li>
-                                <li>Exécution de l'action associée à la commande utilisateur</li>
-                                <li>En fonction du retour de l'action, on détermine la vue à rendre</li>
-                            </ul>
-                            Note: chaque étape <em>Process events</em> est susceptible de rediriger vers une autre vue (<em>response complete</em>)
-                        </ol>
+                        <p>Différences avec JSP:</p>
+                        <ul>
+                            <li>Page JSP traduite en servlet</li>
+                            <li class="alert">Vue HTML regénérée à chaque requête</li>
+                            <li>Page Facelets = arbre de composants</li>
+                            <li>Chaque composant est un objet Java autonome</li>
+                            <li class="alert">L'état des composants est sauvegardé entre les requêtes</li>
+                            <li>Construction de l'arbre gérée par Jakarta Faces</li>
+                        </ul>
+                    </div>
+                    <div class="col-5">
+                        <img src="figures/chap5/jakartafaces.png" class="w-90 m-auto">
                     </div>
                 </div>
             </section>
 
-            <!--------------------------------------------->
+            <!---------------------------------------------
             <section>
                 <h1>Facelets</h1>
                 <div class="boxtitle">Facelets</div>
@@ -257,39 +148,32 @@ public class UserNumberBean implements Serializable {
                     <li>Ce fichier N'EST PAS le fichier retourné au client</li>
                     <li>Il est traité par le moteur de rendu pour générer le contenu HTML final</li>
                 </ul>
-            </section>
+            </section>-->
 
             <!--------------------------------------------->
             <section>
                 <h1>Facelets</h1>
                 <div class="row">
                     <div class="col-6">
-                        <pre><code class="language-html compact" data-trim data-line-numbers="1,2,7,10,13,16,17,22,25,27" class="w-100">
+                        <pre><code class="language-html compact" data-trim data-line-numbers="1,2,7,10,12,18" class="w-100">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; 
     xmlns:h=&quot;jakarta.faces.html&quot; 
     xmlns:f=&quot;jakarta.faces.core&quot;&gt;
     &lt;h:head&gt;
         &lt;h:outputStylesheet library=&quot;css&quot; name=&quot;default.css&quot;/&gt;
-        &lt;title&gt;Guess Number Facelets Application&lt;/title&gt;
+        &lt;title&gt;Facelets Application&lt;/title&gt;
     &lt;/h:head&gt;
     &lt;h:body&gt;
-        &lt;main class=&quot;container&quot;&gt;
-            &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
-            &lt;h:form&gt;
-                &lt;h2&gt;
-                    Hi, my name is Sime. I am thinking of a number from #{userNumberBean.minimum} to #{userNumberBean.maximum}. 
-                    Can you guess it?
-                &lt;/h2&gt;
-                &lt;p&gt;
-                    &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
-                        &lt;f:validateLongRange minimum=&quot;#{userNumberBean.minimum}&quot; maximum=&quot;#{userNumberBean.maximum}&quot;/&gt;
-                    &lt;/h:inputText&gt;
-                    &lt;h:commandButton id=&quot;submit&quot; value=&quot;Submit&quot; action=&quot;response&quot;/&gt;
-                &lt;/p&gt;
-                &lt;h:message showSummary=&quot;true&quot; showDetail=&quot;false&quot; style=&quot;color: #d20005&quot; id=&quot;errors1&quot; for=&quot;userNo&quot;/&gt;
-            &lt;/h:form&gt;
-        &lt;/main&gt;
+    &lt;main&gt;
+        &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
+        &lt;h2&gt;Hello, welcome to Facelets!&lt;/h2&gt;
+        &lt;h:form&gt;
+            &lt;h:outputLabel for=&quot;name&quot; value=&quot;Enter your name: &quot; /&gt;
+            &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+            &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+        &lt;/h:form&gt;
+    &lt;/main&gt;
     &lt;/h:body&gt;
 &lt;/html&gt;
                         </code></pre>
@@ -307,32 +191,25 @@ public class UserNumberBean implements Serializable {
                 <h1>Facelets</h1>
                 <div class="row">
                     <div class="col-6">
-                        <pre><code class="language-html compact" data-trim data-line-numbers="2-4" class="w-100">
+                        <pre><code class="language-html compact" data-trim data-line-numbers="3-4" class="w-100">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; 
     xmlns:h=&quot;jakarta.faces.html&quot; 
     xmlns:f=&quot;jakarta.faces.core&quot;&gt;
     &lt;h:head&gt;
         &lt;h:outputStylesheet library=&quot;css&quot; name=&quot;default.css&quot;/&gt;
-        &lt;title&gt;Guess Number Facelets Application&lt;/title&gt;
+        &lt;title&gt;Facelets Application&lt;/title&gt;
     &lt;/h:head&gt;
     &lt;h:body&gt;
-        &lt;main class=&quot;container&quot;&gt;
-            &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
-            &lt;h:form&gt;
-                &lt;h2&gt;
-                    Hi, my name is Sime. I am thinking of a number from #{userNumberBean.minimum} to #{userNumberBean.maximum}. 
-                    Can you guess it?
-                &lt;/h2&gt;
-                &lt;p&gt;
-                    &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
-                        &lt;f:validateLongRange minimum=&quot;#{userNumberBean.minimum}&quot; maximum=&quot;#{userNumberBean.maximum}&quot;/&gt;
-                    &lt;/h:inputText&gt;
-                    &lt;h:commandButton id=&quot;submit&quot; value=&quot;Submit&quot; action=&quot;response&quot;/&gt;
-                &lt;/p&gt;
-                &lt;h:message showSummary=&quot;true&quot; showDetail=&quot;false&quot; style=&quot;color: #d20005&quot; id=&quot;errors1&quot; for=&quot;userNo&quot;/&gt;
-            &lt;/h:form&gt;
-        &lt;/main&gt;
+    &lt;main&gt;
+        &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
+        &lt;h2&gt;Hello, welcome to Facelets!&lt;/h2&gt;
+        &lt;h:form&gt;
+            &lt;h:outputLabel for=&quot;name&quot; value=&quot;Enter your name: &quot; /&gt;
+            &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+            &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+        &lt;/h:form&gt;
+    &lt;/main&gt;
     &lt;/h:body&gt;
 &lt;/html&gt;
                         </code></pre>
@@ -340,7 +217,7 @@ public class UserNumberBean implements Serializable {
                     <div class="col-6">
                         <ul>
                             <li class="mb-2">Balises HTML5, reportées dans la page HTML résultante</li>
-                            <li class="mb-2">Accès aux bibliothèques de balises standard : balises HTML (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
+                            <li class="mb-2">Accès aux bibliothèques de balises standard : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
                         </ul>
                     </div>
                 </div>
@@ -351,32 +228,25 @@ public class UserNumberBean implements Serializable {
                 <h1>Facelets</h1>
                 <div class="row">
                     <div class="col-6">
-                        <pre><code class="language-html compact" data-trim data-line-numbers="5,6,8,9,11,26" class="w-100">
+                        <pre><code class="language-html compact" data-trim data-line-numbers="5,6,8,9,11,19" class="w-100">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; 
     xmlns:h=&quot;jakarta.faces.html&quot; 
     xmlns:f=&quot;jakarta.faces.core&quot;&gt;
     &lt;h:head&gt;
         &lt;h:outputStylesheet library=&quot;css&quot; name=&quot;default.css&quot;/&gt;
-        &lt;title&gt;Guess Number Facelets Application&lt;/title&gt;
+        &lt;title&gt;Facelets Application&lt;/title&gt;
     &lt;/h:head&gt;
     &lt;h:body&gt;
-        &lt;main class=&quot;container&quot;&gt;
-            &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
-            &lt;h:form&gt;
-                &lt;h2&gt;
-                    Hi, my name is Sime. I am thinking of a number from #{userNumberBean.minimum} to #{userNumberBean.maximum}. 
-                    Can you guess it?
-                &lt;/h2&gt;
-                &lt;p&gt;
-                    &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
-                        &lt;f:validateLongRange minimum=&quot;#{userNumberBean.minimum}&quot; maximum=&quot;#{userNumberBean.maximum}&quot;/&gt;
-                    &lt;/h:inputText&gt;
-                    &lt;h:commandButton id=&quot;submit&quot; value=&quot;Submit&quot; action=&quot;response&quot;/&gt;
-                &lt;/p&gt;
-                &lt;h:message showSummary=&quot;true&quot; showDetail=&quot;false&quot; style=&quot;color: #d20005&quot; id=&quot;errors1&quot; for=&quot;userNo&quot;/&gt;
-            &lt;/h:form&gt;
-        &lt;/main&gt;
+    &lt;main&gt;
+        &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
+        &lt;h2&gt;Hello, welcome to Facelets!&lt;/h2&gt;
+        &lt;h:form&gt;
+            &lt;h:outputLabel for=&quot;name&quot; value=&quot;Enter your name: &quot; /&gt;
+            &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+            &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+        &lt;/h:form&gt;
+    &lt;/main&gt;
     &lt;/h:body&gt;
 &lt;/html&gt;
                         </code></pre>
@@ -384,7 +254,7 @@ public class UserNumberBean implements Serializable {
                     <div class="col-6">
                         <ul>
                             <li class="mb-2">Balises HTML5, reportées dans la page HTML résultante</li>
-                            <li class="mb-2">Accès aux bibliothèques de balises standard : balises HTML (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
+                            <li class="mb-2">Accès aux bibliothèques de balises standard : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
                             <li class="mb-2"><code>&lt;h:head&gt;</code>, <code>&lt;h:body&gt;</code> nécessaires pour la gestion des ressources externes (CSS, script, images)</li>
                         </ul>
                     </div>
@@ -396,32 +266,25 @@ public class UserNumberBean implements Serializable {
                 <h1>Facelets</h1>
                 <div class="row">
                     <div class="col-6">
-                        <pre><code class="language-html compact" data-trim data-line-numbers="12,18-21,23" class="w-100">
+                        <pre><code class="language-html compact" data-trim data-line-numbers="13-17" class="w-100">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; 
     xmlns:h=&quot;jakarta.faces.html&quot; 
     xmlns:f=&quot;jakarta.faces.core&quot;&gt;
     &lt;h:head&gt;
         &lt;h:outputStylesheet library=&quot;css&quot; name=&quot;default.css&quot;/&gt;
-        &lt;title&gt;Guess Number Facelets Application&lt;/title&gt;
+        &lt;title&gt;Facelets Application&lt;/title&gt;
     &lt;/h:head&gt;
     &lt;h:body&gt;
-        &lt;main class=&quot;container&quot;&gt;
-            &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
-            &lt;h:form&gt;
-                &lt;h2&gt;
-                    Hi, my name is Sime. I am thinking of a number from #{userNumberBean.minimum} to #{userNumberBean.maximum}. 
-                    Can you guess it?
-                &lt;/h2&gt;
-                &lt;p&gt;
-                    &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
-                        &lt;f:validateLongRange minimum=&quot;#{userNumberBean.minimum}&quot; maximum=&quot;#{userNumberBean.maximum}&quot;/&gt;
-                    &lt;/h:inputText&gt;
-                    &lt;h:commandButton id=&quot;submit&quot; value=&quot;Submit&quot; action=&quot;response&quot;/&gt;
-                &lt;/p&gt;
-                &lt;h:message showSummary=&quot;true&quot; showDetail=&quot;false&quot; style=&quot;color: #d20005&quot; id=&quot;errors1&quot; for=&quot;userNo&quot;/&gt;
-            &lt;/h:form&gt;
-        &lt;/main&gt;
+    &lt;main&gt;
+        &lt;h:graphicImage value=&quot;#{resource[&#39;images:logo-couleur.png&#39;]}&quot; alt=&quot;Master SD logo&quot;/&gt;
+        &lt;h2&gt;Hello, welcome to Facelets!&lt;/h2&gt;
+        &lt;h:form&gt;
+            &lt;h:outputLabel for=&quot;name&quot; value=&quot;Enter your name: &quot; /&gt;
+            &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+            &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+        &lt;/h:form&gt;
+    &lt;/main&gt;
     &lt;/h:body&gt;
 &lt;/html&gt;
                         </code></pre>
@@ -429,9 +292,9 @@ public class UserNumberBean implements Serializable {
                     <div class="col-6">
                         <ul>
                             <li class="mb-2">Balises HTML5, reportées dans la page HTML résultante</li>
-                            <li class="mb-2">Accès aux bibliothèques de balises standard : balises HTML (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
+                            <li class="mb-2">Accès aux bibliothèques de balises standard : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
                             <li class="mb-2"><code>&lt;h:head&gt;</code>, <code>&lt;h:body&gt;</code> nécessaires pour la gestion des ressources externes (CSS, script, images)</li>
-                            <li class="mb-2"><code>&lt;h:form&gt;</code>, <code>&lt;h:inputText&gt;</code>, <code>&lt;h:commandButton&gt;</code> pour la gestion des formulaires</li>
+                            <li class="mb-2"><code>&lt;h:form&gt;</code>, <code>&lt;h:outputText&gt;</code>, <code>&lt;h:inputText&gt;</code>, <code>&lt;h:commandButton&gt;</code> pour la gestion des formulaires</li>
                         </ul>
                     </div>
                 </div>
@@ -488,9 +351,9 @@ public class UserNumberBean implements Serializable {
                         </tr>
                     </tbody>
                 </table>
+
+                <p class="mt-4">Liste assez complète des balises courantes: <a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page/faces-page.html" target="_blank">Documentation Jakarta EE</a></p>
             </section>
-
-
 
 
             <!--------------------------------------------->
@@ -498,9 +361,9 @@ public class UserNumberBean implements Serializable {
                 <h1>Ressources externes</h1>
                 <ul>
                     <li>Les ressources externes (CSS, images, scripts) sont gérées par le framework</li>
-                    <li>Balises dédiées (e.g. <code>&lt;h:outputStylesheet&gt;</code> pour les CSS, <code>&lt;h:graphicImage&gt;</code> pour les images)</li>
-                    <li>Les ressources sont placées dans le répertoire <code>/resources</code> du projet:</li>
-                    <pre><code class="language-text compact" data-trim>
+                    <li>Balises dédiées (e.g. <code>&lt;h:outputStylesheet&gt;</code>, <code>&lt;h:graphicImage&gt;</code> et <code>&lt;h:outputScript&gt;</code>)</li>
+                    <li>Les ressources sont placées dans un sous-dossier (nom libre) du dossier <code>/resources</code> du projet:</li>
+                    <pre><code class="language-text" data-trim>
 /resources
     /css
         default.css
@@ -509,72 +372,426 @@ public class UserNumberBean implements Serializable {
     /js
         script.js
                     </code></pre>
-                    <li>Accès aux ressources via l'expression EL: <code>#{resource['images:logo-couleur.png']}</code></li>
-                    <li>Possible de déplacer la ressource dans la page HTML résultante:</li>
-                    <pre><code class="language-html compact" data-trim>
+                    <li>L'attribut <code>library</code> permet de spécifier le dossier de la ressource</li>
+                    <pre><code class="language-html" data-trim>
 &lt;h:outputStylesheet library=&quot;css&quot; name=&quot;default.css&quot; target=&quot;head&quot;/&gt;
+&lt;h:outputScript library=&quot;js&quot; name=&quot;script.js&quot; target=&quot;head&quot;/&gt;
+&lt;h:graphicImage library=&quot;images&quot; name=&quot;logo-couleur.png&quot; alt=&quot;Master SD logo&quot;/&gt;
                     </code></pre>
-                    Essentiel pour les composants composites (détails plus tard)
+                    <li>Accès également possible via EL: <code>#{resource['images:logo-couleur.png']}</code></li>
                 </ul>
             </section>
 
             <!--------------------------------------------->
             <section>
-                <h1>Baking beans</h1>
+                <h1>Backing beans</h1>
                 <ul>
-                    <li>Bean CDI utilisé dans une page Facelets : doit être annoté avec <code>@Named</code></li>
-                    <pre><code class="language-java" data-trim data-line-numbers>
-@Named("userNumber")
-public class UserNumberBean { ... }
+                    <li>Les Facelets sont liés à des <em>backing beans</em></li>
+                    <li>CDI bean qui contient l'état (attributs) et les commandes (méthodes) de la facelet</li>
+                    <li>Accès aux beans dans Facelets via EL (Expression Language)</li>
+                    <pre><code class="language-html" data-trim>
+#{userBean.name}
+#{userBean.doGreeting()}
                     </code></pre>
-                    <li>Utilisation dans la facelet:</li>
-                    <pre><code class="language-html" data-trim data-line-numbers="3,6,7">
-&lt;h:form&gt;
-    &lt;h2&gt;
-        Hi, my name is Sime. I am thinking of a number from #{userNumber.minimum} to #{userNumber.maximum}. Can you guess it?
-    &lt;/h2&gt;
-    &lt;p&gt;
-        &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumber.userNumber}&quot;&gt;
-            &lt;f:validateLongRange minimum=&quot;#{userNumber.minimum}&quot; maximum=&quot;#{userNumber.maximum}&quot;/&gt;
-        &lt;/h:inputText&gt;
+                    <li>Le <em>backing beans</em> doit être annoté avec <code>@Named</code> et un scope approprié</li>
+                    <pre><code class="language-java" data-trim>
+@Named
+@RequestScoped
+public class UserBean { ... }
                     </code></pre>
-                    <li>Il s'agit d'une injection: le conteneur recherche une instance, et la crée si elle n'existe pas</li>
                 </ul>
             </section>
             <!--------------------------------------------->
             <section>
-                <h1>Baking beans</h1>
+                <h1>Backing beans</h1>
                 <ul>
-                    <li>Dans une application type, on a généralement un baking bean par facelet</li>
-                    <li>Les scopes CDI : <code>@RequestScoped</code>, <code>@SessionScoped</code>, <code>@ApplicationScoped</code></li>
-                    <li>+ nouveau scope : <code>@ViewScoped</code></li>
-                    <pre><code class="language-java" data-trim data-line-numbers>
-@Named("userNumber")
+                    <li><em>backing beans</em> = sorte de contrôleurs pour les vues (<em>design pattern command</em>)</li>
+                    <li>Dans une application type, on a généralement un backing bean par facelet</li>
+                    <li>Nouveau scope <code>@ViewScoped</code>: réutilise la même instance tant que l'utilisateur interagit avec la même page</li>
+                </ul>
+                <img src="figures/chap5/jsf-mvc.png" class="w-40 m-auto mt-4">
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Exemple (1)</h1>
+                <p class="mb-2"><em>Backing bean</em> <code>UserBean.java</code></p>
+                <pre><code class="language-java compact" data-trim data-line-numbers>
+@Named
+@RequestScoped
+public class UserBean {
+    private String name;
+    private String greeting;
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getGreeting() {
+        return greeting;
+    }
+    public void greet() {
+        greeting = "Hello " + name;
+    }
+}
+                    </code></pre>
+                    <ul>
+                        <li>Bean créé à la réception d'une requête vers une vue qui fait référence à <code>userBean</code></li>
+                        <li><code>RequestScoped</code>: bean détruit à la fin de la requête, quand la réponse est envoyée</li>
+                    </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Exemple (1)</h1>
+                <p class="mb-2">Vue <code>greeting.xhtml</code></p>
+                <pre><code class="language-html compact" data-trim data-line-numbers>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot; xmlns:f=&quot;jakarta.faces.core&quot;&gt;
+    &lt;h:head&gt;
+        &lt;title&gt;Greeting form&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+        &lt;main&gt;
+            &lt;h:form&gt;
+                Enter your name: &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+                &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+                &lt;h:outputText value=&quot;#{userBean.greeting}&quot; rendered=&quot;#{not empty userBean.greeting}&quot; /&gt;
+            &lt;/h:form&gt;
+        &lt;/main&gt;
+    &lt;/h:body&gt;
+&lt;/html&gt;
+                </code></pre>
+                <ul>
+                    <li>Requête <code>GET</code> vers <code>greeting.xhtml</code>: bean créé et lié à la vue</li>
+                    <li><code>userBean.name</code> affiché dans l'<code>inputText</code>: ici <code>null</code> donc le champ de saisie est vide</li>
+                    <li>l'<code>outputText</code> n'est pas affiché car <code>userBean.greeting</code> est <code>null</code></li>
+                    <li>Page HTML construite et retournée au client, le bean est détruit</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Exemple (1)</h1>
+                <p class="mb-2">Vue <code>greeting.xhtml</code></p>
+                <pre><code class="language-html compact" data-trim data-line-numbers>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot; xmlns:f=&quot;jakarta.faces.core&quot;&gt;
+    &lt;h:head&gt;
+        &lt;title&gt;Greeting form&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+        &lt;main&gt;
+            &lt;h:form&gt;
+                Enter your name: &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+                &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+                &lt;h:outputText value=&quot;#{userBean.greeting}&quot; rendered=&quot;#{not empty userBean.greeting}&quot; /&gt;
+            &lt;/h:form&gt;
+        &lt;/main&gt;
+    &lt;/h:body&gt;
+&lt;/html&gt;
+                </code></pre>
+                <ul>
+                    <li>Utilisateur clique sur le bouton <code>Greet</code>: requête <code>POST</code> vers <code style="text-decoration: underline;">greeting.xhtml</code> et bean recréé</li>
+                    <li><code>userBean.name</code> est mis à jour avec la valeur saisie par l'utilisateur et affiché dans l'<code>inputText</code></li>
+                    <li><code>userBean.greet()</code> est appelé, <code>greeting</code> est mis à jour et affiché dans l'<code>outputText</code></li>
+                    <li>Page HTML construite et retournée au client, le bean est détruit</li>
+                </ul>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Exemple (2)</h1>
+                <p class="mb-2"><em>Backing bean</em> <code>UserBean.java</code></p>
+                <pre><code class="language-java compact" data-trim data-line-numbers>
+@Named
 @ViewScoped
-public class UserNumberBean { ... }
-                    </code></pre>
-                    <li>Permet de réutiliser la même instance tant que l'utilisateur interagit avec la même page</li>
-                </ul>
-                <img src="figures/chap5/jsf-mvc.png" class="w-30 m-auto mt-4">
-            </section>
+public class UserBean {
+    private String name;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String greet() {
+        return "greeting-response"; // name of the next view
+    }
+}
+                    </code></pre>
+                    <ul>
+                        <li>La méthode <code>greet()</code> renvoie le nom de la prochaine vue (i.e. <code>greeting-response.xhtml</code>)</li>
+                        <li>Une méthode qui renvoie <code>null</code> ou <code>void</code> renvoie vers la même vue</li>
+                        <li><code>ViewScoped</code>: le bean est détruit dés lors qu'une méthode invoquée retourne le nom d'une autre vue</li>
+                    </ul>
+            </section>
 
             <!--------------------------------------------->
             <section>
-                <h1>Validation et conversion</h1>
+                <h1>Exemple (2)</h1>
+                <p class="mb-2">Vue <code>greeting.xhtml</code></p>
+                <pre><code class="language-html compact" data-trim data-line-numbers>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; 
+    xmlns:h=&quot;jakarta.faces.html&quot; 
+    xmlns:f=&quot;jakarta.faces.core&quot;&gt;
+    &lt;h:head&gt;
+        &lt;title&gt;Greeting form&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+        &lt;main&gt;
+            &lt;h:form&gt;
+                &lt;h:outputLabel for=&quot;name&quot; value=&quot;Enter your name: &quot; /&gt;
+                &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+                &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+            &lt;/h:form&gt;
+        &lt;/main&gt;
+    &lt;/h:body&gt;
+&lt;/html&gt;
+                </code></pre>
                 <ul>
-                    <li>Les données saisies dans un formulaires sont des chaînes de caractères</li>
-                    <li>Il faut les convertir en Java, dans le bon type</li>
-                    <li>Exemple: conversion en entier pour affecter à <code>userNumber</code></li>
-                    <pre><code class="language-html compact" data-trim>
-&lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
+                    <li>Requête <code>GET</code> vers <code>greeting.xhtml</code>: même comportement que précédemment</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Exemple (2)</h1>
+                <p class="mb-2">Vue <code>greeting-response.xhtml</code></p>
+                <pre><code class="language-html compact" data-trim data-line-numbers>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; 
+    xmlns:h=&quot;jakarta.faces.html&quot;&gt;
+    &lt;h:head&gt;  
+        &lt;title&gt;Greeting page&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+        &lt;main&gt;
+            &lt;h2&gt;Hello, #{userBean.name}!&lt;/h2&gt;
+        &lt;/main&gt;
+    &lt;/h:body&gt;
+&lt;/html&gt;
+                </code></pre>
+                <ul>
+                    <li>Utilisateur clique sur le bouton <code>Greet</code> de <code>greeting.xhtml</code>: envoi d'une requête <code>POST</code> vers <code style="text-decoration: underline;">greeting.xhtml</code></li>
+                    <li>Le champ <code>name</code> du bean existant est mis à jour avec la valeur saisie par l'utilisateur</li>
+                    <li>La méthode <code>greet()</code> est appelée, qui renvoie le nom de la vue suivante: <code>greeting-response.xhtml</code></li>
+                    <li>La vue <code>greeting-response.xhtml</code> est rendue, avec le nom de l'utilisateur saisi</li>
+                    <li>Le bean est détruit après le rendu et l'envoie de la réponse au client</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Convertisseurs standards</h1>
+                <ul>
+                    <li>Les données saisies dans un formulaire sont des chaînes de caractères</li>
+                    <li>Il faut les convertir dans le type Java adéquat tel que définit dans le bean</li>
+                    <li>La plupart des conversions sont automatiques:</li>
+                    <pre><code class="language-html" data-trim>
+&lt;h:inputText id=&quot;age&quot; title=&quot;Enter your age:&quot; value=&quot;#{userBean.age}&quot;&gt;
                     </code></pre>
-                    <li>Ici la conversion est implicite mais le developpeur peut définir une conversion explicite</li>
-                    <pre><code class="language-html compact" data-trim>
+                    <li>2 cas particuliers: <code>Date</code> et <code>Number</code></li>
+                    <pre><code class="language-html" data-trim>
+&lt;h:inputText id=&quot;dateofbirth&quot; title=&quot;Enter your date of birth:&quot; value=&quot;#{userBean.dateOfBirth}&quot;&gt;
+    &lt;f:convertDateTime type=&quot;localDateTime&quot; pattern=&quot;dd/MM/yyyy&quot; /&gt;
+&lt;/h:inputText&gt;
+&lt;h:message for=&quot;dateofbirth&quot; /&gt;
+                    </code></pre>
+                    <li><code>&lt;h:message/&gt;</code> permet d'afficher un message d'erreur automatique si la conversion échoue</li>
+                    <li>Plus de détails: <a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page-core/faces-page-core.html#_using_the_standard_converters" target="_blank">documentation</a></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Convertisseurs non standards</h1>
+                <ul>
+                    <li>Si aucun convertisseur standard ne peut être utilisé, on peut définir son propre convertisseur</li>
+                    <li>Classe qui implémente <code>javax.faces.convert.Converter</code></li>
+                    <pre><code class="language-java compact" data-trim>
+@FacesConverter(forClass=java.net.URL.class, value="urlconverter")
+public class UrlConverter implements Converter {
+    @Override
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
+        try {
+            return new URL(value);
+        } catch (MalformedURLException e) {
+            throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Not a valid URL"));
+        }
+    }
+
+    @Override
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
+        if (value == null) {
+            return "";
+        }
+        return ((URL) value).toString();
+    }
+}
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Validateurs standards</h1>
+                <ul>
+                    <li>Après conversion, les données peuvent être validées: </li>
+                    <pre><code class="language-html mb-1" data-trim>
 &lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
-    &lt;f:convertNumber integerOnly=&quot;true&quot; /&gt;
+    &lt;f:validateLongRange minimum=&quot;#{userNumberBean.minimum}&quot; maximum=&quot;#{userNumberBean.maximum}&quot;/&gt;
+&lt;/h:inputText&gt;
+&lt;h:message for=&quot;userNo&quot; /&gt;
+                    </code></pre>
+                    <li>Plusieurs validateurs standards dans le framework (cf. <a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page-core/faces-page-core.html#_using_the_standard_validators" target="_blank">documentation</a>)</li>
+                    <li>ou API <em>Bean Validation</em>: annotations pour imposer des contraintes sur les attributs/méthodes de beans</li>
+                    <pre><code class="language-java" data-trim>
+@Named
+@ViewScoped
+public class UserNumberBean {
+    @Min(0)
+    @Max(10)
+    private int userNumber;
+    ...
+}
+                    </code></pre>
+                    <li>Plus de détails sur cette API dans la <a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/beanvalidation/bean-validation/bean-validation.html" target="_blank">documentation</a></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Validateurs non standards</h1>
+                <ul>
+                    <li>Validation via une méthode du bean:</li>
+                    <pre><code class="language-java compact mb-1" data-trim>
+@Named
+@ViewScoped
+public class UserNumberBean {
+    ...
+    public void validateNumber(FacesContext context, UIComponent component, Object value) {
+        Integer number = (Integer) value;
+        if (number < 0 || number > 10) {
+            ((UIInput) component).setValid(false);
+            FacesMessage message = new FacesMessage("Invalid number: Must be between 0 and 10.");
+            context.addMessage(component.getClientId(context), message);
+        }
+    }
+}
+                    </code></pre>
+                    <li>Méthode référencée via l'attribut <code>validator</code></li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; 
+    value=&quot;#{userNumberBean.userNumber}&quot;
+    validator=&quot;#{userNumberBean.validateNumber}&quot;&gt;
 &lt;/h:inputText&gt;
                     </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Validateurs non standards</h1>
+                <ul>
+                    <li>Validation via une classe qui implémente <code>javax.faces.validator.Validator</code>:</li>
+                    <pre><code class="language-java compact mb-1" data-trim>
+@FacesValidator("evenNumberValidator")
+public class EvenNumberValidator implements Validator {
+
+    @Override
+    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        Integer number = (Integer) value;
+        if (number < 0 || number > 10) {
+            ((UIInput) component).setValid(false);
+            FacesMessage message = new FacesMessage("Invalid number: Must be between 0 and 10.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            throw new ValidatorException(message);
+        }
+    }
+}
+                    </code></pre>
+                    <li>Classe référencée via la balise <code>f:validator</code></li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;h:inputText id=&quot;evenNo&quot; title=&quot;Enter an even number:&quot; value=&quot;#{userNumberBean.evenNumber}&quot;&gt;
+    &lt;f:validator validatorId=&quot;evenNumberValidator&quot; /&gt;
+&lt;/h:inputText&gt;
+                    </code></pre>
+                    <li>À n'utiliser que si les méthodes précédentes ne suffisent pas</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cycle de vie</h1>
+                <div class="row">
+                    <div class="col-5">
+                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
+                    </div>
+                    <div class="col-7">
+                        <ol>
+                            <li class="mb-3">Première requête vers une page facelets</li>
+                            <ul class="small mb-5">
+                                <li>Création d'un arbre de composants vide (en Java)</li>
+                                <li>Arbre peuplé avec les composants de la vue facelets</li>
+                                <li>Rendu de la vue facelets pour création de la page HTML résultante</li>
+                                <li>Envoi de la page HTML au navigateur</li>
+                                <li>Sauvegarde de l'état de la vue pour requêtes suivantes</li>
+                            </ul>
+                            Note: Dans ce cas, on n'exécute que la première (<em>restore view</em>) et la dernière étape (<em>render response</em>) du cycle de vie
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Cycle de vie</h1>
+                <div class="row">
+                    <div class="col-5">
+                        <img src="figures/chap5/jakartafaces_cycle.png" class="w-100">
+                    </div>
+                    <div class="col-7">
+                        <ol start="2">
+                            <li class="mb-3">Requêtes suivantes (soumission formulaire)</li>
+                            <ul class="small mb-5">
+                                <li>La vue est restaurée</li>
+                                <li>Paramètres de requête ajoutés dans l'arbre de composants</li>
+                                <li>Conversion et validation des données saisies</li>
+                                <li>Si erreurs: étape de rendu de la vue</li>
+                                <li>Si ok, données mises à jour dans le backing bean</li>
+                                <li>Exécution de l'action associée à la commande utilisateur</li>
+                                <li>En fonction du retour de l'action, on détermine la vue à rendre</li>
+                            </ul>
+                            Note: chaque étape <em>Process events</em> est susceptible de rediriger vers une autre vue (<em>response complete</em>)
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Événements</h1>
+                <ul>
+                    <li>Interface utilisateur = intéractions utilisateurs</li>
+                    
+                    <li>Plusieurs types d'événements sont générés lors du cycle de vie</li>
+                </ul>
+
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Liens vers la documentation</h1>
+                <ul>
+                    <li><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page-core/faces-page-core.html" target="_blank">Converssion et validation</a></li>
+                    <li><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-develop/faces-develop.html#_writing_managed_bean_methods" target="_blank">Écriture de méthodes de bean (validation, navigation, etc.)</a></li>
                 </ul>
             </section>
 

@@ -17,14 +17,10 @@
                     Can you guess it?
                 </h2>
                 <p>
-                    <h:inputText id="userNo"
-                                title="Enter a number from 0 to 10:"
-                                value="#{userNumberBean.userNumber}">
-                        <f:validateLongRange minimum="#{userNumberBean.minimum}"
-                                            maximum="#{userNumberBean.maximum}"/>
+                    <h:inputText id="userNo" title="Enter a number from 0 to 10:" value="#{userNumberBean.userNumber}">
+                        <f:validateLongRange minimum="#{userNumberBean.minimum}" maximum="#{userNumberBean.maximum}"/>
                     </h:inputText>
-                    <h:commandButton id="submit" value="Submit"
-                                    action="response"/>
+                    <h:commandButton id="submit" value="Submit" action="response"/>
                 </p>
                 <h:message showSummary="true" showDetail="false" style="color: #d20005" id="errors1" for="userNo"/>
             </h:form>

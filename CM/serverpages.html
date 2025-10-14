@@ -430,19 +430,20 @@ public class Car implements Serializable {
                 <ul>
                     <li>On suppose qu'une instance de <code>Car</code> est disponible dans la session sous l'identifiant <code>myCar</code></li>
                     <li>Les <em>scope</em> possibles sont <code>page</code>, <code>request</code>, <code>session</code> et <code>application</code></li>
-                    <pre><code class="language-html" data-trim>
+                    <pre><code class="language-html mb-1" data-trim>
 &lt;jsp:useBean id=&quot;myCar&quot; class=&quot;com.example.Car&quot; scope=&quot;session&quot;/&gt;
-&lt;%-- équivalent à:--%&gt;
-&lt;% 
-    com.example.Car myCar = (com.example.Car) request.getAttribute(&quot;myCar&quot;); 
-    if ( myCar == null ) {
-        myCar = new com.example.Car();
-        request.setAttribute(&quot;myCar&quot;,myCar);
-    }
-%&gt;
-&lt;%-- Si le bean n&#39;existe pas, un bean par defaut est créé à la place --%&gt;
-
-&lt;%-- Possible de definir un corps, inclut dans la page si le bean n&#39;existe pas --%&gt;
+                    </code></pre>
+                    équivalent à :
+                    <pre><code class="language-java mb-2" data-trim>
+com.example.Car myCar = (com.example.Car) request.getAttribute(&quot;myCar&quot;); 
+if ( myCar == null ) {
+    myCar = new com.example.Car();
+    request.setAttribute(&quot;myCar&quot;,myCar);
+}
+                    </code></pre>
+                    <li>Si le bean n&#39;existe pas, un bean par defaut est créé à la place</li>
+                    <li>Possibilité de définir un corps, inclut dans la page si le bean n'existe pas</li>
+                    <pre><code class="language-html" data-trim>
 &lt;jsp:useBean id=&quot;myCar&quot; class=&quot;com.example.Car&quot; scope=&quot;request&quot; /&gt;
     &lt;p&gt; Modele par defaut utilisé &lt;/p&gt;
 &lt;/jsp:useBean&gt;
@@ -460,10 +461,12 @@ public class Car implements Serializable {
                     <pre><code class="language-html" data-trim>
 &lt;%-- affiche le contenu de la propriété &#39;speed&#39; du bean &#39;myCar&#39; : --%&gt;
 &lt;jsp:getProperty name=&quot;myCar&quot; property=&quot;speed&quot; /&gt;
-
-&lt;%-- équivalent à : --%&gt;
+                    </code></pre>
+                    équivalent à :
+                    <pre><code class="language-java mb-2" data-trim>
 &lt;%= myCar.getSpeed() %&gt;
                     </code></pre>
+                    <li>Cependant, on est sûr avec <code>&lt;jsp:getProperty&gt;</code> que le bean existe</li>
                 </ul>
             </section>
 
@@ -577,7 +580,7 @@ public class Car implements Serializable {
                         <li>Gère les paramètres des requêtes</li>
                         <li>Lie modèle et vue</li>
                         <li>Si application complexe, un contrôleur est lié à une action spécifique</li>
-                        <li>Souvent, pattern <em>Front Controller</em>, et des sous-contrôleurs pour les actions spécifiques (pattern command)</li>
+                        <li>Souvent, <em>Front Controller</em>, et des sous-contrôleurs pour les actions spécifiques (<em>design pattern Command</em>)</li>
                     </ul>
                     <li class="mt-4"><strong>Vue</strong></li>
                     <ul>
