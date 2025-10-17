@@ -89,6 +89,10 @@ footer {
     color: var(--primary-color);
     text-align: center;
 }
+.center {
+    margin: auto;
+    text-align: center;
+}
 
 /* ================================================== */
 /* Styles for the sidebar */

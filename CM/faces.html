@@ -779,9 +779,19 @@ public class EvenNumberValidator implements Validator {
             <section>
                 <h1>Événements</h1>
                 <ul>
-                    <li>Interface utilisateur = intéractions utilisateurs</li>
-                    
-                    <li>Plusieurs types d'événements sont générés lors du cycle de vie</li>
+                    <li>Page web intéractive = déclencher des traitements en réaction à un événement</li>
+                    <li>2 grands types d'événements auquel on peut réagir :</li>
+                    <ul>
+                        <li>Générés par une <span class="alert">action utilisateur</span> (clic, saisie, etc.)</li>
+                        <li>Générés par le <span class="alert">cycle de vie de l'application</span></li>
+                    </ul>
+                    <li>Pour traiter un événement, on doit définir un <em>listener</em> dédié</li>
+                    <li>Un <em>listener</em> est:</li>
+                    <ul>
+                        <li>Soit une méthode du backing bean</li>
+                        <li>Soit une classe qui implémente une interface dédiée</li>
+                    </ul>
+                    <li>Il faut ensuite <em>enregistrer</em> le listener dans une Facelet</li>
                 </ul>
 
             </section>

@@ -480,68 +480,75 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                 <h4 id="banque-images">Le projet "Banque d'images"</h4>
 
                 <p>On propose de réaliser une application qui permet à un utilisateur de visionner des images d'une banque d'images. Cette banque d'images est disponible sur UniversiTICE sous la forme d'un <code>zip</code> contenant plusieurs dossiers, chacun d'eux contenant des images d'une même catégorie. Le nom du dossier est le nom de la catégorie des images qu'il contient.</p>
+
                 <p>Cette application doit fonctionner selon deux modes de fonctionnement:</p>
                 <ul>
-                    <li>mode "anonyme"</li>
-                    <li>mode "authentifié"</li>
+                    <li>mode "aléatoire"</li>
+                    <li>mode "personnalisé"</li>
                 </ul>
-                <p>Dans le mode "anonyme", l'utilisateur peut visualiser un sous-ensemble d'images sélectionnées aléatoirement dans la banque d'images, toutes catégories confondues. Le mode "authentifié", accessible après que l'utilisateur ait rempli un formulaire d'inscription, permet d'accéder à un sous-ensemble d'images correspondant à une catégorie que celui-ci a sélectionné via ce formulaire.</p>
+                <p>Dans le mode "aléatoire", l'utilisateur peut visualiser un sous-ensemble d'images sélectionnées aléatoirement dans la banque d'images, toutes catégories confondues. Le mode "personnalisé", permet à l'utilisateur de choisir une catégorie et un nombre <em>n</em> via un formulaire, puis de visualiser <em>n</em> images, choisie aléatoirement dans la catégorie désignée.</p>
 
-                <p>On fournit ci-dessous un schéma simplifié de l'architecture de l'application. Les trois grands blocs représentent les trois composants MVC: Modèle, Vue et Contrôleur. Le modèle et le contrôleur sont implémentés par des <em>packages</em> Java et les blocs qu'ils contiennent sont des classes. La vue représente le dossier <code>webapp</code> et les blocs qu'elle contient sont des fichiers <code>.jsp</code>. L'application doit au moins respecter cette architecture, que vous êtes libre ensuite de compléter comme vous le souhaitez.</p>
-                <img src="../img/imagebank_diagram.png" class="mt-2 mb-3" alt="Diagramme de l'architecture de l'application ImageBank">
-                <p>L'architecture de l'application est basé sur le patron <em>Front controller</em>. Ce patron préconise d’utiliser une unique servlet chargée de recevoir l’ensemble des requêtes de l’application, et de déléguer ensuite le traitement au composant adéquat. Une application complexe disposerait typiquement d'un composant de traitement par fonctionnalité/action. Pour mettre en oeuvre cela, on s'appuit généralement sur le patron <em>command</em> qui préconise de créer une classe pour chaque "commande" reçu par le contrôleur:</p>
-                <figure>
+                <p>Pour concevoir cette application, vous devez mettre en oeuvre une architecture MVC dans laquelle:</p>
+                <ul>
+                    <li>Le contrôleur est composé d'une classe <code>FrontController</code> et d'une classe <code>Command</code>.</li>
+                    <li>La vue est composée de trois pages JSP: <code>gallery.jsp</code>, <code>custom.jsp</code> et <code>error.jsp</code>.</li>
+                    <li>Le modèle est composé de quatre classes Java: <code>Image</code>, <code>ImageCategory</code>, <code>ImageBank</code> et <code>GalleryService</code>.</li>
+                </ul>
+
+                <p>Cette architecture implémente le patron <em>Front controller</em>. Ce patron préconise d’utiliser une unique servlet chargée de recevoir l’ensemble des requêtes de l’application, et de déléguer ensuite le traitement au composant adéquat. Une application complexe disposerait typiquement d'un composant de traitement par fonctionnalité/action. Pour mettre en oeuvre cela, on s'appuit généralement sur le patron <em>command</em> qui préconise de créer une classe pour chaque "commande" reçu par le contrôleur:</p>
+                <figure class="center mb-4">
                     <img src="../img/frontcontroller_command.svg" class="w-50 m-auto mt-2 mb-3 framed" alt="Diagramme du patron Front Controller">
                     <figcaption>Source: <a href="https://en.wikipedia.org/wiki/Front_controller">Wikipedia</a></figcaption>
                 </figure>
-                <p>Dans le cadre de ce projet, on pourra se contenter d'une seule classe (<code>RequestProcessor</code>) pour gérer tous les cas d'usages.</p>
 
-                <p>Les images sont à placer dans le dossier <code>webapp/images</code>, chacune dans un sous-dossier correspondant à sa catégorie, comme dans l'archive.</p>
-                <p>Au chargement de l'application, les images contenues dans ce dossier sont parcourues et chargées en mémoire à l'aide des classes du modèle. L'objet correspondant est "sauvegardé", pour le rendre accéssible ensuite à n'importe quel composant de l'application. Ce chargement est à effectuer à l'initialisation de la servlet <code>FrontController</code>.</p>
+                <p>Dans le cadre de ce projet, on pourra se contenter d'une seule classe <code>Command</code>, responsable de l'exécution de toutes les commandes. En fonction des URL et des paramètres de la requête, elle déterminera quelle action effectuer et renverra au <em>Front Controller</em> le nom de la vue a sollicité en réponse.</p>
+
+                <p>Pour exécuter les commandes utilisateur, la classe <code>Command</code> sollicitera la classe <code>GalleryService</code>. Cette classe est responsable de la gestion de la banque d'images et de la récupération des images à afficher. Pour cela, elle utilisera les classes:</p>
+                <ul>
+                    <li><code>Image</code>, qui représente une image et contient son nom et le chemin d'accès à son fichier</li>
+                    <li><code>ImageCategory</code>, qui représente une catégorie d'images et contient le nom de la catégorie et une collection d'objets <code>Image</code></li>
+                    <li><code>ImageBank</code>, qui représente la banque d'images et contient une collection d'objets <code>ImageCategory</code>. Elle fournit des méthodes pour récupérer des images aléatoires ou des images d'une catégorie spécifique</li>
+                </ul>
+
+                <p>Les images sont à placer dans le dossier <code>webapp/images</code>, chacune dans un sous-dossier correspondant à sa catégorie, comme dans l'archive. Au chargement de l'application, les images contenues dans ce dossier sont parcourues et chargées en mémoire à l'aide des classes du modèle. Ce chargement est à effectuer à l'initialisation de la servlet <code>FrontController</code>.</p>
             </section>
 
 
             <!------------------------------------------->
             <section>
-                <h4 id="images-aléatoires">Premier cas d'usage: gallerie de 50 images aléatoires</h4>
+                <h4 id="images-aleatoires">Premier cas d'usage: gallerie de 50 images aléatoires</h4>
                 <p>Le premier cas d'usage que vous devez implémenter correspond au scénario suivant:</p>
                 <ol>
                     <li>L'utilisateur saisi l'URL de base, sans paramètre</li>
-                    <li>La servlet <code>FrontController</code> reçoit la requête et la transmet au <code>RequestProcessor</code></li>
-                    <li>Celui-ci sollicite le modèle pour récupérer 50 images aléatoires et les transmet en retour à la servlet</li>
-                    <li>La servlet sélectionne la vue appropriée pour afficher les images et transfert le contrôle à cette vue</li>
-                    <li>La vue est ensuite responsable de la présentation des images à l'utilisateur</li>
+                    <li>La servlet <code>FrontController</code> reçoit la requête et la transmet à <code>Command</code></li>
+                    <li>Celui-ci sollicite le modèle pour récupérer 50 images aléatoires et indique en retour à <code>FrontController</code> qu'il doit solliciter la vue <code>gallery.jsp</code></li>
+                    <li>La servlet transfert le contrôle à la vue qui est ensuite responsable de l'affichage des images</li>
                 </ol>
-                <p>Le résultat attendu est montré dans la capture d'écran ci-dessous:</p>
-                <img src="../img/imagebank-screen1.png" class="w-100 m-auto mt-2 mb-3">
+                <p>Le résultat attendu est montré dans la capture d'écran ci-dessous.</p>
+                <img src="../img/imagebank-screen1.png" class="w-100 m-auto">
             </section>
 
 
             <!------------------------------------------->
             <section>
-                <h4 id="images-authentifie">Deuxième cas d'usage: souscription et gallerie personnalisée</h4>
+                <h4 id="images-authentifie">Deuxième cas d'usage: gallerie personnalisée</h4>
                 <p>Le deuxième cas d’usage à implémenter fait suite au premier cas d’usage:</p>
                 <ul>
-                    <li>À partir de l'interface montrée ci-dessus, l'utilisateur doit pouvoir s'inscrire en cliquant sur le bouton "Sign up". Cela déclenche l'envoie d'une requête vers l'URL de base avec un paramètre d'URL permettant d'identifier l'objet de la requête (cf. figure ci-dessous)</li>
+                    <li>À partir de l'interface montrée ci-dessus, l'utilisateur clique sur le bouton "Personnalisé". Cela déclenche l'envoie d'une requête vers l'URL de base avec un paramètre d'URL <code>page=select</code></li>
+                    <li><code>FrontController</code> reçoit la requête et la transmet à <code>Command</code>. Celui-ci indique en retour la vue <code>custom.jsp</code></li>
+                    <li><code>FrontController</code> transfert le contrôle à la vue qui affiche un formulaire HTML comme montré ci-dessous</li>
                 </ul>
-                <img src="../img/imagebank-screen2.png" class="w-100 m-auto mt-2 mb-3 framed">
+                <img src="../img/imagebank-screen2.png" class="w-100 m-auto">
                 <ul>
-                    <li>Le <code>FrontController</code> reçoit la requête et la transmet au <code>RequestProcessor</code>. Celui-ci indique en retour au <code>FrontController</code> la vue qu'il doit solliciter</li>
-                    <li>Le <code>FrontController</code> transfert le contrôle à cette vue qui retourne au client un formulaire HTML à remplir par l'utilisateur (cf. image ci-dessus)</li>
                     <li>Lorsque l'utilisateur rempli et soumet le formulaire, une nouvelle requête est envoyée avec les données saisies à destination de la même URL</li>
-                    <li>À nouveau, le <code>FrontController</code> reçoit et transmet la requête au <code>RequestProcessor</code>, qui cette fois-ci sollicite le modèle pour:</li>
-                    <ol>
-                        <li>contrôler la validité des informations saisies</li>
-                        <li>créer un nouvel utilisateur si tout est valide ou renvoyer un message d'erreur dans le cas contraire</li>
-                    </ol>
-                    <li>En cas d'échec, la vue à solliciter est celle du formulaire d'inscription, qui affiche en plus le message d'erreur (cf. image ci-dessous)</li>
+                    <li><code>FrontController</code> reçoit et transmet la requête à <code>Command</code>, qui sollicite le modèle pour récupérer les images à afficher ou un message d'erreur si ce n'est pas possible</li>
+                    <li>En cas d'erreur, la vue à solliciter est <code>error.jsp</code> qui devra afficher un message décrivant l'erreur (cf. image ci-dessous)</li>
                 </ul>
-                <img src="../img/imagebank-screen3.png" class="w-100 m-auto mt-2 mb-3">
+                <img src="../img/imagebank-screen3.png" class="w-100 m-auto mt-1">
                 <ul>
-                    <li>En cas de succès, le <code>FrontController</code> doit envoyer au client une redirection vers la gallerie d'images. Cette redirection va renvoyer une requête vers l'URL de base</li>
-                    <li>Le <code>FrontController</code> reçoit cette requête, la transmet au <code>RequestProcessor</code> qui sollicite le modèle pour récupérer 50 images aléatoires dans la catégorie que l'utilisateur a sélectionnée pendant son inscription (cf. image ci-dessous).</li>
+                    <li>En cas de succès, la vue à solliciter est <code>gallery.jsp</code> qui doit cette fois afficher les images récupérées, appartenant à la catégorie choisie (cf. image ci-dessous).</li>
                 </ul>
-                <img src="../img/imagebank-screen5.png" class="w-100 m-auto mt-2 mb-3">
+                <img src="../img/imagebank-screen4.png" class="w-100 m-auto mt-2 mb-3">
             </section> 
 
             <!------------------------------------------->
@@ -550,7 +557,7 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                 <ul>
                     <li>Dans une page JSP, tous les chemins relatifs et les hyperliens vers une URL relative au projet doivent être préfixés par <code>${pageContext.request.contextPath}</code>. Par exemple:</li>
                     <pre><code class="language-html">&lt;link rel="stylesheet" href="${pageContext.request.contextPath}/style.css"&gt;</code></pre>
-                    <li>Pour pouvoir charger les images dans le modèle, vous devez lui transmettre le chemin du dossier <code>images</code>, après le déploiement sur le serveur. En pratique, vous ne connaissez pas ce chemin car vous ne savez pas comment l'application sera déployée sur le serveur. La solution est de définir ce chemin relativement au dossier <code>webapp</code> et d'utiliser une méthode dédiée pour déduire le chemin sur le serveur. Cette méthode est accessible via le <code>ServletContext</code>.</li>
+                    <li>Pour pouvoir charger les images, vous devez connaître le chemin du dossier <code>images</code>, après déploiement. En pratique, vous ne connaissez pas ce chemin car vous ne savez pas comment l'application est déployée sur le serveur. La solution est de définir ce chemin relativement au dossier <code>webapp</code> et d'utiliser une méthode dédiée pour déduire le chemin sur le serveur. Cette méthode est <code>getRealPath()</code> accessible via le <code>ServletContext</code>.</li>
                 </ul>
             </section>
             
