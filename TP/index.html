@@ -558,6 +558,7 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                     <li>Dans une page JSP, tous les chemins relatifs et les hyperliens vers une URL relative au projet doivent être préfixés par <code>${pageContext.request.contextPath}</code>. Par exemple:</li>
                     <pre><code class="language-html">&lt;link rel="stylesheet" href="${pageContext.request.contextPath}/style.css"&gt;</code></pre>
                     <li>Pour pouvoir charger les images, vous devez connaître le chemin du dossier <code>images</code>, après déploiement. En pratique, vous ne connaissez pas ce chemin car vous ne savez pas comment l'application est déployée sur le serveur. La solution est de définir ce chemin relativement au dossier <code>webapp</code> et d'utiliser une méthode dédiée pour déduire le chemin sur le serveur. Cette méthode est <code>getRealPath()</code> accessible via le <code>ServletContext</code>.</li>
+                    <li>Certaines dépendances peuvent être prises en charges par le conteneur CDI, comme <code>GalleryService</code> par exemple.</li>
                 </ul>
             </section>
             

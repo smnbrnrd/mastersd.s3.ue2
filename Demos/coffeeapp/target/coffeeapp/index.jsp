@@ -17,8 +17,24 @@
         <main class="container">
             <h1>Welcome to the Coffee Shop App</h1>
             <p>You can ask for a filter coffee or an espresso. Make your choice below:</p>
-            <a class="btn btn-primary mt-4" href="selection?coffeeType=filter">Filter</a>
-            <a class="btn btn-primary mt-4" href="selection?coffeeType=espresso">Espresso</a>
+            <form action="selection" method="post">
+                <div class="form-group">
+                    <label for="coffeeType">Coffee Type:</label>
+                    <select class="form-control" id="coffeeType" name="coffeeType">
+                        <option value="filter">Filter Coffee</option>
+                        <option value="espresso">Espresso</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="strength">Strength (1-5):</label>
+                    <input type="number" class="form-control" id="strength" name="strength" min="1" max="5" value="5">
+                </div>
+                <div class="form-group">
+                    <label for="sugar">Sugar (0-5):</label>
+                    <input type="number" class="form-control" id="sugar" name="sugar" min="0" max="5" value="0">
+                </div>
+                <button type="submit" class="btn btn-primary">Make Coffee</button>
+            </form>
         </main>
     </body>
 </html>

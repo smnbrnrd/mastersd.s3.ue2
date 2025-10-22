@@ -220,9 +220,9 @@ public Connection getConnection() throws SQLException {
                     <li>Un <em>managed bean</em> est une classe Java qui peut être gérée par le conteneur CDI</li>
                     <li>Elle doit :</li>
                     <ul>
-                        <li>Être publique et instantiable (non abstraite)</li>
-                        <li>Avoir un constructeur public sans argument ou avec des paramètres annotés avec <code>@Inject</code></li>
-                        <li>Être dans un package scanné par le conteneur CDI</li>
+                        <li>Être <span class="alert">publique et instantiable</span> (non abstraite)</li>
+                        <li>Avoir un <span class="alert">constructeur public sans argument ou avec des paramètres annotés</span> avec <code>@Inject</code></li>
+                        <li>Être <span class="alert">dans un package scanné par le conteneur CDI</span></li>
                     </ul>
                     <li>Elle est souvent annotée pour configurer son comportement (mais pas obligatoire)</li>
                     <li class="mb-3">Toutes les classes qui respectent ces contraintes sont des <em>managed bean</em> potentiels, c'est-à-dire qu'elles peuvent être découvertes et gérées automatiquement par le conteneur CDI</li>

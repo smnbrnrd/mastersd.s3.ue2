@@ -405,7 +405,7 @@ public class UserBean { ... }
             <section>
                 <h1>Backing beans</h1>
                 <ul>
-                    <li><em>backing beans</em> = sorte de contrôleurs pour les vues (<em>design pattern command</em>)</li>
+                    <li><em>backing beans</em> = lien entre UI et modèle (mais appartient à la vue)</li>
                     <li>Dans une application type, on a généralement un backing bean par facelet</li>
                     <li>Nouveau scope <code>@ViewScoped</code>: réutilise la même instance tant que l'utilisateur interagit avec la même page</li>
                 </ul>
@@ -417,7 +417,7 @@ public class UserBean { ... }
             <section>
                 <h1>Exemple (1)</h1>
                 <p class="mb-2"><em>Backing bean</em> <code>UserBean.java</code></p>
-                <pre><code class="language-java compact" data-trim data-line-numbers>
+                <pre><code class="language-java compact mb-2" data-trim data-line-numbers>
 @Named
 @RequestScoped
 public class UserBean {
@@ -448,7 +448,7 @@ public class UserBean {
             <section>
                 <h1>Exemple (1)</h1>
                 <p class="mb-2">Vue <code>greeting.xhtml</code></p>
-                <pre><code class="language-html compact" data-trim data-line-numbers>
+                <pre><code class="language-html compact mb-2" data-trim data-line-numbers>
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot; xmlns:f=&quot;jakarta.faces.core&quot;&gt;
     &lt;h:head&gt;
@@ -477,7 +477,7 @@ public class UserBean {
             <section>
                 <h1>Exemple (1)</h1>
                 <p class="mb-2">Vue <code>greeting.xhtml</code></p>
-                <pre><code class="language-html compact" data-trim data-line-numbers>
+                <pre><code class="language-html compact mb-2" data-trim data-line-numbers>
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; xmlns:h=&quot;jakarta.faces.html&quot; xmlns:f=&quot;jakarta.faces.core&quot;&gt;
     &lt;h:head&gt;
@@ -507,7 +507,7 @@ public class UserBean {
             <section>
                 <h1>Exemple (2)</h1>
                 <p class="mb-2"><em>Backing bean</em> <code>UserBean.java</code></p>
-                <pre><code class="language-java compact" data-trim data-line-numbers>
+                <pre><code class="language-java compact mb-2" data-trim data-line-numbers>
 @Named
 @ViewScoped
 public class UserBean {
@@ -535,7 +535,7 @@ public class UserBean {
             <section>
                 <h1>Exemple (2)</h1>
                 <p class="mb-2">Vue <code>greeting.xhtml</code></p>
-                <pre><code class="language-html compact" data-trim data-line-numbers>
+                <pre><code class="language-html compact mb-2" data-trim data-line-numbers>
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; 
     xmlns:h=&quot;jakarta.faces.html&quot; 
@@ -563,7 +563,7 @@ public class UserBean {
             <section>
                 <h1>Exemple (2)</h1>
                 <p class="mb-2">Vue <code>greeting-response.xhtml</code></p>
-                <pre><code class="language-html compact" data-trim data-line-numbers>
+                <pre><code class="language-html compact mb-2" data-trim data-line-numbers>
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot; 
     xmlns:h=&quot;jakarta.faces.html&quot;&gt;
@@ -774,27 +774,124 @@ public class EvenNumberValidator implements Validator {
                 </div>
             </section>
 
-
             <!--------------------------------------------->
             <section>
                 <h1>Événements</h1>
                 <ul>
-                    <li>Page web intéractive = déclencher des traitements en réaction à un événement</li>
+                    <li>Faces propose un mécanisme pour déclencher des traitements en réaction à un événement</li>
+                    <li>Ces traitements sont exécutés </li>
                     <li>2 grands types d'événements auquel on peut réagir :</li>
                     <ul>
                         <li>Générés par une <span class="alert">action utilisateur</span> (clic, saisie, etc.)</li>
                         <li>Générés par le <span class="alert">cycle de vie de l'application</span></li>
                     </ul>
-                    <li>Pour traiter un événement, on doit définir un <em>listener</em> dédié</li>
+                    <li>2 types d'événements utilisateur :</li>
+                    <ul>
+                        <li><em>action</em>: actions de l'utilisateur (clic sur un bouton, soumission de formulaire, etc.)</li>
+                        <li><em>value-change</em>: changements de valeur dans les composants (saisie de texte, sélection d'une option, etc.)</li>
+                    </ul>
+                    <li>Faces propose un mécanisme de <em>listener</em> (écouteur) pour gérer ces événements</li>
+                    <li>Déclencher à la réception d'une requête &ne; événements côté client (JS)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Listener</h1>
+                <ul>
                     <li>Un <em>listener</em> est:</li>
                     <ul>
-                        <li>Soit une méthode du backing bean</li>
-                        <li>Soit une classe qui implémente une interface dédiée</li>
+                        <li>Soit une méthode de backing bean</li>
+                        <li>Soit une classe qui implémente l'interface <code>ActionListener</code> ou <code>ValueChangeListener</code></li>
                     </ul>
-                    <li>Il faut ensuite <em>enregistrer</em> le listener dans une Facelet</li>
+                    <li class="mt-3">Exemple avec une méthode de backing bean pour un événement <em>action</em>:</li>
+                    <pre><code class="language-java compact" data-trim>
+@Named
+@ViewScoped
+public class WelcomeBean {
+    ...
+    public void selectLanguage(ActionEvent event) {
+        String language = event.getComponent().getId();
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().put("language", language);
+    }
+}
+                    </code></pre>
+                    <li>Méthode référencée dans la facelet via l'attribut <code>actionListener</code>:</li>
+                    <pre><code class="language-html compact" data-trim>
+&lt;h:commandButton id=&quot;english&quot; value=&quot;English&quot; actionListener=&quot;#{welcomeBean.selectLanguage}&quot; /&gt;
+                    </code></pre>
                 </ul>
-
             </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Listener</h1>
+                <ul>
+                    <li>Un <em>listener</em> est:</li>
+                    <ul>
+                        <li>Soit une méthode de backing bean</li>
+                        <li>Soit une classe qui implémente l'interface <code>ActionListener</code> ou <code>ValueChangeListener</code></li>
+                    </ul>
+                    <li class="mt-3">Exemple avec une classe pour un événement <em>value-change</em>:</li>
+                    <pre><code class="language-java compact mb-1" data-trim>
+public class UserValueChangeListener implements ValueChangeListener {
+    @Override
+    public void processValueChange(ValueChangeEvent event) throws AbortProcessingException {
+        String userName = (String) event.getNewValue();
+        if (null != userName) {
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("name", userName);
+        }
+    }
+}
+                    </code></pre>
+                    <li>Classe référencée dans la facelet avec la balise <code>f:valueChangeListener</code>:</li>
+                    <pre><code class="language-html compact" data-trim>
+&lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot;&gt;
+    &lt;f:valueChangeListener type=&quot;com.example.UserValueChangeListener&quot; /&gt;
+&lt;/h:inputText&gt;
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Listener</h1>
+                <h2><code>Action</code> vs <code>ActionListener</code></h2>
+                <ul>
+                    <li>Attribut <code>action</code> pour déclencher un traitement du backing bean</li>
+                    <pre><code class="language-html compact mb-2" data-trim data-line-numbers="3">
+&lt;h:form&gt;
+    Enter your name: &lt;h:inputText id=&quot;name&quot; value=&quot;#{userBean.name}&quot; /&gt;
+    &lt;h:commandButton value=&quot;Greet&quot; action=&quot;#{userBean.greet()}&quot; /&gt;
+&lt;/h:form&gt;
+                    </code></pre>
+                    <li>Différence avec <code>actionListener</code>?</li>
+                    <li><code>action</code> pour les traitements métiers et la navigation</li>
+                    <li><code>actionListener</code> pour les événements qui n'attendent pas de réponses</li>
+                    <li><code>actionListener</code> a accés au composant qui a déclenché l'événement</li>
+                    <li><code>action</code> est exécuté en dernier</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation</h1>
+                <ul>
+                    <li>Navigation = affichage d'une nouvelle page</li>
+                    <li>5 composants principaux:</li>
+                    <ul>
+                        <li><code>h:commandButton</code>: bouton pour soumettre le formulaire</li>
+                        <li><code>h:button</code>: bouton simple</li>
+                        <li><code>h:commandLink</code>: lien géré par Faces (cycle de vie complet)</li>
+                        <li><code>h:link</code>: lien classique (nouvelle requête GET)</li>
+                        <li><code>h:outputLink</code>: lien sans événement action</li>
+                    </ul>
+                    <li><code>commandButton</code> et <code>commandLink</code> sont à placer dans un formulaire</li>
+                    <li>Les autres ne soumettent pas de formulaire</li>
+                </ul>
+            </section>
+
 
             <!--------------------------------------------->
             <section>

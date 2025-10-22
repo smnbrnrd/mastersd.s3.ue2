@@ -16,7 +16,7 @@
     </head>
     <body>
         <main class="container">
-            <jsp:useBean id="coffee" class="fr.urn.sime.coffeeapp.Coffee" scope="request"/>
+            <jsp:useBean id="coffee" class="fr.urn.sime.coffeeapp.model.Coffee" scope="request"/>
             <h1>Your coffee is served</h1>
             <ul>
                 <li>Type : <jsp:getProperty name="coffee" property="type"/></li>
