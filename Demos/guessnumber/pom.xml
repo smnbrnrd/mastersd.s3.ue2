@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.urn.sime</groupId>
-    <artifactId>hello-faces</artifactId>
+    <artifactId>guessnumber</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>hello-faces</name>
+    <name>guessnumber</name>
     
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
@@ -24,7 +24,7 @@
     </dependencies>
     
     <build>
-        <finalName>hello-faces</finalName>
+        <finalName>guessnumber</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
