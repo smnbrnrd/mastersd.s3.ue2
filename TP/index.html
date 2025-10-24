@@ -509,9 +509,16 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                     <li><code>ImageCategory</code>, qui représente une catégorie d'images et contient le nom de la catégorie et une collection d'objets <code>Image</code></li>
                     <li><code>ImageBank</code>, qui représente la banque d'images et contient une collection d'objets <code>ImageCategory</code>. Elle fournit des méthodes pour récupérer des images aléatoires ou des images d'une catégorie spécifique</li>
                 </ul>
-                <p>Dans ce fonctionnement, <code>Command</code> dépend de <code>GalleryService</code>, qui dépend lui-même de <code>ImageBank</code>. Pour gérer ces dépendances, vous devez utiliser CDI pour l'injection de dépendances.</p>
 
                 <p>Les images sont à placer dans le dossier <code>webapp/images</code>, chacune dans un sous-dossier correspondant à sa catégorie, comme dans l'archive. Au chargement de l'application, les images contenues dans ce dossier sont parcourues et chargées en mémoire à l'aide des classes du modèle. Ce chargement est à effectuer à l'initialisation de la servlet <code>FrontController</code>.</p>
+
+                <p>Dans cette architecture, il y a plusieurs dépendances entre les composants:</p>
+                <ul>
+                    <li><code>FrontController</code> dépend de <code>Command</code></li>
+                    <li><code>Command</code> dépend de <code>GalleryService</code></li>
+                    <li><code>GalleryService</code> dépend de <code>ImageBank</code></li>
+                </ul>
+                <p>Pour gérer ces dépendances, vous devez utiliser CDI pour l'injection de dépendances.</p>
             </section>
 
 
