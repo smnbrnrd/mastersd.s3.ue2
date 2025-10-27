@@ -479,48 +479,67 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
             <section>
                 <h4 id="banque-images">Le projet "Banque d'images"</h4>
 
-                <p>On propose de réaliser une application qui permet à un utilisateur de visionner des images d'une banque d'images. Cette banque d'images est disponible sur UniversiTICE sous la forme d'un <code>zip</code> contenant plusieurs dossiers, chacun d'eux contenant des images d'une même catégorie. Le nom du dossier est le nom de la catégorie des images qu'il contient.</p>
+                <section>
+                    <h5>Présentation</h5>
+                    
+                    <p>On propose de réaliser une application qui permet à un utilisateur de visionner des images d'une banque d'images. Cette banque d'images est disponible sur UniversiTICE sous la forme d'un <code>zip</code> contenant plusieurs dossiers, chacun d'eux contenant des images d'une même catégorie. Le nom du dossier est le nom de la catégorie des images qu'il contient.</p>
 
-                <p>Cette application doit fonctionner selon deux modes de fonctionnement:</p>
-                <ul>
-                    <li>mode "aléatoire"</li>
-                    <li>mode "personnalisé"</li>
-                </ul>
-                <p>Dans le mode "aléatoire", l'utilisateur peut visualiser un sous-ensemble d'images sélectionnées aléatoirement dans la banque d'images, toutes catégories confondues. Le mode "personnalisé", permet à l'utilisateur de choisir une catégorie et un nombre <em>n</em> via un formulaire, puis de visualiser <em>n</em> images, choisie aléatoirement dans la catégorie désignée.</p>
+                    <p>Cette application doit fonctionner selon deux modes de fonctionnement:</p>
+                    <ul>
+                        <li>mode "aléatoire"</li>
+                        <li>mode "personnalisé"</li>
+                    </ul>
+                    <p>Dans le mode "aléatoire", l'utilisateur peut visualiser un sous-ensemble d'images sélectionnées aléatoirement dans la banque d'images, toutes catégories confondues. Le mode "personnalisé", permet à l'utilisateur de choisir une catégorie et un nombre <em>n</em> via un formulaire, puis de visualiser <em>n</em> images, choisie aléatoirement dans la catégorie désignée.</p>
 
-                <p>Pour concevoir cette application, vous devez mettre en oeuvre une architecture MVC dans laquelle:</p>
-                <ul>
-                    <li>Le contrôleur est composé d'une classe <code>FrontController</code> et d'une classe <code>Command</code>.</li>
-                    <li>La vue est composée de trois pages JSP: <code>gallery.jsp</code>, <code>custom.jsp</code> et <code>error.jsp</code>.</li>
-                    <li>Le modèle est composé de quatre classes Java: <code>Image</code>, <code>ImageCategory</code>, <code>ImageBank</code> et <code>GalleryService</code>.</li>
-                </ul>
+                    <p>Pour concevoir cette application, vous devez mettre en oeuvre une architecture MVC dont nous détaillons les composants ci-dessous.</p>
+                </section>
 
-                <p>Cette architecture implémente le patron <em>Front controller</em>. Ce patron préconise d’utiliser une unique servlet chargée de recevoir l’ensemble des requêtes de l’application, et de déléguer ensuite le traitement au composant adéquat. Une application complexe disposerait typiquement d'un composant de traitement par fonctionnalité/action. Pour mettre en oeuvre cela, on s'appuit généralement sur le patron <em>command</em> qui préconise de créer une classe pour chaque "commande" reçu par le contrôleur:</p>
-                <figure class="center mb-4">
-                    <img src="../img/frontcontroller_command.svg" class="w-50 m-auto mt-2 mb-3 framed" alt="Diagramme du patron Front Controller">
-                    <figcaption>Source: <a href="https://en.wikipedia.org/wiki/Front_controller">Wikipedia</a></figcaption>
-                </figure>
+                <section>
+                    <h5>Controleur</h5>
 
-                <p>Dans le cadre de ce projet, on pourra se contenter d'une seule classe <code>Command</code>, responsable de l'exécution de toutes les commandes. En fonction des URL et des paramètres de la requête, elle déterminera quelle action effectuer et renverra au <em>Front Controller</em> le nom de la vue a sollicité en réponse.</p>
+                    <p>Le contrôleur doit mettre en oeuvre le patron de conception <em>Front Controller</em>. Ce patron préconise d’utiliser une unique servlet chargée de recevoir l’ensemble des requêtes de l’application, et de déléguer ensuite le traitement au composant adéquat. Une application dispose typiquement d'un composant de traitement par fonctionnalité/action. Pour mettre en oeuvre cela, on s'appuit généralement sur le patron <em>command</em> qui préconise de créer une classe pour chaque "commande" reçu par le contrôleur:</p>
+                    <figure class="center mb-4">
+                        <img src="../img/frontcontroller_command.svg" class="w-50 m-auto mt-2 mb-3 framed" alt="Diagramme du patron Front Controller">
+                        <figcaption>Source: <a href="https://en.wikipedia.org/wiki/Front_controller">Wikipedia</a></figcaption>
+                    </figure></p>
+                    <p>Dans ce projet, il y a deux commandes: <code>RandomGalleryCommand</code> et <code>CustomGalleryCommand</code>, qui héritent toutes deux de la classe abstraite <code>Command</code>. En fonction de l'URL, <em>Front Controller</em> utilisera l'une ou l'autre de ces deux classes.</p>
+                </section>
 
-                <p>Pour exécuter les commandes utilisateur, la classe <code>Command</code> sollicitera la classe <code>GalleryService</code>. Cette classe est responsable de la gestion de la banque d'images et de la récupération des images à afficher. Pour cela, elle utilisera les classes:</p>
-                <ul>
-                    <li><code>Image</code>, qui représente une image et contient son nom et le chemin d'accès à son fichier</li>
-                    <li><code>ImageCategory</code>, qui représente une catégorie d'images et contient le nom de la catégorie et une collection d'objets <code>Image</code></li>
-                    <li><code>ImageBank</code>, qui représente la banque d'images et contient une collection d'objets <code>ImageCategory</code>. Elle fournit des méthodes pour récupérer des images aléatoires ou des images d'une catégorie spécifique</li>
-                </ul>
+                <section>
+                    <h5>Modèle</h5>
 
-                <p>Les images sont à placer dans le dossier <code>webapp/images</code>, chacune dans un sous-dossier correspondant à sa catégorie, comme dans l'archive. Au chargement de l'application, les images contenues dans ce dossier sont parcourues et chargées en mémoire à l'aide des classes du modèle. Ce chargement est à effectuer à l'initialisation de la servlet <code>FrontController</code>.</p>
+                    <p>Pour exécuter les commandes utilisateur, les classes <em>commandes</em> sollicitent la classe <code>GalleryService</code>. Cette classe est responsable de la gestion de la banque d'images et de la récupération des images à afficher. Pour cela, elle utilisera les classes:</p>
+                    <ul>
+                        <li><code>Image</code>, qui représente une image et contient son nom et le chemin d'accès à son fichier</li>
+                        <li><code>ImageCategory</code>, qui représente une catégorie d'images et contient le nom de la catégorie et une collection d'objets <code>Image</code></li>
+                        <li><code>ImageBank</code>, qui représente la banque d'images et contient une collection d'objets <code>ImageCategory</code>. Elle fournit des méthodes pour récupérer des images aléatoires ou des images d'une catégorie spécifique</li>
+                    </ul>
 
-                <p>Dans cette architecture, il y a plusieurs dépendances entre les composants:</p>
-                <ul>
-                    <li><code>FrontController</code> dépend de <code>Command</code></li>
-                    <li><code>Command</code> dépend de <code>GalleryService</code></li>
-                    <li><code>GalleryService</code> dépend de <code>ImageBank</code></li>
-                </ul>
-                <p>Pour gérer ces dépendances, vous devez utiliser CDI pour l'injection de dépendances.</p>
+                    <p>Les images sont à placer dans le dossier <code>webapp/images</code>, chacune dans un sous-dossier correspondant à sa catégorie, comme dans l'archive. Au chargement de l'application, les images contenues dans ce dossier sont parcourues et chargées en mémoire à l'aide des classes du modèle. Ce chargement est à effectuer à l'initialisation de la servlet <code>FrontController</code>.</p>
+                </section>
+
+                <section>
+                    <h5>Vues</h5>
+
+                    <p>La vue est composée de trois pages JSP:</p>
+                    <ul>
+                        <li><code>gallery.jsp</code>, qui affiche une gallerie d'images</li>
+                        <li><code>custom.jsp</code>, qui affiche un formulaire HTML pour la saisie des paramètres de la gallerie personnalisée</li>
+                        <li><code>error.jsp</code>, qui affiche un message d'erreur</li>
+                    </ul>
+                    <p>Ces pages JSP sont sollicitées par la servlet <code>FrontController</code> en fonction des résultats des commandes exécutées.</p>
+                </section>
+
+                <section>
+                    <h5>CDI</h5>
+                    <p>Dans cette architecture, il y a plusieurs dépendances entre les composants:</p>
+                    <ul>
+                        <li><code>FrontController</code> dépend des sous-classes de <code>Command</code> et de <code>GalleryService</code></li>
+                        <li><code>GalleryService</code> dépend de <code>ImageBank</code></li>
+                    </ul>
+                    <p>Pour gérer ces dépendances, vous devez utiliser CDI pour l'injection de dépendances. En outre, vous devez utiliser une méthode <em>producer</em> pour gérer la dépendance entre <code>FrontController</code> et les <code>Command</code>.</p>   
+                </section>
             </section>
-
 
             <!------------------------------------------->
             <section>
@@ -566,11 +585,23 @@ filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
                     <li>Dans une page JSP, tous les chemins relatifs et les hyperliens vers une URL relative au projet doivent être préfixés par <code>${pageContext.request.contextPath}</code>. Par exemple:</li>
                     <pre><code class="language-html">&lt;link rel="stylesheet" href="${pageContext.request.contextPath}/style.css"&gt;</code></pre>
                     <li>Pour pouvoir charger les images, vous devez connaître le chemin du dossier <code>images</code>, après déploiement. En pratique, vous ne connaissez pas ce chemin car vous ne savez pas comment l'application est déployée sur le serveur. La solution est de définir ce chemin relativement au dossier <code>webapp</code> et d'utiliser une méthode dédiée pour déduire le chemin sur le serveur. Cette méthode est <code>getRealPath()</code> accessible via le <code>ServletContext</code>.</li>
-                    <li>Certaines dépendances peuvent être prises en charges par le conteneur CDI, comme <code>GalleryService</code> par exemple.</li>
                 </ul>
             </section>
             
         </section>
+
+        <!--===============================================
+        <section>
+            <h3 id="mvc">Jakarta Faces</h3>
+        
+            <!-------------------------------------------
+            <section>
+                <h4 id="banque-images">Le projet "Taskboard"</h4>
+            
+
+            </section>
+        
+        </section> ========-->
 
     </main>
 
