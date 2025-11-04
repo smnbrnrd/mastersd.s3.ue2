@@ -1,0 +1,11 @@
+05-10-2025,Web dynamique côté serveur,EXAM,14,20
+11-09-2025,Approches comparatives des technologies mobiles,PROJECT, 16,20
+24-10-2025,Internet des objets,EXAM,12,20
+12-11-2025,CEIP,DEFENSE,17,20
+15-12-2025,Anglais,DEFENSE,16,20
+02-12-2025,Web dynamique côté serveur,PRACTICAL,12,20
+06-02-2026,Gestion de données pour le mobile,PRACTICAL,13,30
+04-12-2025,Projet Innovation Conception,DEFENSE,15,20
+28-08-2026,Stage,DEFENSE,16,20
+21-08-2026,Stage,REPORT,15,20
+29-11-2025,Reinforcement Learning,EXAM,11,20

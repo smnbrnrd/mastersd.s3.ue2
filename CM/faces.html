@@ -217,7 +217,7 @@ public class FacesActivator { }
                     <div class="col-6">
                         <ul>
                             <li class="mb-2">Balises HTML5, reportées dans la page HTML résultante</li>
-                            <li class="mb-2">Accès aux bibliothèques de balises standard : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
+                            <li class="mb-2">Accès aux bibliothèques de balises standards : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
                         </ul>
                     </div>
                 </div>
@@ -254,7 +254,7 @@ public class FacesActivator { }
                     <div class="col-6">
                         <ul>
                             <li class="mb-2">Balises HTML5, reportées dans la page HTML résultante</li>
-                            <li class="mb-2">Accès aux bibliothèques de balises standard : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
+                            <li class="mb-2">Accès aux bibliothèques de balises standards : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
                             <li class="mb-2"><code>&lt;h:head&gt;</code>, <code>&lt;h:body&gt;</code> nécessaires pour la gestion des ressources externes (CSS, script, images)</li>
                         </ul>
                     </div>
@@ -292,7 +292,7 @@ public class FacesActivator { }
                     <div class="col-6">
                         <ul>
                             <li class="mb-2">Balises HTML5, reportées dans la page HTML résultante</li>
-                            <li class="mb-2">Accès aux bibliothèques de balises standard : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
+                            <li class="mb-2">Accès aux bibliothèques de balises standards : composants (<code>h:</code>) et fonctionnalités de bases (<code>f:</code>)</li>
                             <li class="mb-2"><code>&lt;h:head&gt;</code>, <code>&lt;h:body&gt;</code> nécessaires pour la gestion des ressources externes (CSS, script, images)</li>
                             <li class="mb-2"><code>&lt;h:form&gt;</code>, <code>&lt;h:outputText&gt;</code>, <code>&lt;h:inputText&gt;</code>, <code>&lt;h:commandButton&gt;</code> pour la gestion des formulaires</li>
                         </ul>
@@ -599,7 +599,7 @@ public class UserBean {
                     <li>2 cas particuliers: <code>Date</code> et <code>Number</code></li>
                     <pre><code class="language-html" data-trim>
 &lt;h:inputText id=&quot;dateofbirth&quot; title=&quot;Enter your date of birth:&quot; value=&quot;#{userBean.dateOfBirth}&quot;&gt;
-    &lt;f:convertDateTime type=&quot;localDateTime&quot; pattern=&quot;dd/MM/yyyy&quot; /&gt;
+    &lt;f:convertDateTime type=&quot;localDate&quot; pattern=&quot;dd/MM/yyyy&quot; /&gt;
 &lt;/h:inputText&gt;
 &lt;h:message for=&quot;dateofbirth&quot; /&gt;
                     </code></pre>
@@ -670,7 +670,7 @@ public class UserNumberBean {
                 <h1>Validateurs non standards</h1>
                 <ul>
                     <li>Validation via une méthode du bean:</li>
-                    <pre><code class="language-java compact mb-1" data-trim>
+                    <pre><code class="language-java mb-1" data-trim>
 @Named
 @ViewScoped
 public class UserNumberBean {
@@ -701,8 +701,8 @@ public class UserNumberBean {
                 <ul>
                     <li>Validation via une classe qui implémente <code>javax.faces.validator.Validator</code>:</li>
                     <pre><code class="language-java compact mb-1" data-trim>
-@FacesValidator("evenNumberValidator")
-public class EvenNumberValidator implements Validator {
+@FacesValidator("userNumberValidator")
+public class UserNumberValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
@@ -718,8 +718,8 @@ public class EvenNumberValidator implements Validator {
                     </code></pre>
                     <li>Classe référencée via la balise <code>f:validator</code></li>
                     <pre><code class="language-html mb-1" data-trim>
-&lt;h:inputText id=&quot;evenNo&quot; title=&quot;Enter an even number:&quot; value=&quot;#{userNumberBean.evenNumber}&quot;&gt;
-    &lt;f:validator validatorId=&quot;evenNumberValidator&quot; /&gt;
+&lt;h:inputText id=&quot;userNo&quot; title=&quot;Enter a number from 0 to 10:&quot; value=&quot;#{userNumberBean.userNumber}&quot;&gt;
+    &lt;f:validator validatorId=&quot;userNumberValidator&quot; /&gt;
 &lt;/h:inputText&gt;
                     </code></pre>
                     <li>À n'utiliser que si les méthodes précédentes ne suffisent pas</li>
@@ -779,7 +779,6 @@ public class EvenNumberValidator implements Validator {
                 <h1>Événements</h1>
                 <ul>
                     <li>Faces propose un mécanisme pour déclencher des traitements en réaction à un événement</li>
-                    <li>Ces traitements sont exécutés </li>
                     <li>2 grands types d'événements auquel on peut réagir :</li>
                     <ul>
                         <li>Générés par une <span class="alert">action utilisateur</span> (clic, saisie, etc.)</li>
@@ -881,9 +880,9 @@ public class UserValueChangeListener implements ValueChangeListener {
                     <li>Navigation = affichage d'une nouvelle page</li>
                     <li>5 composants principaux:</li>
                     <ul>
-                        <li><code>h:commandButton</code>: bouton pour soumettre le formulaire</li>
+                        <li><code>h:commandButton</code>: bouton pour soumettre un formulaire</li>
+                        <li><code>h:commandLink</code>: lien pour soumettre un formulaire</li>
                         <li><code>h:button</code>: bouton simple</li>
-                        <li><code>h:commandLink</code>: lien géré par Faces (cycle de vie complet)</li>
                         <li><code>h:link</code>: lien classique (nouvelle requête GET)</li>
                         <li><code>h:outputLink</code>: lien sans événement action</li>
                     </ul>
@@ -892,14 +891,30 @@ public class UserValueChangeListener implements ValueChangeListener {
                 </ul>
             </section>
 
+            <!--------------------------------------------->
+            <section>
+                <h1>Navigation</h1>
+                <ul>
+                    <li><code>h:commandButton</code> et <code>h:commandLink</code>: soumission d'un formulaire avec requête <code>POST</code></li>
+                    <li>Cycle de vie géré par <code>Faces</code> pour afficher une page ou déclencher une action (méthode de bean):</li>
+                    <pre><code class="language-html mb-1" data-trim>
+&lt;h:commandButton value=&quot;greet&quot; action=&quot;greetPage&quot; /&gt;
+                    </code></pre>
+                    <li>L'URL affiché après requête est la même que celle du formulaire</li>
+                    <li class="mb-3">Pour afficher le bon URL: <code>action=&quot;greetPage?faces-redirect=true&quot;</code></li>
+                    <li><code>h:button</code> et <code>h:link</code>: une requête <code>GET</code> vers la page indiquée par <code>outcome</code></li>
+                    <pre><code class="language-html mb-3" data-trim>
+&lt;h:button value=&quot;greet&quot; outcome=&quot;greetPage&quot; /&gt;
+                    </code></pre>
+                    <li><code>h:outputLink</code>: requête <code>GET</code> vers une URL externe à l'application</li>
+                </ul>
+            </section>
 
             <!--------------------------------------------->
             <section>
-                <h1>Liens vers la documentation</h1>
-                <ul>
-                    <li><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page-core/faces-page-core.html" target="_blank">Converssion et validation</a></li>
-                    <li><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-develop/faces-develop.html#_writing_managed_bean_methods" target="_blank">Écriture de méthodes de bean (validation, navigation, etc.)</a></li>
-                </ul>
+                <h1>Démonstration</h1>
+                <p class="mb-2">Projet <code>studentmarks</code></p>
+                <a href="../Demos/studentmarks/"><img src="figures/chap5/studentmarks-demo.png" class="w-90 m-auto"></a>
             </section>
 
         </div>
