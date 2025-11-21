@@ -387,27 +387,6 @@ public class HelloServlet extends HttpServlet {
                     </ul>
                 </section>
 
-                <section>
-                    <h5>Ajoutez une photo de profil</h5>
-                    <ul>
-                        <li>Ajoutez au formulaire de saisie de l'exercice précédent un champs permettant à l'utilisateur de désigner un fichier image de son disque dur. Ce fichier sera téléversé (uploadé) sur le serveur et servira de photo de profil à l'utilisateur.</li>
-                        <li>Modifiez la servlet <code>NewUserServlet</code> pour qu'elle réceptionne l'image téléversée et qu'elle l'enregistre sur le serveur. Pour cela:</li>
-                        <ol>
-                            <li>ajoutez à la servlet l'annotation <code>@MultipartConfig</code> qui permet de gérer l'encodage HTTP <code>multipart/form-data</code>, nécessaire à la transmission des fichiers</li>
-                            <li>ajoutez un paramètre d'initialisation de servlet avec le chemin du dossier contenant les images. Ce doit être le chemin absolu du système du serveur (e.g. <code>/home/login/workspace/UserMngr/src/main/webapp/images/</code>)</li>
-                            <li>modifiez la servlet pour qu'elle récupère l'image et l'enregistre sur le serveur, avec les instructions suivantes:</li>
-                            <pre><code class="language-java">
-// pour récupérer le fichier téléversé :
-Part filePart = request.getPart(&lt;name&gt;);
-
-// pour l'enregistré sur le serveur:
-filePart.write(&lt;chemin&gt; + File.separator + &lt;filename&gt;);
-                            </code></pre>
-                            où <code>&lt;name&gt;</code> est le nom du champ dans le formulaire HTML qui a permis de sélectionner l'image, <code>&lt;chemin&gt;</code> est le chemin absolu du dossier destinataire sur le serveur, et <code>&lt;filename&gt;</code> est le nom du fichier enregistré sur le serveur.
-                        </ol>
-                        <li>Modifiez la servlet <code>UsersServlet</code> pour ajouter les photos de profil dans la liste des utilisateurs retournée au client.</li>
-                    </ul>
-                </section>
             </section>
         </section>
 
