@@ -1,0 +1,37 @@
+\documentclass[tikz, margin=5mm]{standalone}
+\usepackage[sfdefault,light]{roboto}
+\usetikzlibrary{shapes, arrows, positioning, backgrounds}
+\definecolor{MyGreen}{HTML}{41B3A3}
+\definecolor{MyBlue}{HTML}{3778C2}
+\definecolor{urn_orange}{HTML}{e28743}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
+\begin{document}
+	\begin{tikzpicture}  [
+			every node/.style={draw,font=\scriptsize,align=center},
+			composant/.style={draw, rectangle, rounded corners, fill=MyGreen!30, text width=1.7cm, minimum height=1.2cm},
+			bdd/.style={draw,cylinder,shape border rotate=90,aspect=0.7,minimum width=10mm,minimum height=10mm, cylinder uses custom fill,cylinder body fill=MyBlue!20,cylinder end fill=MyBlue!10},
+			legend/.style={draw=none,fill=none,align=center},
+		]
+		\node at (0,0) [composant] (nodeClient) {Consommateur (client)};
+		\node at (7,0) [composant] (nodeServeur) {Fournisseur (serveur)};
+		\node at (9.5,0) [bdd] (nodeBdd) {};
+		
+		\node (pc) [draw=none,below=-0.2cm of nodeClient] {\includegraphics[width=15mm]{./images/pc.png}};		
+		\node (pc) [draw=none,below=-0.2cm of nodeServeur] {\includegraphics[width=9mm]{./images/server.png}};
+		
+		\path[-latex,thick] (nodeClient.20) edge node [legend,above,align=left] {
+			\texttt{GET /weather/rouen/20200916 HTTP/1.1} \\
+			\texttt{Host: myservice.com} \\
+			\texttt{Accept: application/json} \\
+		} (nodeServeur.west|-nodeClient.20);
+		\path[latex-,thick] (nodeClient.-20) edge node [legend,below,align=left] {
+			\texttt{\{} \\
+			\hspace{0.5cm}\texttt{"date": "2020-09-16",} \\
+			\hspace{0.5cm}\texttt{"location": "Rouen",} \\
+			\hspace{0.5cm}\texttt{"info": "Hot"} \\
+			\texttt{\}} \\
+		} (nodeServeur.west|-nodeClient.-20);
+		\path[-latex] (nodeServeur.20) edge (nodeBdd);
+		\path[latex-] (nodeServeur.-20) edge (nodeBdd);
+	\end{tikzpicture}
+\end{document}

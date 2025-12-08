@@ -1,0 +1,30 @@
+\documentclass[tikz, margin=5mm]{standalone}
+\usepackage[sfdefault,light]{roboto}
+\usetikzlibrary{shapes, arrows, positioning, backgrounds}
+\definecolor{MyGreen}{HTML}{41B3A3}
+\definecolor{urn_orange}{HTML}{e28743}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
+\begin{document}
+	\begin{tikzpicture} [
+		every node/.style={font=\footnotesize, align=center,rectangle,rounded corners},
+		composant/.style={draw,fill=MyGreen!30,text width=2.5cm,minimum height=1.5cm}
+		]
+		
+		\node (conso) [composant] {Consommateur \\ du service};
+		\node (registre) [composant,above right=1cm and 0.1cm of conso] {Annuaire \\ de services};
+		\node (produc) [composant, right=3cm of conso] {Fournisseur \\ de services};
+		
+		\node (pc) [draw=none,below=-0.2cm of conso] {\includegraphics[width=15mm]{./images/pc.png}};		
+		\node (pc) [draw=none,below=-0.2cm of produc] {\includegraphics[width=9mm]{./images/server.png}};
+		\node (pc) [draw=none,above left=0cm and -1.2cm of produc] {\includegraphics[width=6mm]{./images/contrat.png}};
+		
+		\path[latex-,draw,thick] (registre) -| coordinate[midway] (rp) (produc);
+		\path[-latex,draw,thick] ([xshift=-2mm]conso.north) |- coordinate[midway] (cr) ([yshift=2mm]registre.west);
+		\path[latex-,draw,dashed,thick] ([xshift=2mm]conso.north) |- coordinate[midway] (rc) ([yshift=-2mm]registre.west);
+		\path[latex-latex,draw,thick] (conso) -- coordinate[midway] (cp)   (produc);
+		\node [above] at (rp) {1 - {\color{urn_orange} Publier}};
+		\node [above] at (cr) {2 - {\color{urn_orange} Chercher}};
+		\node [below right=8mm and 1mm of rc] {Description};
+		\node [above] at (cp) {3 - {\color{urn_orange} Consommer}};
+	\end{tikzpicture}
+\end{document}

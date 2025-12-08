@@ -1,0 +1,25 @@
+\documentclass[tikz]{standalone}
+\usepackage[sfdefault,light]{roboto}
+\usetikzlibrary{shapes, arrows, positioning, backgrounds}
+\definecolor{MyGreen}{HTML}{41B3A3}
+\tikzset{every picture/.style={/utils/exec={\sffamily}}}
+\begin{document}
+    \begin{tikzpicture} [every node/.style={align=center,rectangle,rounded corners, font=\small}]
+		\node (client) [draw=none] {\includegraphics[width=15mm]{./images/pc.png}};
+		\node (web) [draw=black,right=of client] {Application\\Web};
+		\node (back) [draw=none,right=of web] {\includegraphics[width=10mm]{./images/server.png}};
+		\node (avion) [draw=none,below=of back] {\includegraphics[width=15mm]{./images/avion.png}};
+		\node (hotel) [draw=none,left=of avion] {\includegraphics[width=15mm]{./images/hotel.jpg}};
+		\node (voiture) [draw=none,left=of hotel] {\includegraphics[width=15mm]{./images/voiture.png}};
+		\node (assur) [draw=none,right=of avion] {\includegraphics[width=15mm]{./images/assurance.png}};
+		\node (lavion) [draw=none,below=0.1cm of voiture] {Location voiture};
+		\node (lhotel) [draw=none,below=0.1cm of hotel] {Réservation hotel};
+		\node (lvoiture) [draw=none,below=0.1cm of avion] {Réservation vol};
+		\node (lassur) [draw=none,below=0.1cm of assur] {Assurance voyage};
+		\path[->,draw,thick] (client) -- (web) -- (back);
+		\path[->,draw,thick] (back) -- (voiture);
+		\path[->,draw,thick] (back) -- (hotel);
+		\path[->,draw,thick] (back) -- (avion);
+		\path[->,draw,thick] (back) -- (assur);
+	\end{tikzpicture}
+\end{document}

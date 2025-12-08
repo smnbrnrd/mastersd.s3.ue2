@@ -49,6 +49,31 @@ img.framed {
     margin: 0;
     padding: 0;
 }
+figure {
+    margin: 0;
+}
+figcaption {
+    font-size: 0.6em;
+    color: grey;
+    margin-top: 0.3em;
+}
+figcaption a {
+    text-decoration: underline;
+}
+
+section .normal { font-size: 1rem !important; }
+section .small { font-size: 0.8rem !important; }
+section .smaller { font-size: 0.7rem !important; }
+section .smallest { font-size: 0.6rem !important; }
+section .large { font-size: 1.2rem !important; }
+section .larger { font-size: 1.4rem !important; }
+section .largest { font-size: 1.6rem !important; }
+
+section .left { text-align: left; }
+section .right { text-align: right; }
+section .center { text-align: center; }
+section .justify { text-align: justify; }
+
 /*** lists ******/
 ul { 
     list-style-type: none; 

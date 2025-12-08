@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Master SD - Web Dynamique côté Serveur</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <link rel="stylesheet" href="reveal/plugin/highlight/zenburn.css" />
+    <link rel="stylesheet" href="../css/cm.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!--------------------------------------------->
+            <!-- Cover slide -->
+            <section class="title-slide">
+                <div class="title">Web Dynamique côté Serveur</div>
+                <div class="subtitle">Jakarta REST</div>
+                <div class="author">Simon BERNARD</div>
+                <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+                <div class="logo"><img src="../img/logo_urn_color.png"></div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture Orientée Service (SOA)</h1>
+                <h2>Deux familles d'applications Web</h2>
+                <ul>
+                    <li class="alert">Orientée présentation</li>
+                    <ul>
+                        <li>Génère des pages web dynamiques en réponses aux requêtes HTTP</li>
+                        <li>À destination d'un utilisateur <em>humain</em></li>
+                        <li>Ce que nous avons vu jusqu'ici, notamment avec Jakarta Faces</li>
+                    </ul>
+                    <li class="alert">Orientée services</li>
+                    <ul>
+                        <li>Génère des structures de données dynamiques en réponses aux requêtes HTTP</li>
+                        <li>À destination d'autres applications (clients lourds, applications mobiles, autres serveurs...)</li>
+                        <li>Utilisation de protocoles légers (HTTP/HTTPS) et de formats de données standardisés (JSON, XML...)</li>
+                        <li>Ce que nous allons voir avec Jakarta REST</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture Orientée Service (SOA)</h1>
+                <ul>
+                    <li>Communication <em>human-to-machine</em>: il faut une interface graphique</li>
+                    <li>HTML/CSS/JS</li>
+                </ul>
+                <figure>
+                    <img src="./figures/chap6/openweather_page.png" class="w-80 m-auto"/>
+                    <figcaption><a href="https://openweathermap.org/city/2982652" target="_blank">https://openweathermap.org/city/2982652</a></figcaption>
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture Orientée Service (SOA)</h1>
+                <ul>
+                    <li>Communication <em>machine-to-machine</em>: un format de données commun</li>
+                    <li>XML ou JSON (ci-dessous)</li>
+                </ul>
+                <figure>
+                    <img src="./figures/chap6/openweather_api.png" class="w-80 m-auto"/>
+                    <figcaption><a href="https://api.openweathermap.org/data/2.5/weather?lat=49.4404&lon=1.0973&appid=049a15928787dad58780457b8ed72029" target="_blank">https://api.openweathermap.org/data/2.5/weather?lat=49.4404&lon=1.0973&appid=049a15928787dad58780457b8ed72029</a></figcaption>
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture Orientée Service (SOA)</h1>
+                <ul>
+                    <li>SOA est un style d'architecture pour la mise en oeuvre de ce type d'échange</li>
+                </ul>
+                <div class="row mt-4">
+                    <div class="col-7">
+                        <figure>
+                            <img src="figures/chap6/archi_soa.png" class="w-100 m-auto"/>
+                        </figure>
+                    </div>
+                    <div class="col-5">
+                        <ol class="mt-3">
+                            <li><span class="alert">Publier</span>: le fournisseur du service publie son service via le contrat</li>
+                            <li><span class="alert">Chercher</span>: le consommateur cherche un service répondant à ces exigences (un contrat lui est retourné)</li>
+                            <li><span class="alert">Consommer</span>: le consommateur utilise le service conformément au contrat</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture Orientée Service (SOA)</h1>
+                <h2>2 familles de services web</h2>
+                <ol>
+                    <li><span class="alert">Services web "étendus"</span> ou SOAP</li>
+                    <ul>
+                        <li>Application "classique" de SOA pour le Web</li>
+                        <li>S'appuie sur des standards dédiés: UDDI pour les annuaires, WSDL pour les contrats, SOAP pour les messages</li>
+                        <li>Inconvénient: standards "lourds" et couplage fort entre le consommateur et le fournisseur</li>
+                    </ul>
+                    <li class="mt-3"><span class="alert">Services web RESTful</span> ou API Web</li>
+                    <ul>
+                        <li>Architecture orientée ressources (ROA)</li>
+                        <li>S'appuie sur le fonctionnement du web: URL pour identifier les ressources et HTTP pour la communication</li>
+                        <li>Pas d'annuaire mais une interface uniforme (et des documentation d'API)</li>
+                    </ul>
+                </ol>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services web RESTful</h1>
+                <div class="boxtitle">REpresentational State Transfer (REST)</div>
+                <div class="boxcontent mb-4">
+                    <p>Style d'architecture définissant un ensemble de contraintes à utiliser pour créer des services web. Ces contraintes restreignent la façon dont le serveur peut traiter et répondre aux requêtes du client afin de garantir la performance, l'extensibilité, la simplicité, l'évolutivité, la visibilité, la portabilité et la fiabilité.</p>
+                    <p class="right smaller">source: <a href="https://fr.wikipedia.org/wiki/Representational_state_transfer" target="_blank">Wikipedia</a></p>
+                </div>
+                <p>Contraintes architecturales:</p>
+                <ul>
+                    <li>Architecture client-serveur</li>
+                    <li>Protocole de communication sans état (<em>stateless</em>), e.g. HTTP</li>
+                    <li>Interface uniforme (pas de contrat):</li>
+                    <ul>
+                        <li>Ressources identifiées dans les requêtes (URL)</li>
+                        <li>Manipulation des ressources par représentation (XML, JSON)</li>
+                        <li>Messages auto-descriptifs (méthodes HTTP)</li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Services web RESTful</h1>
+                <ul>
+                    <li>Le client envoie une requête HTTP ciblant une ressource identifiée par une URL</li>
+                    <li>La méthode HTTP indique l'action à réaliser sur la ressource (GET, POST, PUT, DELETE, ...)</li>
+                    <li>Le serveur renvoie une représentation de la ressource au format JSON ou XML</li>
+                </ul>
+                <figure>
+                    <img src="figures/chap6/rest_client_serveur.png" class="w-90 m-auto"/>
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Architecture orientée ressource</h1>
+                <ul>
+                    <li>Une ressource est "quelque chose" qui peut être identifiée par une URL</li>
+                    <pre><code>http://localhost:8080/books/jrrtolkien/lordofthering/2</code></pre>
+                    <li class="mt-3">Il peut y avoir plusieurs URL différentes pour une même ressource</li>
+                    <pre><code data-trim>
+http://localhost:8080/books/jrrtolkien/lordofthering/2
+http://localhost:8080/books/jrrtolkien/lordofthering/twotours
+                    </code></pre>
+                    <li class="mt-3">Une URL peut désigner une collection de ressources</li>
+                    <pre><code data-trim>
+http://localhost:8080/books/jrrtolkien/lordofthering
+http://localhost:8080/books/jrrtolkien
+                    </code></pre>
+                    <li class="mt-3">Une ressource peut être fournies dans des formats différents en fonction de l'en-tête HTTP <code>Accept</code> (cf. <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept" target="_blank">documentation</a>)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Requête REST</h1>
+                <ul>
+                    <li>Client "riche" = il doit pouvoir savoir comment construire la requête</li>
+                    <li>Interface uniforme basé sur des standards d'opération (CRUD)</li>
+                    <ol>
+                        <li><span class="alert">C</span>reate &rarr; <code>POST</code></li>
+                        <li><span class="alert">R</span>ead &rarr; <code>GET</code></li>
+                        <li><span class="alert">U</span>pdate &rarr; <code>PUT</code> (remplacement complet) ou <code>PATCH</code> (modification partielle)</li>
+                        <li><span class="alert">D</span>elete &rarr; <code>DELETE</code></li>
+                    </ol>
+                    <li>Techniquement, le fournisseur du service peut décider de ne pas respecter ce standard</li>
+                    <li>Mais la facilité d'utilisation du service dépend largement de ces conventions</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Requête REST</h1>
+                <h2>Exemple</h2>
+                <figure class="mb-4">
+                    <img src="figures/chap6/rest_get.png" class="w-90 m-auto"/>
+                </figure>
+                <ul>
+                    <li>Le serveur impose la ou les représentations disponibles</li>
+                    <li>Mais le client doit pouvoir l'anticiper: documentation ou <code>Accept</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Requête REST</h1>
+                <h2>Exemple</h2>
+                <figure class="mb-4">
+                    <img src="figures/chap6/rest_post.png" class="w-90 m-auto"/>
+                </figure>
+                <ul>
+                    <li>Le serveur décide de l'URL de la nouvelle ressource</li>
+                    <li>La réponse inclue souvent la représentation nouvellement créée</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Requête REST</h1>
+                <h2>Exemple</h2>
+                <figure class="mb-4">
+                    <img src="figures/chap6/rest_put.png" class="w-90 m-auto"/>
+                </figure>
+                <ul>
+                    <li>La ressource est entièrement remplacée ou créée à l'URL indiquée si elle n'existe pas</li>
+                    <li>Quand le client connaît l'URL de la ressource à modifier/créer: <code>PUT</code> au lieu de <code>POST</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Requête REST</h1>
+                <h2>Exemples</h2>
+                <figure class="mb-4">
+                    <img src="figures/chap6/postman_screen.png" class="w-100 m-auto"/>
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta REST (anciennement JAX-RS)</h1>
+                <ul>
+                    <li><span class="alert">Basée sur des annotations</span> pour définir les ressources et les méthodes HTTP associées</li>
+                    <li>L'implémentation de l'API (e.g. Jersey) fournit la servlet de façade</li>
+                </ul>
+                <figure>
+                    <img src="figures/chap6/jaxrs.png" class="w-70 m-auto"/>
+                    <figcaption>source: <a href="https://mickael-baron.fr/soa/">https://mickael-baron.fr/soa/</a></figcaption>
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta REST (anciennement JAX-RS)</h1>
+                <ul>
+                    <li>Pour activer le framework:</li>
+                    <pre><code class="language-xml compact" data-trim>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;jersey-Servlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.glassfish.jersey.servlet.ServletContainer&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;jersey.config.server.provider.packages&lt;/param-name&gt;
+        &lt;param-value&gt;fr.urn.mastersime&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    ...
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;jersey-Servlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/api/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+                    </code></pre>
+                    ou avec une classe d'activation:
+                    <pre><code class="language-java compact" data-trim>
+@ApplicationPath("/api")
+public class ApplicationConfig extends Application { }
+                    </code></pre>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta REST (anciennement JAX-RS)</h1>
+                <ul>
+                    <li>Pour définir une ressource:</li>
+                    <pre><code class="language-java compact" data-trim>
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+
+@Path("hello")
+public class HelloResource {
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public HelloRecord hello(){
+        return new HelloRecord("Hello from Jakarta EE");
+    }
+}
+                    </code></pre>
+                    <li><code>@Path("hello")</code>: pour définir l'URL associée à la ressource <em>hello</em></li>
+                    <li><code>@GET</code>: pour indiquer que la méthode répond à une requête <code>GET</code></li>
+                    <li><code>@Produces(MediaType.APPLICATION_JSON)</code>: pour indiquer que la méthode produit une réponse JSON</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Jakarta REST (anciennement JAX-RS)</h1>
+                <figure>
+                    <img src="figures/chap6/hello_screen.png" class="w-80 m-auto"/>
+                </figure>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les annotations JAX-RS</h1>
+                <ul>
+                    <li>Une classe annotée avec <code>@Path</code> définit une ressource ou un ensemble de ressources</li>
+                    <li>L'URL de la classe est l'URL racine des ressources</li>
+                    <li>Les méthodes de classe peuvent également être associées à une sous-URL</li>
+                    <pre><code class="language-java compact" data-trim>
+@Path("books")
+public class BookResource {
+
+    @GET
+    @Path("{id}")
+    public Book getBook(@PathParam("id") String id) { ... }
+
+    @GET
+    public List&lt;Book&gt; getAllBooks() { ... }
+}
+                    </code></pre>
+                    <li>Une requête <code>GET http://localhost:8080/bookapi/books/123</code> appelle la méthode <code>getBook("123")</code></li>
+                    <li>Une requête <code>GET http://localhost:8080/bookapi/books</code> appelle la méthode <code>getAllBooks()</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les annotations JAX-RS</h1>
+                <ul>
+                    <li><code>Path</code> autorise les paramètres d'URL</li>
+                    <pre><code class="language-java compact" data-trim>
+@Path("books")
+public class BookResource {
+    @GET
+    @Path("{id}")
+    public Book getBook(@PathParam("id") String id) { ... }
+
+    @GET
+    @Path("search-{tag}")
+    public List&lt;Book&gt; searchBooksByTag(@PathParam("tag") String tag) { ... }
+}
+                    </code></pre>
+                    <li>Une requête <code>GET http://.../books/search-sciencefiction</code> appelle <code>searchBooksByTag("sciencefiction")</code></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les annotations JAX-RS</h1>
+                <ul>
+                    <li>Paramètre possible aussi dans l'URL de la classe</li>
+                    <pre><code class="language-java compact" data-trim>
+@Path("books/{id: [0-9]{5}}")
+public class BookResource {
+    @GET
+    public Book getBook(@PathParam("id") String id) { ... }
+}
+                    </code></pre>
+                    <li>Possible car <span class="alert">création d'une instance pour chaque requête reçue</span></li>
+                    <li>Transtypage automatique vers les types primitifs et les <code>String</code></li>
+                    <li>Spécification de motif avec une expression régulière</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les annotations JAX-RS</h1>
+                <ul>
+                    <li><code>consume/produce</code> permet d'indiquer le type de contenu attendu ou fourni</li>
+                    <pre><code class="language-java compact" data-trim>
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+public String getBook(@PathParam("id") String id) { ... }
+
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+public Book getBook(@PathParam("id") String id) { ... }
+
+
+                    </code></pre>
+                    <li>La première méthode retourne une représentation sous la forme d'un <code>String</code></li>
+                    <li>La seconde retourne un objet Java qui sera automatiquement converti en JSON</li>
+                    <li>De même pour la réponse:</li>
+                    <pre><code class="language-java compact" data-trim>
+@POST
+@Consumes(MediaType.APPLICATION_JSON)
+public void createBook(Book book) { ... }
+                    </code></pre>
+                    <li>Le corps de la requête est automatiquement converti en objet Java</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les annotations JAX-RS</h1>
+                <ul>
+                    <li><code>QueryParam/FormParam</code> permettent de récupérer les paramètres de requête ou de formulaire</li>
+                    <li><code>QueryParam</code> pour les paramètres de requête</li>
+                    <pre><code class="language-java compact" data-trim>
+@GET
+@Produces(MediaType.APPLICATION_JSON)
+public List&lt;Book&gt; searchBooks(@QueryParam("title") String title) { ... }
+                    </code></pre>
+                    <li>Une requête <code>GET http://.../books?title=sciencefiction</code> appelle <code>searchBooks("sciencefiction")</code></li>
+                    <li><code>FormParam</code> pour les paramètres de formulaire</li>
+                    <pre><code class="language-java compact" data-trim>
+@POST
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+public void createBook(@FormParam("title") String title, @FormParam("author") String author) { ... }
+                    </code></pre>
+                    <li>Dans ce cas, le type du corps de la requête doit être <code>application/x-www-form-urlencoded</code></li>
+                    <li>Sur le même principe, <code>HeaderParam</code> pour les paramètres d'en-tête et <code>CookieParam</code> pour les cookies</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Les annotations JAX-RS</h1>
+                <ul>
+                    <li><code>Context</code> permet d'injecter des objets/informations du contexte de l'application</li>
+                    <pre><code class="language-java compact" data-trim>
+@GET
+public Response getRequestInfo(@Context UriInfo ui) {
+    MultivaluedMap&lt;String, String&gt; queryParams = ui.getQueryParameters();
+    MultivaluedMap&lt;String, String&gt; pathParams = ui.getPathParameters();
+}
+                    </code></pre>
+                    ou
+                    <pre><code class="language-java compact" data-trim>
+@Path("helloworld")
+public class HelloWorld {
+    @Context
+    private UriInfo context;
+    ...
+}
+                    </code></pre>
+                    <li>Autre type d'informations de context accessibles: <a href="https://jakarta.ee/specifications/restful-ws/4.0/jakarta-restful-ws-spec-4.0#context" target="_blank">documentation</a></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <ul>
+                    <li>Quand une méthode annotée retourne un objet Java, JAX-RS tente de convertir au format souhaité</li>
+                    <li>JAX-RS fournit des mécanismes de conversion automatique: <em>Data binding</em></li>
+                    <li>Les conversions en JSON sont transparente et s'appuient sur les <em>getters</em> et <em>setters</em></li>
+                    <li>Les conversions en XML nécessitent des annotations spécifiques</li>
+                    <li class="mt-4">La conversion objet Java vers JSON est prise en charge par l'API <a href="https://jakarta.ee/specifications/jsonb/3.0/jakarta-jsonb-spec-3.0" target="_blank">JSON-B</a></li>
+                    <li>La conversion objet Java vers XML est prise en charge par l'API <a href="https://jakarta.ee/specifications/xml-binding/4.0/jakarta-xml-binding-spec-4.0.html" target="_blank">Jakarta XML Binding (JAXB)</a></li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-java compact" data-trim>
+public class Person {
+    private String name;
+    private int age;
+    private List&lt;Person&gt; children = new ArrayList&lt;&gt;();
+
+    //constructeurs
+    ...
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    ...
+
+    public Person addChild(Person child) {
+        this.children.add(child);
+        return child;
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-java compact" data-trim>
+@Path("person")
+public class PersonResource {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Person get() {
+        Person michel = new Person("Michel Dupont", 56);
+        Person anne = new Person("Anne Dupont", 38);
+        michel.addChild(new Person("Damien Dupont", 32));
+        michel.addChild(anne);
+        anne.addChild(new Person("Pierre Durant", 16));
+        return michel;
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <h2>Exemple</h2>
+                <ul>
+                    <li>Représentation JSON retournée au client pour l'objet <code>michel</code>:</li>
+                </ul>
+                <pre><code class="language-json compact" data-trim>
+{
+    "children":[
+        {
+            "children":[
+                {
+                    "children":[],
+                    "name":"Pierre Durant",
+                    "age":16
+                }
+            ],
+            "name":"Anne Dupont",
+            "age":38
+        },
+
+        {
+            "children":[],
+            "name":"Damien Dupont",
+            "age":32
+        }
+    ],
+    "name":"Michel Dupont",
+    "age":56
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <ul>
+                    <li>Pour en faire autant avec XML, il faut ajouter des annotations à la classe <code>Person</code></li>
+                    <li>Fournissent des indications sur la façon dont la classe Java peut être associée à un document XML:</li>
+                    <ul>
+                        <li><code>@XmlRootElement</code>: indique que la classe peut être la racine d'un document XML</li>
+                        <li><code>@XmlElement</code>: sur un <em>getter</em> pour préciser que l'attribut est un élément XML (optionnel)</li>
+                        <li><code>@XmlAttribute</code>: sur un <em>getter</em> pour préciser que l'attribut est un attribut XML</li>
+                        <li><code>@XmlTransient</code>: pour indiquer que l'attribut ne doit pas être inclus dans la représentation XML</li>
+                    </ul>
+                    <li>Attributs d’annotation disponible pour modifier les noms et namespaces des éléments XML (par défaut, identiques aux identificateurs Java)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <h2>Exemple</h2>
+                <pre><code class="language-java compact" data-trim>
+@XmlRootElement(name="person", namespace="http://mastersd.urn/person")
+public class Person {
+    private String name;
+    private int age;
+    private List&lt;Person&gt; children = new ArrayList&lt;&gt;();
+    ...
+
+    @XmlElement(namespace="http://mastersd.urn/person")
+    public String getName() {
+        return name;
+    }
+    ....
+
+    @XmlElementWrapper(name="children", namespace="http://mastersid.urn/person")
+    @XmlElement(name="person", namespace="http://mastersid.urn/person")
+    public List&lt;Person&gt; getChildren() {
+        return children;
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <h2>Exemple</h2>
+                <ul>
+                    <li>Représentation XML retournée au client pour l'objet <code>michel</code>:</li>
+                </ul>
+                <pre><code class="language-xml compact" data-trim>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;person xmlns="http://mastersd.urn/person"&gt;
+    &lt;age&gt;56&lt;/age&gt;
+    &lt;children&gt;
+        &lt;person&gt;
+            &lt;age&gt;38&lt;/age&gt;
+            &lt;children&gt;
+                &lt;person&gt;
+                    &lt;age&gt;16&lt;/age&gt;
+                    &lt;children/&gt;
+                    &lt;name&gt;Pierre Durant&lt;/name&gt;
+                &lt;/person&gt;
+            &lt;/children&gt;
+            &lt;name&gt;Anne Dupont&lt;/name&gt;
+        &lt;/person&gt;
+        &lt;person&gt;
+            &lt;age&gt;32&lt;/age&gt;
+            &lt;children/&gt;
+            &lt;name&gt;Damien Dupont&lt;/name&gt;
+        &lt;/person&gt;
+    &lt;/children&gt;
+    &lt;name&gt;Michel Dupont&lt;/name&gt;
+&lt;/person&gt;
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Data Binding</h1>
+                <ul>
+                    <li>Si <code>@Produces</code> autorise les 2 formats, les annotations JAXB sont utilisées pour JSON aussi</li>
+                </ul>
+                <pre><code class="language-java compact" data-trim>
+@Path("/person")
+public class PersonResource {
+    @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Person get() {
+        // ...
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public void post(Person person) {
+        // ...
+    }
+}
+                </code></pre>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Réponse du serveur au client</h1>
+                <ul>
+                    <li>Jusqu'ici, la réponse est automatiquement construite à partir du retour de la méthode (<code>void</code>, <code>String</code> ou objet Java)</li>
+                    <pre><code data-trim>
+HTTP / &lt;Versions&gt;&lt;Status&gt;&lt;Commentaire Status&gt;
+Content-Type:&lt;Type MIME du contenu&gt;
+[&lt;Champ d'en-tête&gt;:&lt;Valeur&gt;]
+...
+Ligne vide
+Document
+                    </code></pre>
+                    <li><code>Document</code> représente l'objet retourné par la méthode Java (en XML ou JSON selon le type MIME)</li>
+                    <li>On a souvent besoin de spécifier en même temps le code HTTP et les en-têtes (e.g. statut, type, etc.)</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Réponse du serveur au client</h1>
+                <ul>
+                    <li>Par exemple, les status HTTP sont importants pour informer le client en cas de problème</li>
+                    <li><code>100-199</code>: informationnel</li>
+                    <li><code>200-299</code>: succès</li>
+                    <ul>
+                        <li><code>200 OK</code></li>
+                        <li><code>201 Created</code></li>
+                    </ul>
+                    <li><code>300-399</code>: redirection</li>
+                    <ul>
+                        <li><code>301 Redirection</code></li>
+                        <li><code>302 Move Temporarily</code></li>
+                    </ul>
+                    <li><code>400-499</code>: erreur client</li>
+                    <ul>
+                        <li><code>400 Bad Request</code></li>
+                        <li><code>404 Not Found</code></li>
+                    </ul>
+                    <li><code>500-599</code>: erreur serveur</li>
+                    <ul>
+                        <li><code>500 Internal Server Error</code></li>
+                        <li><code>503 Service Unavailable</code></li>
+                    </ul>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>Réponse du serveur au client</h1>
+                <ul>
+                    <li>Pour personnaliser la réponse, la méthode ressource doit renvoyer un objet <code>Response</code></li>
+                    <li>Construction de la réponse avec un <em>builder</em>:</li>
+                    <pre><code class="language-java compact" data-trim>
+@Path("/books")
+public class BookResource {
+    @GET
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getByIndex(@PathParam("id") int id) {
+        try {
+            Book book = books.get(id);
+            return Response.ok(book).build();
+        } catch(InvalidBookException e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        }
+    }
+    ...
+}
+                    </code></pre>
+                    <li><code>ok</code>, <code>status</code> et <code>entity</code> sont des méthodes statiques de la classe <code>ResponseBuilder</code></li>
+                    <li>La méthode <code>build</code> construit l'objet <code>Response</code> final</li>
+                </ul>
+            </section>
+
+            <!--------------------------------------------->
+            <section>
+                <h1>API Client de Jakarta REST</h1>
+                <ul>
+                    <li>Le client n'est pas supposé être conçu en Jakarta, ni même forcément en Java</li>
+                    <li>Par exemple, il peut être conçu en JavaScript et utilisé via un navigateur (interface HTML)</li>
+                    <li>Jakarta REST fournit tout de même une API client pour faciliter les appels REST</li>
+                    <pre><code class="language-java compact" data-trim>
+public class BookClient {
+    public static void main(String[] args) {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:8080/bookapi/books/123");
+        Book book = target.request().accept(MediaType.APPLICATION_JSON).get(Book.class);
+        System.out.println(book);
+    }
+}
+                    </code></pre>
+                    <li>Plus de détails dans la <a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/websvcs/rest-client/rest-client.html" target="_blank">documentation</a></li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="reveal/dist/reveal.js"></script>
+    <script src="reveal/plugin/notes/notes.js"></script>
+    <script src="reveal/plugin/highlight/highlight.js"></script>
+	<script src="reveal/plugin/math/math.js"></script>
+    <script src="reveal/plugin/zoom/zoom.js"></script>
+    <script src="reveal/plugin/reveald3.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 800,
+            height: 600,
+            margin: 0.05,
+            center: false,
+            hash: true,
+            controls: false,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            mouseWheel: true,
+            transition: 'none', // Transition style : none/fade/slide/convex/concave/zoom
+            progress: true,
+            autoPlayMedia: true,
+            plugins: [ RevealNotes, RevealHighlight, Reveald3, RevealZoom, RevealMath.KaTeX ]
+        });
+    </script>
+</body>
+</html>
