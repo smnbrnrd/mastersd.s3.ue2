@@ -75,6 +75,18 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#faces-rest-collapse" aria-expanded="false">
+                        Faces ou REST
+                    </button>
+                    <div class="collapse" id="faces-rest-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#taskboard" class="d-inline-flex align-items-center rounded">Projet "TaskBoard"</a></li>
+                            <li><a href="#consignes" class="d-inline-flex align-items-center rounded">Consignes</a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </nav>
     </aside>
@@ -569,18 +581,50 @@ public class HelloServlet extends HttpServlet {
             
         </section>
 
-        <!--===============================================
+        <!--=======================================================-->
         <section>
-            <h3 id="mvc">Jakarta Faces</h3>
+            <h3 id="faces-rest">Faces ou REST</h3>
         
-            <!-------------------------------------------
+            <!------------------------------------------->
             <section>
-                <h4 id="banque-images">Le projet "Taskboard"</h4>
-            
-
+                <h4 id="taskboard">Le projet "Taskboard"</h4>
+                <p>L'objectif de ce projet est de concevoir une application web de gestion de tâches (to-do list) en utilisant soit Jakarta Faces (JSF) soit Jakarta REST. L'application doit permettre aux utilisateurs de créer, lire, mettre à jour et supprimer des tâches. Chaque tâche doit contenir un titre, une description, une date d'échéance et un statut (à faire, en cours, terminé).</p>
+                <ul>
+                    <li>Si vous choisissez Jakarta Faces, vous devez créer des pages XHTML pour l'interface utilisateur et des Beans CDI pour la logique métier.</li>
+                    <li>Si vous choisissez Jakarta REST, vous devez concevoir une API RESTful pour gérer les tâches et créer une interface utilisateur en HTML/CSS/JavaScript qui consomme cette API.</li>
+                </ul>
+                <p>Nous donnons ci-dessous des exemples d'interfaces de l'application:</p> 
+                <ul>
+                    <li>La première interface correspond à la page d'accueil qui affiche l'ensemble des tâches créées jusqu'à ce jour, réparties selon leur statut. Cette page est accessible en cliquant sur le lien "Home" du bandeau d'en-tête figurant sur toutes les pages.</li>
+                    <li>La deuxième interface correspond à la page de saisie d'une nouvelle tâches. Cette page est accessible en cliquant sur le lien "New Task" du bandeau d'en-tête figurant sur toutes les pages.</li>
+                    <li>La troisième interface correspond à l'interface qui affiche les informations d'une tâche existante et qui permet de mettre à jour ces informations ou de supprimer la tâches. Cette page est accessible en cliquant sur le titre d'une tâche dans la liste des tâches sur la page d'accueil.</li>
+                </ul>  
+                <img src="../img/taskboard-screen1.png" class="w-100 m-auto mt-2 mb-3">
+                <img src="../img/taskboard-screen2.png" class="w-100 m-auto mt-2 mb-3">
+                <img src="../img/taskboard-screen3.png" class="w-100 m-auto mt-2 mb-3">
             </section>
         
-        </section> ========-->
+            <!------------------------------------------->
+            <section>
+                <h4 id="consignes">Consignes</h4>
+                <p>Vous devez implémenter les fonctionnalités suivantes :</p>
+                <ul>
+                    <li>Créer une nouvelle tâche avec un titre, une description, une date d'échéance et un statut.</li>
+                    <li>Afficher la liste des tâches existantes, regroupées par statut.</li>
+                    <li>Mettre à jour les informations d'une tâche existante.</li>
+                    <li>Supprimer une tâche existante.</li>
+                </ul>
+                <p>Vous êtes libres d'adapter les interfaces selon vos préférences et besoins, mais vous devez respecter les consignes suivantes:</p>
+                <ul>
+                    <li>Pour le stockage des tâches, utilisez une collection en mémoire, mais il n'est pas demandé d'utiliser une base de données pour ce projet. Vous pouvez également utiliser un fichier textes pour initialiser cette collection avec des tâches pré-créées, afin de faciliter vos tests.</li>
+                    <li>La mise en page et l'esthétique des interfaces doivent être soignés. Vous pouvez utiliser CSS et/ou Bootstrap pour améliorer l'apparence de l'application.</li>
+                    <li>Prenez également soins d'écrire un code lisible, modulaire et respectant les contraintes et bonnes pratiques expliquées dans le cours.</li>
+                    <li>Testez soigneusement toutes les fonctionnalités de l'application pour vous assurer qu'elles fonctionnent correctement.</li>
+                    <li>Prévoyez une gestion des erreurs, notamment pour la vérification et la validation des saisies utilisateurs.</li>
+                </ul>
+            </section>
+        
+        </section>
 
     </main>
 
