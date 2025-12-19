@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Demoing REST API with JS client</title>    
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		h1, #panel {
+			text-align: center;
+		}
+		button a {
+			color: white;
+			text-decoration: none;
+		}
+	</style>
+</head>
+<body>
+    <main class="container">
+	    <h1>REST Bookshelf</h1>
+	    <div id="panel">
+	    	<div class="buttons mb-3">
+		    	<button id="showAllButton" type="button" class="btn btn-outline-secondary">Show all</button>
+		    	<button type="button" class="btn btn-primary"><a href="newBook.html">Add book</a></button>
+	    	</div>
+			<div class="input-group mb-3">
+			  <input id="getByIdInput" type="text" class="form-control" placeholder="Get a book by his ID">
+			  <div class="input-group-append">
+			    <button id="getByIdButton" class="btn btn-outline-secondary" type="button">Get</button>
+			  </div>
+			</div>
+		</div>
+		<hr>
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">ID</th>
+		      <th scope="col">Title</th>
+		      <th scope="col">Author</th>
+		      <th scope="col">Rate</th>
+		      <th scope="col">Comment</th>
+		    </tr>
+		  </thead>
+		  <tbody id="bookList">
+		  
+		  </tbody>
+		</table>
+    </main>
+    
+    <script type="text/javascript">
+    
+	    function showAllBooks(response) {
+	    	let bookList = document.getElementById("bookList")
+	    	let bookListHTML = '';
+	    	for (let i = 0; i < response.length; i++) {
+	   			bookListHTML += "<tr>"
+	   				+ '<th scope="row">' + i + '</th>'
+	   				+ '<td>' + response[i].title + '</td>'
+	   				+ '<td>' + response[i].author + '</td>'
+	   				+ '<td>' + response[i].rate + '</td>'
+	   				+ '<td>' + response[i].review + '</td>'
+	   				+ '</tr>';
+	   		}
+	    	bookList.innerHTML = bookListHTML;
+	    }
+	    
+	    function showBookById(response, id) {
+	    	let bookList = document.getElementById("bookList")
+	    	bookList.innerHTML = "<tr>"
+				+ '<th scope="row">' + id + '</th>'
+				+ '<td>' + response.title + '</td>'
+				+ '<td>' + response.author + '</td>'
+				+ '<td>' + response.rate + '</td>'
+				+ '<td>' + response.review + '</td>'
+				+ '</tr>';
+		}
+	    
+	    // HTTP request to get all the books and show them in an HTML Tab
+	    async function requestShowAll(baseUrl) {
+	    	let response = await fetch(baseUrl, {
+	    		headers: {
+	    			Accept: "application/json"
+	    		}
+	    	});
+		    let jsonResponse = await response.json();
+		    console.log(JSON.stringify(jsonResponse))
+		    showAllBooks(jsonResponse);
+	    }
+	    
+	    // HTTP request to get one book by its ID
+	    async function requestGetById(baseUrl, id) {
+	    	const url = baseUrl + "/" + id;
+	    	let response = await fetch(url, {
+	    		headers: {
+	    			Accept: "application/json"
+	    		}
+	    	});
+	    	if(response.ok) {
+			    let jsonResponse = await response.json();
+			    showBookById(jsonResponse, id);
+	    	} else {
+			    let textResponse = await response.text();
+			    alert(textResponse);
+	    	}
+	    }
+    
+	    // JS code need to be in a IIFE to make it works with await
+	    (async () => {
+	    	const baseUrl = "http://localhost:8080/bookrest/api/books";
+	    	
+	    	const showAllButton = document.getElementById("showAllButton");
+	    	showAllButton.addEventListener("click", (event) => {
+	    		requestShowAll(baseUrl);
+	    	});
+	    	
+	    	const getByIdButton = document.getElementById("getByIdButton");
+	    	const getByIdInput = document.getElementById("getByIdInput");
+	    	getByIdButton.addEventListener("click", (event) => {
+	    		requestGetById(baseUrl, getByIdInput.value);
+	    	});
+	    	
+	    	requestShowAll(baseUrl);
+	    })() 
+    
+    </script>
+
+</body>
+</html>
