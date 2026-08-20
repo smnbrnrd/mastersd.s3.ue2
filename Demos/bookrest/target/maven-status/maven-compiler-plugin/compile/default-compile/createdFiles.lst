@@ -1,0 +1,6 @@
+fr/urn/mastersime/resources/HelloResource.class
+fr/urn/mastersime/domain/InvalidBookException.class
+fr/urn/mastersime/ApplicationConfig.class
+fr/urn/mastersime/domain/Book.class
+fr/urn/mastersime/domain/Bookshelf.class
+fr/urn/mastersime/resources/BookResource.class

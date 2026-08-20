@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+
+main.container {
+  font-size: 14px;
+  font-family: 'Roboto', Verdana, sans-serif;
+  margin: 10px;
+}
+
+h2 {
+  font-size:  16px;
+  font-weight: bold;
+  margin: 1em 0;
+  color: blue;
+}
+
+img {
+  width: 100px;
+  height: auto;
+}

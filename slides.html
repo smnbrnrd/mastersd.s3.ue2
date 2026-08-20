@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
+    <title>Slide deck</title>
+    <link rel="stylesheet" href="./assets/katex.min.css">
+    <link rel="stylesheet" href="./assets/slides.css">
+</head>
+<body>
+    <textarea id="source" style="display: none;"></textarea>
+
+    <script src="./assets/remark.min.js"></script>
+    <script src="./assets/katex.min.js"></script>
+    <script src="./assets/auto-render.min.js"></script>
+    <script>
+        /**
+         * Get the source URL from the query parameter "deck", or use "slides.md" by default.
+         * For example, if the URL is "index.html?deck=other-slides.md", it will load "other-slides.md".
+         */
+        function getSourceUrl() {
+            let url = new URL(window.location.href);
+            let sourceUrl = url.searchParams.get('deck');
+            if (sourceUrl) return sourceUrl;
+            /*return 'slides.md';*/
+            return 'lecture6.md';
+        }
+
+        // Remark configuration (more: https://github.com/gnab/remark/wiki/Configuration)
+        let options = {
+            ratio: '4:3',
+            slideNumberFormat: '%current% / %total%',
+            highlightLanguage: 'java',
+            highlightStyle: 'github',
+        };
+        options.sourceUrl = getSourceUrl();
+
+        /**
+         * Render math expressions using KaTeX. It will render math expressions in the entire document body after the DOM content is loaded.
+         * The delimiters for math expressions are defined as follows:
+         * - Display math: $$...$$ or \[...\]
+         * - Inline math: $...$ or \(...\)
+         * (from https://github.com/gnab/remark/wiki/LaTeX-Using-KaTeX)
+         */
+        let renderMath = function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\\(", right: "\\)", display: false},
+                ]
+            });
+        };
+
+        // Create the slideshow
+        let slideshow = remark.create(options, renderMath);
+
+        /**
+         * When DOM is loaded add the "target=_blank" attribute to all links that have a "http" or "https" protocol.
+         * This will make external links open in a new tab.
+         */
+        document.addEventListener("DOMContentLoaded", function() {
+            let links = document.querySelectorAll("a[href^='http']");
+            links.forEach(function(link) {
+                link.setAttribute("target", "_blank");
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <title>Web Dynamique côté Serveur</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', 'Gill Sans', sans-serif; }
+        .logo { max-height: 5rem; margin-right: 2rem; margin-bottom: 3rem;}
+        .author, .mail { font-size: 1.2rem; }
+        section { margin-bottom: 3rem; }
+        span.desc { color: grey; font-size: 0.9rem; display: block; margin-top: 0.2rem; }
+        a { text-decoration: none; color: #3a7ca5 }
+        a.btn, a.btn.disabled { border-color: #3a7ca5; color: #3a7ca5; }
+        a.btn:hover { background-color: #3a7ca5; color: white; }
+        a.btn.disabled { opacity: 0.5; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container-lg">
+
+        <header class="mt-5 mb-5">
+            <img src="assets/logo-urn-color.png" alt="Logo Université de Rouen Normandie" class="logo">
+            <h1 class="h1">Web Dynamique côté Serveur</h1>
+            <hr>
+            <div class="author">Simon BERNARD</div>
+            <div class="mail"><a href="mailto:simon.bernard@univ-rouen.fr">simon.bernard@univ-rouen.fr</a></div>
+            <hr>
+        </header>
+
+        <main>
+            <section>
+                <h2>Description et supports</h2>
+                <p>Les supports ci-dessous sont proposés dans le cadre du cours « Web Dynamique côté Serveur » du Master Science des Données de l'Université de Rouen Normandie.</p>
+                <p>Ce cours est une introduction au développement d'applications web dynamiques côté serveur avec la plateforme Jakarta EE. Il couvre les concepts de bases, les API essentielles et introduit brievement le framework Spring.</p>
+                <p>Ce cours est divisé en 7 parties :</p>
+                <table class="table table-bordered mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Lecture</th>
+                            <th scope="col">Titre</th>
+                            <th scope="col">Liens</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                Introduction
+                                <span class="desc">Rappels sur le Web, serveurs web et d'application, plateforme Jakarta EE, architectures des applications web</span>
+                            </td>
+                            <td>
+                                <a href="./slides.html?deck=lecture1.md" class="btn btn-outline-primary btn-sm">Slides</a>
+                                <a href="./pdf/lecture1.pdf" class="btn btn-outline-primary btn-sm">PDF</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>
+                                Jakarta Servlet
+                                <span class="desc">Le composant servlet, traitement des requêtes, cookies et sessions</span>
+                            </td>
+                            <td>
+                                <a href="./slides.html?deck=lecture2.md" class="btn btn-outline-primary btn-sm">Slides</a>
+                                <a href="./pdf/lecture2.pdf" class="btn btn-outline-primary btn-sm">PDF</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>
+                                Jakarta Server Pages
+                                <span class="desc">Pages JSP, Expression Language, architecture MVC</span>
+                            </td>
+                            <td>
+                                <a href="./slides.html?deck=lecture3.md" class="btn btn-outline-primary btn-sm">Slides</a>
+                                <a href="./pdf/lecture3.pdf" class="btn btn-outline-primary btn-sm">PDF</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td>
+                                Jakarta Contexts and Dependency Injection (CDI)
+                                <span class="desc">Injection de dépendances, CDI managed beans, qualifiers, portées, intercepteurs, méthodes producer</span>
+                            </td>
+                            <td>
+                                <a href="./slides.html?deck=lecture4.md" class="btn btn-outline-primary btn-sm">Slides</a>
+                                <a href="./pdf/lecture4.pdf" class="btn btn-outline-primary btn-sm">PDF</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">5</th>
+                            <td>
+                                Jakarta Faces
+                                <span class="desc">Facelets, backing beans, convertisseurs et validateurs, cycle de vie, événements et navigation</span>
+                            </td>
+                            <td>
+                                <a href="./slides.html?deck=lecture5.md" class="btn btn-outline-primary btn-sm">Slides</a>
+                                <a href="./pdf/lecture5.pdf" class="btn btn-outline-primary btn-sm">PDF</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">6</th>
+                            <td>
+                                Jakarta REST
+                                <span class="desc">Architecture orientée services, services web RESTful, annotations JAX-RS, data binding, API client</span>
+                            </td>
+                            <td>
+                                <a href="./slides.html?deck=lecture6.md" class="btn btn-outline-primary btn-sm">Slides</a>
+                                <a href="./pdf/lecture6.pdf" class="btn btn-outline-primary btn-sm">PDF</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">7</th>
+                            <td>
+                                Le framework Spring
+                                <span class="desc">Introduction au framework Spring (à venir)</span>
+                            </td>
+                            <td>
+                                <a href="./slides.html?deck=lecture6.md" class="btn btn-outline-primary btn-sm disabled">Slides</a>
+                                <a href="./pdf/lecture7.pdf" class="btn btn-outline-primary btn-sm disabled">PDF</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h2>Travaux pratiques</h2>
+                <p><a href="./TP/index.html">Accéder aux travaux pratiques</a></p>
+            </section>
+            <section>
+                <h2>Démonstration</h2>
+                <p><a href="https://github.com/smnbrnrd/mastersd.s3.ue2/tree/master/Demos">Accéder aux <em>Github repository</em> des démonstrations du cours</a></p>
+            </section>
+            <section>
+                <h2>Ressources complémentaires</h2>
+                <ul>
+                    <li><a href="https://jakarta.ee/learn/docs/jakartaee-tutorial/current/index.html" target="_blank">Documentation officielle de Jakarta EE</a></li>
+                    <li><a href="https://github.com/eclipse-ee4j/jakartaee-examples/tree/main" target="_blank">Dépôt des exemples de la documentation Jakarta EE 10</a></li>
+                    <li><a href="https://jakarta.ee/specifications/" target="_blank">Spécifications Jakarta EE 10</a></li>
+                    <li><a href="https://jakarta.ee/specifications/platform/10/apidocs/index.html" target="_blank">API de la plateforme Jakarta EE 10</a></li>
+                    <li><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html" target="_blank">Documentation officielle de Spring Framework</a></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 <a href="https://mastersd.univ-rouen.fr">Master Science des Données</a> - Université de Rouen Normandie</p>
+        </footer>
+        </main>
+    </div>
+</body>
+</html>
