@@ -94,18 +94,18 @@ Le navigateur affiche :
 - Une classe Servlet doit être annotée avec `@WebServlet`
 - Cela permet de configurer la servlet et de la déclarer auprès du conteneur
 ```java
-@WebServlet(
-    name = "HelloServlet",
-    description = "This is a simple web application",
-    urlPatterns = {"/hello", "/hello*"},
-    initParams = {
-        @WebInitParam(name = "defaultLastname", value = "Doe"),
-        @WebInitParam(name = "defaultFirstname", value = "John")
+    @WebServlet(
+        name = "HelloServlet",
+        description = "This is a simple web application",
+        urlPatterns = {"/hello", "/hello*"},
+        initParams = {
+            @WebInitParam(name = "defaultLastname", value = "Doe"),
+            @WebInitParam(name = "defaultFirstname", value = "John")
+        }
+    )
+    public class HelloServlet extends HttpServlet {
+        ...
     }
-)
-public class HelloServlet extends HttpServlet {
-    ...
-}
 ```
 ou
 ```java
@@ -120,26 +120,26 @@ public class HelloServlet extends HttpServlet {
 
 - Alternative : déclaration dans `web.xml` :
 ```xml
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-         version="6.0">
-    <servlet>
-        <servlet-name>HelloServlet</servlet-name>
-        <servlet-class>com.example.HelloServlet</servlet-class>
-        <init-param>
-            <param-name>defaultLastname</param-name>
-            <param-value>Doe</param-value>
-        </init-param>
-        <init-param>
-            <param-name>defaultFirstname</param-name>
-            <param-value>John</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>HelloServlet</servlet-name>
-        <url-pattern>/hello</url-pattern>
-    </servlet-mapping>
-</web-app>
+    <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+            version="6.0">
+        <servlet>
+            <servlet-name>HelloServlet</servlet-name>
+            <servlet-class>com.example.HelloServlet</servlet-class>
+            <init-param>
+                <param-name>defaultLastname</param-name>
+                <param-value>Doe</param-value>
+            </init-param>
+            <init-param>
+                <param-name>defaultFirstname</param-name>
+                <param-value>John</param-value>
+            </init-param>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>HelloServlet</servlet-name>
+            <url-pattern>/hello</url-pattern>
+        </servlet-mapping>
+    </web-app>
 ```
 - Remplace l'annotation `@WebServlet` (il ne faut pas utiliser les deux)
 - Si vous définissez vous-même la servlet, privilégiez l'annotation
@@ -151,15 +151,15 @@ public class HelloServlet extends HttpServlet {
 - Elle permet de configurer la servlet avant que celle-ci ne traite des requêtes
 - Exemple : récupération des paramètres d'initialisation
 ```java
-public class HelloServlet extends HttpServlet {
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config); // <-- obligatoire
-        String defaultLastname = config.getInitParameter("defaultLastname");
-        String defaultFirstname = config.getInitParameter("defaultFirstname");
-        ... // autres initialisations, e.g. connexion BDD, initialisation de ressources, etc.
+    public class HelloServlet extends HttpServlet {
+        @Override
+        public void init(ServletConfig config) throws ServletException {
+            super.init(config); // <-- obligatoire
+            String defaultLastname = config.getInitParameter("defaultLastname");
+            String defaultFirstname = config.getInitParameter("defaultFirstname");
+            ... // autres initialisations, e.g. connexion BDD, initialisation de ressources, etc.
+        }
     }
-}
 ```
 - `config` est un objet créé par le conteneur pour transmettre les informations de configuration à la servlet
 - De la même manière, la méthode `destroy()` est appelée par le conteneur lors de la destruction
