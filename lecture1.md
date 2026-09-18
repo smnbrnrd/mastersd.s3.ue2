@@ -2,7 +2,7 @@ class: middle, center, title-slide
 name: lecture1
 
 # Web Dynamique côté Serveur
-## Lecture 1 : Introduction
+## 1. Introduction
 <br><br>
 Simon BERNARD<br>
 [simon.bernard@univ-rouen.fr](mailto:simon.bernard@univ-rouen.fr)<br><br>
@@ -349,7 +349,7 @@ class: middle, center
 
 - Architecture classique pour les applications web
 - **Tier Présentation** : interface utilisateur (HTML, CSS, JS)
-- **Tier Application** : logique métier (traitement des données, logique métier)
+- **Tier Application** : logique métier (traitement des données, logique de contrôle)
 - **Tier Données** : accès aux données (base de données, fichiers, etc.)
 
 .center.width-80[![Architecture 3-tiers](medias/lec1/archi_3tiers.png)]

@@ -1,8 +1,8 @@
 class: middle, center, title-slide
-name: lecture2
+name: lecture3
 
 # Web Dynamique côté Serveur
-## Lecture 3 : Jakarta Server Pages
+## 3. Jakarta Server Pages
 <br><br>
 Simon BERNARD<br>
 [simon.bernard@univ-rouen.fr](mailto:simon.bernard@univ-rouen.fr)<br><br>

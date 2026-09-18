@@ -1,8 +1,8 @@
 class: middle, center, title-slide
-name: lecture4
+name: lecture5
 
 # Web Dynamique côté Serveur
-## Lecture 4 : Jakarta Faces
+## 5. Jakarta Faces
 <br><br>
 Simon BERNARD<br>
 [simon.bernard@univ-rouen.fr](mailto:simon.bernard@univ-rouen.fr)<br><br>

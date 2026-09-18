@@ -1,8 +1,8 @@
 class: middle, center, title-slide
-name: lecture5
+name: lecture6
 
 # Web Dynamique côté Serveur
-## Lecture 5 : Jakarta REST
+## 6. Jakarta REST
 <br><br>
 Simon BERNARD<br>
 [simon.bernard@univ-rouen.fr](mailto:simon.bernard@univ-rouen.fr)<br><br>

@@ -1,8 +1,8 @@
 class: middle, center, title-slide
-name: lecture3
+name: lecture4
 
 # Web Dynamique côté Serveur
-## Lecture 3 : Jakarta Contexts and Dependency Injection (CDI)
+## 4. Jakarta Contexts and Dependency Injection (CDI)
 <br><br>
 Simon BERNARD<br>
 [simon.bernard@univ-rouen.fr](mailto:simon.bernard@univ-rouen.fr)<br><br>

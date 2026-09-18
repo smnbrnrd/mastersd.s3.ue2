@@ -2,7 +2,7 @@ class: middle, center, title-slide
 name: lecture2
 
 # Web Dynamique côté Serveur
-## Lecture 2 : Jakarta Servlet
+## 2. Jakarta Servlet
 <br><br>
 Simon BERNARD<br>
 [simon.bernard@univ-rouen.fr](mailto:simon.bernard@univ-rouen.fr)<br><br>
