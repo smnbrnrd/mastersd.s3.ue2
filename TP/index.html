@@ -42,8 +42,6 @@
                     <div class="collapse" id="servlet-collapse">
                         <ul class="btn-toggle-nav list-unstyled">
                             <li><a href="#hello-servlet" class="d-inline-flex align-items-center rounded">Hello Servlet</a></li>
-                            <li><a href="#param-requete" class="d-inline-flex align-items-center rounded">Paramètres de requêtes</a></li>
-                            <li><a href="#partage-controle" class="d-inline-flex align-items-center rounded">Partage de contrôle</a></li>
                             <li><a href="#user-manager" class="d-inline-flex align-items-center rounded">Projet UserManager</a></li>
                         </ul>
                     </div>
@@ -55,8 +53,7 @@
                     </button>
                     <div class="collapse" id="jsp-collapse">
                         <ul class="btn-toggle-nav list-unstyled">
-                            <li><a href="#premiere-jsp" class="d-inline-flex align-items-center rounded">Première page JSP</a></li>
-                            <li><a href="#objets-implicites" class="d-inline-flex align-items-center rounded">Objets Implicites</a></li>
+                            <li><a href="#premiere-jsp" class="d-inline-flex align-items-center rounded">Hello JSP</a></li>
                             <li><a href="#student-manager" class="d-inline-flex align-items-center rounded">Projet StudentManager</a></li>
                         </ul>
                     </div>
@@ -77,13 +74,24 @@
                 </li>
 
                 <li class="mb-1">
-                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#faces-rest-collapse" aria-expanded="false">
-                        Faces ou REST
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#faces-collapse" aria-expanded="false">
+                        Jakarta Faces
                     </button>
-                    <div class="collapse" id="faces-rest-collapse">
+                    <div class="collapse" id="faces-collapse">
                         <ul class="btn-toggle-nav list-unstyled">
                             <li><a href="#taskboard" class="d-inline-flex align-items-center rounded">Projet "TaskBoard"</a></li>
                             <li><a href="#consignes" class="d-inline-flex align-items-center rounded">Consignes</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#rest-collapse" aria-expanded="false">
+                        Jakarta REST
+                    </button>
+                    <div class="collapse" id="rest-collapse">
+                        <ul class="btn-toggle-nav list-unstyled">
+                            <li><a href="#rest" class="d-inline-flex align-items-center rounded">À venir</a></li>
                         </ul>
                     </div>
                 </li>
@@ -311,41 +319,12 @@ public class HelloServlet extends HttpServlet {
             <section>
                 <h4 id="hello-servlet">Hello Servlet</h4>
                 <ul>
-                    <li>Dans un nouveau projet, créez et testez la servlet <code>HelloServlet</code> qui vous a été présentée au début du chapitre 2 du cours.</li>
-                    <li>Modifiez cette servlet pour qu'elle affiche la date courante (cf. <code>java.util.Date</code>) dans la réponse au client, en plus du message "Hello World". Testez le résultats "en raffraichissant" la page plusieurs fois. Vous devez constater que l'heure change à chaque nouvel affichage.</li>
-                    <li>Modifiez cette servlet pour insérer dans la page renvoyée au client, l'image <code>logo-urn.png</code> fournie sur UniversiTICE. L'image sera stockée sur le serveur, charge à vous de la placer au bon endroit.</li>
-                </ul>
-            </section>
-
-            <!------------------------------------------->
-            <section>
-                <h4 id="param-requete">Paramètres de requêtes</h4>
-                <p>Le but de ce deuxième exercice est de personnaliser la réponse envoyée au client par la servlet, en fonction de données transmises par l'utilisateur à l'aide d'un formulaire HTML.</p>
-                <ul>
                     <li>Dans un nouveau projet, créez une page <code>index.html</code> contenant un formulaire HTML avec deux champs de texte pour permettre à l'utilisateur de saisir son nom et son prénom, et deux boutons radio pour sélectionner le texte "monsieur" ou "madame".</li>
                     <li>Créez une servlet chargée de réceptionner ces informations et de générer une page HTML affichant le message :</li>
                     <pre><code>Bonjour &lt;monsieur/madame&gt; &lt;prénom&gt; &lt;nom&gt;</code></pre>
                     où <code>&lt;monsieur/madame&gt;</code> est à remplacer par monsieur OU madame en fonction de l'option qui a été cochée dans le formulaire, et <code>&lt;prénom&gt;</code> et <code>&lt;nom&gt;</code> sont à remplacer par les textes saisis.
                     <li>Modifiez le formulaire pour ajouter un champ qui permet la saisie d'un nombre compris entre 2 et 50</li>
                     <li>Modifiez la servlet pour que le message précédent soit répété <em>n</em> fois, <em>n</em> étant la valeur saisie dans ce nouveau champ</li>
-                </ul>
-            </section>
-
-            <!------------------------------------------->
-            <section>
-                <h4 id="partage-controle">Partage de contrôle</h4>
-                <p>Dans ce nouvel exercice, vous allez créer plusieurs servlets qui participeront à produire la même réponse à une requête. Le principe à implémenter est le suivant:</p>
-                <ul>
-                    <li>La page d'accueil <code>index.html</code> contient deux boutons avec les intitulés "Texte" et "Image"</li>
-                    <li>Ces deux boutons déclenchent l'envoie d'une requête <code>GET</code> vers une servlet <code>ControllerServlet</code> avec un paramètre d'URL <code>button=&lt;value&gt;</code>, où <code>&lt;value&gt;</code> est à remplacer par l'intitulé du bouton actionné.</li>
-                    <li><code>ControllerServlet</code> réceptionne la requête et répond à trois situations:</li>
-                    <ul>
-                        <li>Si le paramètre <code>button</code> a pour valeur <code>Texte</code>, elle délègue la requête à une servlet qui <code>TextServlet</code>.</li>
-                        <li>Si le paramètre <code>button</code> a pour valeur <code>Image</code>, elle délègue la requête à une servlet qui <code>ImageServlet</code>.</li>
-                        <li>Si le paramètre <code>button</code> n'est pas reconnu, la servlet renvoie un message d'erreur.</li>
-                    </ul>
-                    <li><code>TextServlet</code> renvoie le contenu HTML de la page <code>kitchen_sink.html</code> disponible sur UniversiTICE. Il ne doit pas s'agir d'une redirection ici mais bien d'une inclusion du contenu.</li>
-                    <li><code>ImageServlet</code> renvoie un contenu HTML pour inclure l'image <code>logo-urn.png</code>.</li>
                 </ul>
             </section>
 
@@ -409,30 +388,13 @@ public class HelloServlet extends HttpServlet {
 
             <!------------------------------------------->
             <section>
-                <h4 id="premiere-jsp">Première page JSP</h4>
+                <h4 id="premiere-jsp">Hello JSP</h4>
                 <p>Dans un nouveau projet:</p>
                 <ul>
                     <li>Créez une page <code>index.html</code> comportant un formulaire HTML avec deux champs de saisie, permettant de saisir un prénom et un nom.</li>
                     <li>Ajoutez à ce formulaire un bouton pour soumettre le formulaire et le transmettre à une page JSP qui affiche "Hello &lt;prénom&gt; &lt;nom&gt;", où &lt;prénom&gt; et &lt;nom&gt; sont automatiquement remplacés par les chaînes de caractères saisies.</li>
                     <li>Ajoutez à ce formulaire HTML des boutons radio permettant à l'utilisateur de spécifier s'il est un homme ou une femme.</li>
                     <li>Modifiez la page JSP pour qu'elle affiche "Hello Monsieur &lt;prénom&gt; &lt;nom&gt;" si l'utilisateur a sélectionné qu'il était un homme, "Hello Madame &lt;prénom&gt; &lt;nom&gt;" sinon.</li>
-                </ul>
-            </section>
-
-            <!------------------------------------------->
-            <section>
-                <h4 id="objets-implicites">Objets implicites</h4>
-                <p>Dans un nouveau projet:</p>
-                <ul>
-                    <li>Créez une page JSP qui affiche les informations suivantes:</li>
-                    <ul>
-                        <li>l'URL de la requête</li>
-                        <li>la méthode HTTP de cette requête</li>
-                        <li>l'adresse IP du client de cette requête</li>
-                    </ul>
-                    <li>Modifiez la page JSP pour qu'elle crée un nouveau Cookie à chaque visite, dont la clé et la valeur sont des entiers (pseudo-)aléatoires compris entre 0 et 999 (inclus).</li>
-                    <li>Modifiez la page JSP pour qu'elle affiche un tableau HTML listant tous les Cookies déjà enregistrés sur le poste du client à chaque visite.</li>
-                    <li>Testez votre page JSP en l'ouvrant plusieurs fois de suite.</li>
                 </ul>
             </section>
 
@@ -581,19 +543,15 @@ public class HelloServlet extends HttpServlet {
             
         </section>
 
+
         <!--=======================================================-->
         <section>
-            <h3 id="faces-rest">Faces ou REST</h3>
+            <h3 id="faces">Jakarta Faces</h3>
         
             <!------------------------------------------->
             <section>
                 <h4 id="taskboard">Le projet "Taskboard"</h4>
-                <p>L'objectif de ce projet est de concevoir une application web de gestion de tâches (to-do list) en utilisant soit Jakarta Faces (JSF) soit Jakarta REST (ou les deux). L'application doit permettre aux utilisateurs de créer, lire, mettre à jour et supprimer des tâches. Chaque tâche doit contenir un titre, une description, une date d'échéance et un statut (à faire, en cours, terminé).</p>
-                <ul>
-                    <li>Si vous choisissez Jakarta Faces, vous devez créer des pages XHTML pour l'interface utilisateur et des Beans CDI pour la logique métier.</li>
-                    <li>Si vous choisissez Jakarta REST, vous devez concevoir une API RESTful pour gérer les tâches et créer une interface utilisateur en HTML/CSS/JavaScript qui consomme cette API.</li>
-                </ul>
-                <p>Vous pouvez également combiner les deux approches, en créant une application qui utilise Jakarta REST pour l'API backend et Jakarta Faces pour l'interface utilisateur.</p>
+                <p>L'objectif de ce projet est de concevoir une application web de gestion de tâches (to-do list) en utilisant soit Jakarta Faces. L'application doit permettre aux utilisateurs de créer, lire, mettre à jour et supprimer des tâches. Chaque tâche doit contenir un titre, une description, une date d'échéance et un statut (à faire, en cours, terminé).</p>
                 <p>Nous donnons ci-dessous des exemples d'interfaces de l'application:</p> 
                 <ul>
                     <li>La première interface correspond à la page d'accueil qui affiche l'ensemble des tâches créées jusqu'à ce jour, réparties selon leur statut. Cette page est accessible en cliquant sur le lien "Home" du bandeau d'en-tête figurant sur toutes les pages.</li>
@@ -626,6 +584,16 @@ public class HelloServlet extends HttpServlet {
             </section>
         
         </section>
+
+
+        <!--=======================================================-->
+        <section>
+            <h3 id="rest">Jakarta REST</h3>
+            <p>Cette partie de l'énoncé sera mis en ligne très prochainement.</p>
+        
+        </section>
+
+
 
     </main>
 
