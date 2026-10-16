@@ -1,0 +1,704 @@
+[
+  {
+    "id": 1,
+    "title": "Ratatouille",
+    "description": "A sunny Provençal vegetable stew.",
+    "duration": 60,
+    "servings": 4,
+    "tags": [
+      "vegetarian",
+      "french",
+      "summer"
+    ],
+    "rating": 4,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Aubergines",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Courgettes",
+        "quantity": 2,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Tomatoes",
+        "quantity": 4,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Onions",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Red pepper",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 3,
+        "unit": "tbsp",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Dice all the vegetables.",
+      "Cook the onion and pepper in olive oil for 5 minutes.",
+      "Add the aubergine and courgettes, cook for 10 minutes.",
+      "Add the tomatoes and simmer for 40 minutes."
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Chicken curry",
+    "description": "A mild creamy curry with coconut milk.",
+    "duration": 45,
+    "servings": 4,
+    "tags": [
+      "spicy"
+    ],
+    "rating": 5,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Chicken breast",
+        "quantity": 600,
+        "unit": "g",
+        "category": "meat"
+      },
+      {
+        "name": "Coconut milk",
+        "quantity": 200,
+        "unit": "mL",
+        "category": "grocery"
+      },
+      {
+        "name": "Curry powder",
+        "quantity": 1,
+        "unit": "tbsp",
+        "category": "grocery"
+      },
+      {
+        "name": "Onions",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Basmati rice",
+        "quantity": 300,
+        "unit": "g",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Cut the chicken into pieces.",
+      "Brown the onion, add the chicken and the curry powder.",
+      "Pour in the coconut milk and simmer for 25 minutes.",
+      "Serve with basmati rice."
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Lentil soup",
+    "description": "A thick and warming winter soup.",
+    "duration": 40,
+    "servings": 6,
+    "tags": [
+      "vegetarian",
+      "winter"
+    ],
+    "rating": 4,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Green lentils",
+        "quantity": 200,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 2,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Onions",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Vegetable stock",
+        "quantity": 1.5,
+        "unit": "L",
+        "category": "grocery"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Chop the onion and carrots.",
+      "Sweat them in a pot, add the lentils, cumin and stock.",
+      "Simmer for 30 minutes, then blend half of the soup."
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Mushroom risotto",
+    "description": "A creamy Italian classic, ready in no time on a weeknight.",
+    "duration": 35,
+    "servings": 4,
+    "tags": [
+      "vegetarian",
+      "quick"
+    ],
+    "rating": 5,
+    "favorite": true,
+    "ingredients": [
+      {
+        "name": "Arborio rice",
+        "quantity": 300,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Button mushrooms",
+        "quantity": 400,
+        "unit": "g",
+        "category": "vegetables"
+      },
+      {
+        "name": "Onions",
+        "quantity": 2,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Vegetable stock",
+        "quantity": 1.2,
+        "unit": "L",
+        "category": "grocery"
+      },
+      {
+        "name": "Dry white wine",
+        "quantity": 150,
+        "unit": "mL",
+        "category": "grocery"
+      },
+      {
+        "name": "Parmesan",
+        "quantity": 80,
+        "unit": "g",
+        "category": "dairy"
+      },
+      {
+        "name": "Butter",
+        "quantity": 40,
+        "unit": "g",
+        "category": "dairy"
+      }
+    ],
+    "steps": [
+      "Slice the mushrooms and chop the onion.",
+      "Sweat the onion in half of the butter, add the rice and stir for 2 minutes.",
+      "Deglaze with the white wine, then add the hot stock one ladle at a time, stirring, for about 18 minutes.",
+      "Add the mushrooms halfway through cooking.",
+      "Off the heat, stir in the parmesan and the remaining butter. Serve immediately."
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Quiche lorraine",
+    "description": "The traditional quiche from Lorraine.",
+    "duration": 55,
+    "servings": 6,
+    "tags": [
+      "french"
+    ],
+    "rating": 3,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Shortcrust pastry",
+        "quantity": 1,
+        "unit": "",
+        "category": "grocery"
+      },
+      {
+        "name": "Smoked bacon",
+        "quantity": 200,
+        "unit": "g",
+        "category": "meat"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 3,
+        "unit": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Crème fraîche",
+        "quantity": 200,
+        "unit": "mL",
+        "category": "dairy"
+      },
+      {
+        "name": "Milk",
+        "quantity": 200,
+        "unit": "mL",
+        "category": "dairy"
+      }
+    ],
+    "steps": [
+      "Line a tart tin with the pastry.",
+      "Brown the bacon and spread it on the pastry.",
+      "Beat the eggs with the cream and milk, pour over.",
+      "Bake for 35 minutes at 180°C."
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Pesto pasta",
+    "description": "The fastest dinner of the week.",
+    "duration": 15,
+    "servings": 2,
+    "tags": [
+      "vegetarian",
+      "quick"
+    ],
+    "rating": 4,
+    "favorite": true,
+    "ingredients": [
+      {
+        "name": "Pasta",
+        "quantity": 250,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Basil pesto",
+        "quantity": 4,
+        "unit": "tbsp",
+        "category": "grocery"
+      },
+      {
+        "name": "Parmesan",
+        "quantity": 30,
+        "unit": "g",
+        "category": "dairy"
+      },
+      {
+        "name": "Cherry tomatoes",
+        "quantity": 10,
+        "unit": "",
+        "category": "vegetables"
+      }
+    ],
+    "steps": [
+      "Cook the pasta in salted water.",
+      "Drain and mix with the pesto.",
+      "Serve with halved cherry tomatoes and grated parmesan."
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Tarte tatin",
+    "description": "An upside-down caramelised apple tart.",
+    "duration": 70,
+    "servings": 6,
+    "tags": [
+      "dessert",
+      "french"
+    ],
+    "rating": 5,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Apples",
+        "quantity": 6,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Sugar",
+        "quantity": 150,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Butter",
+        "quantity": 80,
+        "unit": "g",
+        "category": "dairy"
+      },
+      {
+        "name": "Puff pastry",
+        "quantity": 1,
+        "unit": "",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Make a caramel with the sugar and butter in an oven-proof pan.",
+      "Arrange the apple quarters on the caramel and cook for 15 minutes.",
+      "Cover with the pastry and bake for 30 minutes at 200°C.",
+      "Turn out while still warm."
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Crêpes",
+    "description": "Thin French pancakes, sweet or savoury.",
+    "duration": 30,
+    "servings": 4,
+    "tags": [
+      "dessert",
+      "french",
+      "quick"
+    ],
+    "rating": 4,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Flour",
+        "quantity": 250,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 4,
+        "unit": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Milk",
+        "quantity": 500,
+        "unit": "mL",
+        "category": "dairy"
+      },
+      {
+        "name": "Butter",
+        "quantity": 50,
+        "unit": "g",
+        "category": "dairy"
+      },
+      {
+        "name": "Sugar",
+        "quantity": 1,
+        "unit": "tbsp",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Whisk the flour, eggs and sugar, then add the milk gradually.",
+      "Add the melted butter and let the batter rest for 1 hour.",
+      "Cook thin crêpes in a hot buttered pan."
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Salmon with rice",
+    "description": "Oven-baked salmon, lemon and dill.",
+    "duration": 30,
+    "servings": 4,
+    "tags": [
+      "fish",
+      "quick"
+    ],
+    "rating": 4,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Salmon fillets",
+        "quantity": 4,
+        "unit": "",
+        "category": "fish"
+      },
+      {
+        "name": "Basmati rice",
+        "quantity": 300,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Lemon",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Dill",
+        "quantity": 1,
+        "unit": "tbsp",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Cook the rice.",
+      "Place the salmon on a baking tray with lemon slices and dill.",
+      "Bake for 15 minutes at 200°C."
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Chili sin carne",
+    "description": "A vegetarian chili with red beans.",
+    "duration": 50,
+    "servings": 6,
+    "tags": [
+      "vegetarian",
+      "spicy",
+      "winter"
+    ],
+    "rating": 4,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Red beans",
+        "quantity": 500,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Chopped tomatoes",
+        "quantity": 800,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Onions",
+        "quantity": 2,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Red pepper",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Chili powder",
+        "quantity": 2,
+        "unit": "tsp",
+        "category": "grocery"
+      },
+      {
+        "name": "Sweetcorn",
+        "quantity": 150,
+        "unit": "g",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Brown the onions and pepper.",
+      "Add the tomatoes, beans, sweetcorn and chili.",
+      "Simmer for 35 minutes."
+    ]
+  },
+  {
+    "id": 11,
+    "title": "Greek salad",
+    "description": "Tomatoes, cucumber, feta and olives.",
+    "duration": 15,
+    "servings": 4,
+    "tags": [
+      "vegetarian",
+      "summer",
+      "quick"
+    ],
+    "rating": 4,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Tomatoes",
+        "quantity": 4,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Cucumber",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Feta",
+        "quantity": 200,
+        "unit": "g",
+        "category": "dairy"
+      },
+      {
+        "name": "Black olives",
+        "quantity": 100,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Red onion",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 3,
+        "unit": "tbsp",
+        "category": "grocery"
+      }
+    ],
+    "steps": [
+      "Cut the vegetables into chunks.",
+      "Add the olives and the feta.",
+      "Season with olive oil and oregano."
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Beef bourguignon",
+    "description": "Beef slowly braised in red wine.",
+    "duration": 180,
+    "servings": 6,
+    "tags": [
+      "french",
+      "winter"
+    ],
+    "rating": 5,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Stewing beef",
+        "quantity": 1.2,
+        "unit": "kg",
+        "category": "meat"
+      },
+      {
+        "name": "Red wine",
+        "quantity": 750,
+        "unit": "mL",
+        "category": "grocery"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 3,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Onions",
+        "quantity": 2,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Button mushrooms",
+        "quantity": 250,
+        "unit": "g",
+        "category": "vegetables"
+      },
+      {
+        "name": "Smoked bacon",
+        "quantity": 150,
+        "unit": "g",
+        "category": "meat"
+      }
+    ],
+    "steps": [
+      "Brown the beef and the bacon.",
+      "Add the onions and carrots, then the red wine.",
+      "Simmer gently for 2.5 hours.",
+      "Add the mushrooms 20 minutes before the end."
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Vegetable omelette",
+    "description": "A quick omelette with whatever is left in the fridge.",
+    "duration": 15,
+    "servings": 2,
+    "tags": [
+      "vegetarian",
+      "quick"
+    ],
+    "rating": 3,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Eggs",
+        "quantity": 4,
+        "unit": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Courgettes",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Onions",
+        "quantity": 1,
+        "unit": "",
+        "category": "vegetables"
+      },
+      {
+        "name": "Grated cheese",
+        "quantity": 50,
+        "unit": "g",
+        "category": "dairy"
+      }
+    ],
+    "steps": [
+      "Sauté the diced vegetables.",
+      "Pour in the beaten eggs and cook on low heat.",
+      "Sprinkle with cheese and fold."
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Chocolate mousse",
+    "description": "Light and airy, with only two ingredients.",
+    "duration": 20,
+    "servings": 6,
+    "tags": [
+      "dessert"
+    ],
+    "rating": 5,
+    "favorite": false,
+    "ingredients": [
+      {
+        "name": "Dark chocolate",
+        "quantity": 200,
+        "unit": "g",
+        "category": "grocery"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 6,
+        "unit": "",
+        "category": "dairy"
+      }
+    ],
+    "steps": [
+      "Melt the chocolate.",
+      "Separate the eggs, mix the yolks into the chocolate.",
+      "Fold in the stiffly beaten whites and chill for 4 hours."
+    ]
+  }
+]
