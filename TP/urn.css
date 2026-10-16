@@ -110,6 +110,13 @@ footer {
     text-align: center;
 }
 
+.hidden {
+    display: none;
+}
+.white {
+    color: white;
+}
+
 /* ================================================== */
 /* Styles for the sidebar */
 /* ================================================== */
