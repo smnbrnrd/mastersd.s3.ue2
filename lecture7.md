@@ -47,20 +47,24 @@ count: false
 # L'écosystème Spring
 
 - Spring Framework: le framework de base
-- l'écosystème .exponent[(1)] : 21 projets bâtis sur Spring Framework, dont:
-  - Spring Boot: pour simplifier la configuration et le déploiement
-  - Spring Data: pour l'accès aux données
-  - Spring Security: pour la sécurité
-  - Spring Cloud: pour le développement de microservices
-  - Spring AI: pour l'intégration de l'IA dans les applications Spring
-- Chaque projet est divisé en modules, chacun fournissant un service spécifique (ex: Spring Data JPA, Spring Data MongoDB, etc.)
+- L'écosystème .exponent[(1)] : 21 projets bâtis sur Spring Framework, dont:
+    - Spring Boot: pour simplifier la configuration et le déploiement
+    - Spring Data: pour l'accès aux données
+    - Spring Security: pour la sécurité
+    - Spring Cloud: pour le développement de microservices
+    - Spring AI: pour l'intégration de l'IA dans les applications Spring
+- Ces projets fournissent des modules qui peuvent être utilisés indépendamment ou combinés selon les besoins
+- Par ex., pour créer une API REST, on va utiliser un *starter* Spring Boot et y inclure les modules:
+    - Spring Web (accès aux requêtes HTTP et aux vues)
+    - Spring Data JPA (accès aux données relationnelles)
+    - Spring Security (authentification et autorisation)
 
 .footnote[(1) [https://spring.io/projects](https://spring.io/projects)]
 
 ---
 # Les modules de Spring Framework
 
-.center.width-80[![Modules Spring](medias/lec7/spring-modules-v7.png)]
+.center.width-75[![Modules Spring](medias/lec7/spring-modules-v7.png)]
 
 ---
 class: middle, center
@@ -69,8 +73,8 @@ class: middle, center
 ---
 # Le conteneur IoC de Spring
 
-- Même principe que le conteneur CDI: le conteneur crée, assemble et gère le cycle de vie des objets de l'application
-- Ces objets sont des **beans**, i.e. POJO annotés
+- Même principe que CDI: un conteneur crée, assemble et gère le cycle de vie des composants de l'application
+- Ces composants sont des **beans**, i.e. POJO annotés
 - Contrairement à CDI, le conteneur n'est pas fourni par un serveur, il est **embarqué** dans l'application
 - Le conteneur est représenté par l'interface `ApplicationContext`
 ```java
@@ -79,10 +83,21 @@ class: middle, center
     Coffee coffee = coffeeService.makeCoffee(2, 1);
 ```
 - En pratique, on n'appelle presque jamais `getBean` : c'est le conteneur qui injecte les dépendances
-- Il s'appuie sur des **métadonnées de configuration** pour savoir quels beans créer et comment les assembler :
-  - des annotations sur les classes (`@Component`, `@Service`, ...)
-  - des classes de configuration Java (`@Configuration`)
-  - des fichiers XML (historique, encore présent dans du code ancien)
+
+---
+# Le conteneur IoC de Spring
+
+- Le conteneur doit connaître les classes à gérer: il faut déclarer les beans
+- Pour cela, trois façons de faire: 
+    1. des annotations sur les classes (`@Component`, `@Service`, ...)
+    2. des classes de configuration Java (`@Configuration`)
+    3. des fichiers XML (historique, encore présent dans du code ancien)
+- Dans:
+```java
+    ApplicationContext context = new AnnotationConfigApplicationContext(**AppConfig**.class);
+```
+`AppConfig` est une classe de configuration Java qui déclare les beans et leurs dépendances
+
 
 ---
 # Déclarer des beans par annotations

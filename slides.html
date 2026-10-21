@@ -54,18 +54,20 @@
             });
         };
 
-        // Create the slideshow
-        let slideshow = remark.create(options, renderMath);
-
         /**
-         * When DOM is loaded add the "target=_blank" attribute to all links that have a "http" or "https" protocol.
+         * Add the "target=_blank" attribute to all links that have a "http" or "https" protocol.
          * This will make external links open in a new tab.
          */
-        document.addEventListener("DOMContentLoaded", function() {
-            let links = document.querySelectorAll("a[href^='http']");
-            links.forEach(function(link) {
+        let addTargetBlank = function() {
+            document.querySelectorAll("a[href^='http']").forEach(function(link) {
                 link.setAttribute("target", "_blank");
             });
+        };
+
+        // Create the slideshow
+        let slideshow = remark.create(options, function() {
+            renderMath();
+            addTargetBlank();
         });
     </script>
 

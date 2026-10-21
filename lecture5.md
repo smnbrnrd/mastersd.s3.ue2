@@ -10,7 +10,7 @@ Simon BERNARD<br>
 
 ---
 class: middle, center
-# Framework pour applications orientées présentation
+# Présentation du framework
 
 ---
 # Jakarta Faces
@@ -107,7 +107,7 @@ Différences avec JSP :
 # Facelets
 
 .row[
-.col-50[
+.col-48[
 ```html
 <!DOCTYPE html>
 <html lang="en"
@@ -131,7 +131,8 @@ Différences avec JSP :
 </html>
 ```
 ]
-.col-50[
+.col-4[]
+.col-48[
 - Balises HTML5, reportées dans la page HTML résultante
 - Accès aux bibliothèques de balises standards : composants (`h:`) et fonctionnalités de bases (`f:`)
 - `<h:head>`, `<h:body>` nécessaires pour la gestion des ressources externes (CSS, script, images)
@@ -162,13 +163,13 @@ Liste assez complète des balises courantes : [Documentation Jakarta EE](https:/
 - Balises dédiées (e.g. `<h:outputStylesheet>`, `<h:graphicImage>` et `<h:outputScript>`)
 - Les ressources sont placées dans un sous-dossier (nom libre) du dossier `/resources` du projet :
 ```shell
-/resources
-    /css
-        default.css
-    /images
-        logo-couleur.png
-    /js
-        script.js
+    /resources
+        /css
+            default.css
+        /images
+            logo-couleur.png
+        /js
+            script.js
 ```
 - L'attribut `library` permet de spécifier le dossier de la ressource
 ```html
@@ -380,16 +381,40 @@ Vue `greeting-response.xhtml`
 
 - Les données saisies dans un formulaire sont des chaînes de caractères
 - Il faut les convertir dans le type Java adéquat tel que définit dans le bean
-- La plupart des conversions sont automatiques :
+- Jakarta Faces fournit des convertisseurs standards pour tous les types primitifs
+- **La plupart des conversions sont automatiques** :
 ```html
     <h:inputText id="age" title="Enter your age:" value="#{userBean.age}">
 ```
+`userBean.age` étant un entier, le convertisseurs `IntegerConverter` sera utilisé de façon transparente
+- Dans certains cas, on peut devoir spécifier explicitement le convertisseurs:
+    - via l'attribut `converter`
+    ```html
+        <h:inputText value="#{userBean.age}" converter="javax.faces.Integer" />
+    ```
+    - via la balise imbriquée `f:converter``
+    ```html
+        <h:inputText value="#{userBean.code}">
+            <f:converter converterId="javax.faces.Long" />
+        </h:inputText>
+    ```
+- C'est le cas quand le convertisseur à utiliser est mal reconnu automatiquement (mais rare)
+
+---
+# Convertisseurs standards
+
 - 2 cas particuliers : `Date` et `Number`
 ```html
-    <h:inputText id="dateofbirth" title="Enter your date of birth:" value="#{userBean.dateOfBirth}">
+    <h:inputText id="dateofbirth" value="#{userBean.dateOfBirth}" title="Enter your date of birth:">
         <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
     </h:inputText>
     <h:message for="dateofbirth" />
+```
+```html
+    <h:outputText id="price" value="#{productBean.price}" title="Enter the price of the product in euros:">
+        <f:convertNumber type="currency" currencySymbol="€" />
+    </h:outputText>
+    <h:message for="price" />
 ```
 - `<h:message/>` permet d'afficher un message d'erreur automatique si la conversion échoue
 - Plus de détails : [documentation](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page-core/faces-page-core.html#_using_the_standard_converters)
@@ -431,7 +456,7 @@ Vue `greeting-response.xhtml`
     <h:message for="userNo" />
 ```
 - Plusieurs validateurs standards dans le framework (cf. [documentation](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page-core/faces-page-core.html#_using_the_standard_validators))
-- ou API *Bean Validation* : annotations pour imposer des contraintes sur les attributs/méthodes de beans
+- **ou API *Bean Validation*** : annotations pour imposer des contraintes sur les attributs/méthodes de beans
 ```java
     @Named
     @ViewScoped
@@ -443,6 +468,7 @@ Vue `greeting-response.xhtml`
     }
 ```
 - Plus de détails sur cette API dans la [documentation](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/beanvalidation/bean-validation/bean-validation.html)
+- **Dans 90% des cas, la bean validation est préférable**. La validation dans les facelets est à réserver aux validations liés à l'UX (e.g. champs requis ou format de saisie)
 
 ---
 # Validateurs non standards
@@ -471,6 +497,8 @@ Vue `greeting-response.xhtml`
     </h:inputText>
 ```
 
+.footnote[Note : `FacesContext` est un objet créé à la réception d'une requête et qui contient toutes les informations sur la requête et la réponse. Il permet ici d'ajouter un message d'erreur à la réponse, que l'on peut afficher dans la facelet via la balise `<h:message>` ou `<h:messages>`.]
+
 ---
 # Validateurs non standards
 
@@ -498,6 +526,7 @@ Vue `greeting-response.xhtml`
     </h:inputText>
 ```
 - À n'utiliser que si les méthodes précédentes ne suffisent pas
+- A noter aussi que *Bean validation* permet de créer ses propres annotations de validation
 
 
 ---
@@ -508,16 +537,17 @@ class: middle, center
 # Cycle de vie
 
 .row[
-.col-40[
+.col-45[
 .width-100[![Cycle de vie Jakarta Faces](medias/lec4/jakartafaces_cycle.png)]
 ]
-.col-60[
-1. Première requête vers une page facelets
-  - Création d'un arbre de composants vide (en Java)
-  - Arbre peuplé avec les composants de la vue facelets
-  - Rendu de la vue facelets pour création de la page HTML résultante
-  - Envoi de la page HTML au navigateur
-  - Sauvegarde de l'état de la vue pour requêtes suivantes
+.col-5[]
+.col-50[
+**Première requête vers une page facelets**
+- Création d'un arbre de composants vide (en Java)
+- Arbre peuplé avec les composants de la vue facelets
+- Rendu de la vue facelets pour création de la page HTML résultante
+- Envoi de la page HTML au navigateur
+- Sauvegarde de l'état de la vue pour requêtes suivantes
 
 .small[Note : dans ce cas, on n'exécute que la première (*restore view*) et la dernière étape (*render response*) du cycle de vie]
 ]
@@ -527,20 +557,19 @@ class: middle, center
 # Cycle de vie
 
 .row[
-.col-40[
+.col-45[
 .width-100[![Cycle de vie Jakarta Faces](medias/lec4/jakartafaces_cycle.png)]
 ]
-.col-60[
-2. Requêtes suivantes (soumission formulaire)
-  - La vue est restaurée
-  - Paramètres de requête ajoutés dans l'arbre de composants
-  - Conversion et validation des données saisies
-  - Si erreurs : étape de rendu de la vue
-  - Si ok, données mises à jour dans le backing bean
-  - Exécution de l'action associée à la commande utilisateur
-  - En fonction du retour de l'action, on détermine la vue à rendre
-
-.small[Note : chaque étape *Process events* est susceptible de rediriger vers une autre vue (*response complete*)]
+.col-5[]
+.col-50[
+**Requêtes suivantes ou *postback* (soumission formulaire)**
+- La vue est restaurée
+- Paramètres de requête ajoutés dans l'arbre de composants
+- Conversion et validation des données saisies
+- Si erreurs : étape de rendu de la vue
+- Si ok, données mises à jour dans le backing bean
+- Exécution de l'action associée à la commande utilisateur
+- En fonction du retour de l'action, on détermine la vue à rendre
 ]
 ]
 
@@ -548,6 +577,7 @@ class: middle, center
 # Événements
 
 - Faces propose un mécanisme pour déclencher des traitements en réaction à un événement
+- Ces traitements interviennent à différentes étapes du cycle de vie en fonction de la nature de l'événement
 - 2 grands types d'événements auquel on peut réagir :
   - Générés par une **action utilisateur** (clic, saisie, etc.)
   - Générés par le **cycle de vie de l'application**
@@ -581,6 +611,8 @@ class: middle, center
     <h:commandButton id="english" value="English" actionListener="#{welcomeBean.selectLanguage}" />
 ```
 
+.footnote[Note : `FacesContext` permet d'accéder aux objets de la session via `context.getExternalContext().getSessionMap()`. Une méthode plus moderne serait d'utiliser un Bean CDI pour gérer l'état de la session et d'injecter ce bean dans le backing bean.]
+
 ---
 # Listener
 
@@ -606,6 +638,8 @@ class: middle, center
     </h:inputText>
 ```
 
+.footnote[Note : `FacesContext` permet d'accéder aux objets de la session via `context.getExternalContext().getSessionMap()`. Une méthode plus moderne serait d'utiliser un Bean CDI pour gérer l'état de la session et d'injecter ce bean dans le backing bean.]
+
 ---
 # Listener
 
@@ -619,39 +653,69 @@ class: middle, center
     </h:form>
 ```
 - Différence avec `actionListener` ?
-- `action` pour les traitements métiers et la navigation
-- `actionListener` pour les événements qui n'attendent pas de réponses
-- `actionListener` a accés au composant qui a déclenché l'événement
-- `action` est exécuté en dernier
+    - `action` pour les traitements métiers et la navigation
+    - `actionListener` pour les événements qui n'attendent pas de réponses
+    - `actionListener` a accés au composant qui a déclenché l'événement
+    - `action` est exécuté en dernier
 
 ---
 # Navigation
 
 - Navigation = affichage d'une nouvelle page
-- 5 composants principaux :
-  - `h:commandButton` : bouton pour soumettre un formulaire
-  - `h:commandLink` : lien pour soumettre un formulaire
-  - `h:button` : bouton simple
-  - `h:link` : lien classique (nouvelle requête GET)
-  - `h:outputLink` : lien sans événement action
-- `commandButton` et `commandLink` sont à placer dans un formulaire
-- Les autres ne soumettent pas de formulaire
+- 5 composants principaux permettent de déclencher la navigation :
+    - `h:commandButton` et `h:commandLink` sont des boutons/lien pour soumettre un formulaire
+    ```html
+        <h:commandButton value="greet" action="greetPage" />
+        <h:commandLink value="greet" action="greetPage" />
+    ```
+    - La requête est de type `POST` et le cycle de vie de Jakarta Faces est exécuté
+    - `greetPage` est le nom de la vue à afficher (i.e. `greetPage.xhtml`)
+    - Peut être remplacé par une méthode du backing bean qui renvoie le nom de la vue à afficher
 
 ---
+count:false
 # Navigation
 
-- `h:commandButton` et `h:commandLink` : soumission d'un formulaire avec requête `POST`
-- Cycle de vie géré par `Faces` pour afficher une page ou déclencher une action (méthode de bean) :
-```html
-    <h:commandButton value="greet" action="greetPage" />
-```
-- L'URL affiché après requête est la même que celle du formulaire
-- Pour afficher le bon URL : `action="greetPage?faces-redirect=true"`
-- `h:button` et `h:link` : une requête `GET` vers la page indiquée par `outcome`
-```html
-    <h:button value="greet" outcome="greetPage" />
-```
-- `h:outputLink` : requête `GET` vers une URL externe à l'application
+- Navigation = affichage d'une nouvelle page
+- 5 composants principaux permettent de déclencher la navigation :
+    - `h:button` et `h:link` sont des boutons/lien classiques
+    ```html
+        <h:button value="greet" outcome="greetPage" />
+        <h:link value="greet" outcome="greetPage" />
+    ```
+    - La requête est de type `GET` et le cycle de vie de Jakarta Faces n'est pas exécuté
+    - `greetPage` est le nom de la vue à afficher (i.e. `greetPage.xhtml`)
+    - `h:outputLink` est un lien vers une URL externe à l'application
+    ```html
+        <h:outputLink value="https://www.univ-rouen.fr/">University of Rouen</h:outputLink>
+    ```
+---
+# Pour aller plus loin
+.small[
+Quelques liens de la documentation officielle pour aller plus loin :
+- Facelets : [USing Jakarta Faces Technology in Web Pages](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page/faces-page.html)
+- Backing beans : [Developing with Jakarta Faces Technology](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-develop/faces-develop.html)
+- Convertisseurs, validateurs et listener : [Using Converters, Listeners, and Validators](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-page-core/faces-page-core.html)
+- Ajax avec Jakarta Faces : [Using Ajax with Jakarta Faces Technology](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-ajax/faces-ajax.html)
+- Configuration avancée : [Configuring Jakarta Faces Technology](https://jakarta.ee/learn/docs/jakartaee-tutorial/current/web/faces-configure/faces-configure.html)
+
+Autres ressources web :
+- Guide interactif d'OpenLiberty : [Building a dynamic Web application using Jakarta Faces](https://openliberty.io/guides/guide-jakarta-faces.html)
+- Catalogue de ressources de BalusC .exponent[(1)] : [Jakarta Faces](https://jakarta-faces.zeef.com/balusc)
+- Série de vidéos en français mais un peu anciennes : [Koor.fr - Tutoriel vidéo](https://www.youtube.com/playlist?list=PLBNheBxhHLQyuFBZHx20kGByDoySutwBf)
+- Série de vidéos en anglais mais assez récentes : [Getting Started with Jakarta EE 9: Jakarta Faces (JSF)](https://www.youtube.com/watch?v=h8HKV7hh_Vc)
+
+Librairie de composants et d'utilitaires pour Jakarta Faces :
+- PrimeFaces : [PrimeFaces Showcase](https://showcase.primefaces.org/index?jfwid=59bff)
+- AdminFaces : [AdminFaces site](https://adminfaces.github.io/site/)
+- IceFaces : [IceFaces Showcase](https://www.icesoft.org/wiki/display/ICE/Showcase)
+- OmniFaces : [OmniFaces Showcase](https://showcase.omnifaces.org/)
+
+Livre:
+- Livre recommandé: "The Definitive Guide to Jakarta Faces in Jakarta EE 10" par Bauke Scholtz et Arjan Tijms (Éditions Apress).
+]
+
+.footnote[(1) BalusC est un développeur Jakarta EE qui a beaucoup contribué à la communauté Jakarta Faces. Il est le créateur d'OmniFaces, une librairie d'outils pour Jakarta Faces. Il est l'auteur de la plupart des top réponses de StackOverflow sur JSF/Faces.]
 
 ---
 class: middle, dark-slide

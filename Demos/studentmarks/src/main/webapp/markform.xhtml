@@ -41,7 +41,7 @@
                                 <f:selectItem itemValue="REPORT" itemLabel="Report"/>
                                 <f:selectItem itemValue="OTHER" itemLabel="Other"/>
                             </h:selectOneMenu>
-                            <h:message for="type" showDetail="false" showSummary="true"/>
+                            <h:message for="type" showDetail="false" showSummary="true" styleClass="text-danger"/>
                         </div>
 
                         <div class="form-group">
@@ -49,7 +49,7 @@
                             <h:inputText id="value" value="#{newRecord.mark.value}" required="true" requiredMessage="Renseignez la note obtenue.">
                                 <f:validateLongRange minimum="#{userNumberBean.minimum}" />
                             </h:inputText>
-                            <h:message for="value" showDetail="false" showSummary="true"/>
+                            <h:message for="value" showDetail="false" showSummary="true" styleClass="text-danger"/>
                         </div>
 
                         <div class="form-group">
@@ -57,7 +57,7 @@
                             <h:inputText id="maxValue" value="#{newRecord.mark.maxValue}" required="true" requiredMessage="Renseignez la note maximale.">
                                 <f:validateLongRange minimum="#{userNumberBean.minimum}" />
                             </h:inputText>
-                            <h:message for="maxValue" showDetail="false" showSummary="true"/>
+                            <h:message for="maxValue" showDetail="false" showSummary="true" styleClass="text-danger"/>
                         </div>
 
                         <div class="form-group">
@@ -65,7 +65,7 @@
                             <h:inputText id="date" value="#{newRecord.mark.date}" required="true" requiredMessage="Renseignez la date.">
                                 <f:convertDateTime type="localDate" pattern="dd-MM-yyyy" />
                             </h:inputText>
-                            <h:message for="date" showDetail="false" showSummary="true"/>
+                            <h:message for="date" showDetail="false" showSummary="true" styleClass="text-danger"/>
                         </div>
 
                         <br/>
