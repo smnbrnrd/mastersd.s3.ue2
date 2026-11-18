@@ -94,7 +94,7 @@ class: middle, center
     3. des fichiers XML (historique, encore présent dans du code ancien)
 - Dans:
 ```java
-    ApplicationContext context = new AnnotationConfigApplicationContext(**AppConfig**.class);
+    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 ```
 `AppConfig` est une classe de configuration Java qui déclare les beans et leurs dépendances
 
@@ -265,8 +265,8 @@ class: middle, center
 # Spring MVC
 
 - Module web « historique » de Spring Framework (`spring-webmvc`), bâti sur l'API Servlet
-- Implémente le patron MVC pour le Web (cf. chapitre 1) avec un **contrôleur frontal** (*front controller*) : la `DispatcherServlet`
-- La `DispatcherServlet` est une servlet (cf. chapitre 2) qui reçoit toutes les requêtes et les délègue aux contrôleurs de l'application
+- Implémente le patron MVC pour le Web avec un **contrôleur frontal** (*front controller*) : la `DispatcherServlet`
+- La `DispatcherServlet` est une servlet qui reçoit toutes les requêtes et les délègue aux contrôleurs de l'application
 - Deux usages :
   - application orientée présentation : le contrôleur renvoie une **vue** HTML, comme Servlet + JSP (chapitre 3) ou Faces (chapitre 5)
   - service web RESTful : le contrôleur renvoie des **données** (JSON), comme Jakarta REST (chapitre 6)
@@ -304,7 +304,6 @@ class: middle, center
         }
     }
 ```
-- Comparer avec `CoffeeServlet` du chapitre 4 : plus de `doGet`, de `request.setAttribute` ni de `RequestDispatcher`
 - Le nom logique `"coffee"` est résolu en un template, par exemple `templates/coffee.html` avec Thymeleaf :
 ```html
     <h1>Votre café</h1>
@@ -525,7 +524,7 @@ class: middle, center
 ---
 # L'auto-configuration
 
-- Spring Boot crée les beans d'infrastructure en fonction des bibliothèques présentes dans le classpath et de la configuration
+- Spring Boot crée les beans d'infrastructure en fonction des bibliothèques présentes
 - Exemples :
   - Spring MVC présent → `DispatcherServlet`, convertisseurs JSON, Tomcat embarqué sur le port 8080
   - Thymeleaf présent → `ViewResolver` vers `templates/*.html`
